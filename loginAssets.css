@@ -1,5 +1,5 @@
-.square-box{
-    max-width:3000px;
-    min-height:3000px;
-    border:1px solid #333
+.Background{
+    background-image: url('./Background.jpg');
+    width: 100%;
+    height: 100%;
 }
