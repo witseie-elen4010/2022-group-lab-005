@@ -4,6 +4,8 @@ const app = express()
 const mainRouter = require('./mainRoutes')
 
 app.use(mainRouter)
+app.use('/public', express.static(__dirname + '/public'));
+//app.use('/settings', mainRouter)
 
 const port = process.env.PORT || 3000
 app.listen(port)
