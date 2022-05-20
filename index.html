@@ -14,7 +14,49 @@
   <button type="button" id="settingsButton">Settings</button>
   
   <script>
+    //try using browserify
+    //var darkMode = sessionStorage.getItem("darkMode");
+    //var darkMode = window.index.darkMode;
+    //var darkMode = "true";
 
+
+    //colour scheme variables
+    var textColour = "black";
+    var backColour = "white";
+    var buttonColour = "grey";
+    darkMode = true;
+    //set current current scheme variables
+    if (darkMode) {
+      textColour = "blue";
+      backColour = "black";
+      buttonColour = "white";
+    }
+    else { 
+        textColour = "black";
+        backColour = "white";
+        buttonColour = "grey";
+    }
+    
+    const helloButton = document.getElementById('helloButton')
+    const settingsButton = document.getElementById('settingsButton')
+
+    //redirect to settings page when button is pressed
+    settingsButton.addEventListener('click', function () {
+      location.href = "http://127.0.0.1:3000/settings";//get using path variable
+    }, false)
+
+    //set colour scheme of this page
+    document.body.style.color = textColour;
+    document.body.style.backgroundColor = backColour;
+    helloButton.style.backgroundColor = buttonColour;
+    helloButton.style.color = textColour;
+    settingsButton.style.backgroundColor = buttonColour;
+    settingsButton.style.color = textColour;
+
+    //set current current scheme variables
+    sessionStorage.setItem("textColour", textColour);
+    sessionStorage.setItem("backColour", backColour);
+    sessionStorage.setItem("buttonColour", buttonColour);
 
   </script>
 </body>
