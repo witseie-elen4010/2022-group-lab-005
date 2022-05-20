@@ -453,3 +453,11 @@ dist
 
 # TernJS port file
 .tern-port
+env
+*.json
+package-lock.json
+package.json
+package-lock.json
+package.json
+package-lock.json
+package.json

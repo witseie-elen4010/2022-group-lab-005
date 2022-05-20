@@ -8,6 +8,6 @@ mainRouter.get('/about', function (req, res) {
     res.sendFile(path.join(__dirname, 'views', 'about.html'))
 })
 mainRouter.get('/LogIn', function (req, res) {
-    res.sendFile(path.join(__dirname, 'views', 'Login.html'))
+    res.sendFile(path.join(__dirname, 'views', 'LogIn.html'))
 })
 module.exports = mainRouter
