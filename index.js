@@ -1,7 +1,14 @@
-const path = require('path') // used later in the exercise
+'use strict'
+
+const bodyParser = require('body-parser')
+const path = require('path')
 const express = require('express')
 const app = express()
 const mainRouter = require('./mainRoutes')
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.static('public'))
 
 app.use(mainRouter)
 
