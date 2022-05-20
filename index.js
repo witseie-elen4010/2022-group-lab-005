@@ -1,7 +1,7 @@
 const path = require('path') // used later in the exercise
 const express = require('express')
 const app = express()
-const mainRouter = require('./mainRoutes')
+const mainRouter = require('./src/mainRoutes')
 
 app.use(mainRouter)
 
