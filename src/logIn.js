@@ -1,3 +1,9 @@
+// const { get } = require('./poolManagement')
+
+// const { format } = require("mysql");
+
+var form = document.getElementById("form-id");
+
 
 document.getElementById("output").style.display = "None";//switch this output off until button is clicked
 document.getElementById("LoginButton").onclick = function()
@@ -13,21 +19,8 @@ document.getElementById("LoginButton").onclick = function()
   {
     document.getElementById("output").innerHTML = "Please enter a password";
   }
-  else
-  {
-    document.getElementById("output").innerHTML = "username " + username + "       password : " +password;
-  }
+  var form = document.getElementById("LogIn-Form")
+  document.getElementById("your-id").addEventListener("click", function () {
+    form.submit();
+  });
 }
-// if(!(select name from YourTable where name == username))
-// {
-//     document.getElementById("output").innerHTML = "username does not exist";
-// }
-// else if ( !(select password from YourTable where name == username))
-// {
-//     document.getElementById("output").innerHTML = "password is incorrect";
-// }
-// else
-// {
-//     direct to another page 
-//     set online = true;
-// }
