@@ -17,15 +17,6 @@ mainRouter.use(bodyParser.urlencoded({ extended: false }));
 mainRouter.use(bodyParser.json());
 mainRouter.post('/send', async function(req, res){
     const result = await LogIn(req.body.username, req.body.password)
-    var list = JSON.stringify(result.recordset[0])
-    let obj = JSON.parse(list);
-    if(obj.Password == req.body.password)
-    {
-        res.send("True");
-    }
-    else
-    {
-        res.send("False");
-    }
+    res.send(result)
 })
 module.exports = mainRouter
