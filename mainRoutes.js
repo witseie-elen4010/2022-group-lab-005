@@ -1,3 +1,11 @@
+const path = require('path')
+const bodyParser = require('body-parser')
+const { example, createPerson } = require('./services/testDB')
+const { createGame, prevGameID } = require('./services/lobby.js')
+
+
+mainRouter.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'views', 'home.html'))
 'use strict'
 
 const express = require('express')
@@ -7,10 +15,6 @@ const bodyParser = require('body-parser')
 const mainRouter = express.Router()
 
 const { example, changeMode } = require('./services/testDB')
-
-mainRouter.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'index.html'))
-
 
 const jsonParser = bodyParser.json()
 // const urlencodedParser = bodyParser.urlencoded({ extended: true })
@@ -24,10 +28,45 @@ mainRouter.use(bodyParser.json())
 mainRouter.get('/', function (req, res) {
   res.send('Hello World. I\'m a Node app.')
 
+
 })
 
 mainRouter.get('/about', function (req, res) {
   res.sendFile(path.join(__dirname, 'views', 'about.html'))
+})
+mainRouter.get('/form', function (req, res) {
+  res.sendFile(path.join(__dirname, 'views', 'form.html'))
+})
+
+mainRouter.get('/api/testconnection', async function (req, res) {
+  const result = await example()
+  res.send(result)
+})
+mainRouter.use(bodyParser.urlencoded({ extended: false }))
+mainRouter.use(bodyParser.json())
+
+mainRouter.post('/send', async function (req, res) {
+  const result = await createPerson(
+    1,
+    req.body.lastName,
+    req.body.firstName,
+    req.body.address,
+    req.body.city
+  )
+  res.send(result)
+})
+
+mainRouter.post('/lobby', async function (req, res) {
+  res.sendFile(path.join(__dirname, 'views', 'lobby.html'))
+})
+
+mainRouter.post('/game', async function (req, res) {
+  const prevResult = await prevGameID()
+  newID = parseInt(prevResult) + 1;
+  const result = await createGame(req.body.gameModeInput, newID)
+  res.sendFile(path.join(__dirname, 'views', 'game.html'))
+})
+
 
 })
 
