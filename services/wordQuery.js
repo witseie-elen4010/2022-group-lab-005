@@ -21,7 +21,7 @@ module.exports = {
             (pool) => pool.request().query(sqlCode).then(
                     (result) => {
                         console.log(result.recordset[0].WordToGuess)
-                        resolve(word === result.recordset[0].WordToGuess);
+                        resolve(word === result.recordset[0].WordToGuess)
                     }
                 ).catch(reject)
         ).catch(reject)

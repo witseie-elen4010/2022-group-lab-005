@@ -41,10 +41,10 @@ mainRouter.post('/logWord', jsonParser, async function (req, res) {
         if (numRows === 1) {
           checkWord(word, 1).then((check) => {
             if (check) {// Displays if the guessed word is correct
-              res.send(JSON.stringify({ 'message': `${word} has been saved to the database, you guess the correct word!` }));
+              res.send(JSON.stringify({ 'message': `${word} has been saved to the database, you guess the correct word!` }))
             }
             else {
-              res.send(JSON.stringify({ 'message': `${word} has been saved to the database, you NONCE that's the wrong word! D:<` }));
+              res.send(JSON.stringify({ 'message': `${word} has been saved to the database, you NONCE that's the wrong word! D:<` }))
             }
           }).catch(console.error)
         } else {
