@@ -1,8 +1,18 @@
 'use strict'
 
-const path = require('path')
 const express = require('express')
+const path = require('path')
+const bodyParser = require('body-parser')
+
 const mainRouter = express.Router()
+
+let jsonParser = bodyParser.json()
+let urlencodedParser = bodyParser.urlencoded({ extended: true });
+
+const { createWord } = require('./services/wordQuery')
+
+mainRouter.use(bodyParser.urlencoded({ extended: false }));
+mainRouter.use(bodyParser.json());
 
 mainRouter.get('/', function (req, res) {
     res.send('Hello World. I\'m a Node app.')
@@ -16,17 +26,16 @@ mainRouter.get('/test', function (pos, req) {
     req.sendFile(path.join(__dirname, 'views', 'test.html'))
 })
 
-mainRouter.post("/myWord", function (req, res) {
-    const wordToLog = req.body.wordField
+mainRouter.post('/logWord', jsonParser, async function (req, res) {
+  const word = req.body.wordToLog
+  console.log(`Server received: ${word}`)
 
-    console.log(wordToLog)
-
-    // The word must only contain alphabetical elements. It must also have a length of 5.
-    if (/^[a-zA-Z]+$/.test(wordToLog) === true & wordToLog.length === 5) {
-      res.send(`Saved <b>${wordToLog}</b> to the database.`)
-    } else {
-      res.send('Invalid word. Word must be 5 letters long and only be alphabetical')
-    }
-  })
+  if (/^[a-zA-Z]+$/.test(word) === true & word.length === 5) {
+    const result = await createWord(word)
+    res.send(JSON.stringify({'message' : `${word} has been saved to the database`}));
+  } else {
+    res.send(JSON.stringify({'message' : `${word} is invalid. It must be 5 letters long and only be alphabetical`}))
+  }
+})
 
 module.exports = mainRouter
