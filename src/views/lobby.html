@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>LOBBY</title>
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="./css/bootstrap.min.css" />
+    <script type="text/javascript" src="services/lobby.js"></script>
+  </head>
+
+  <style>
+    .gameMode label {
+      display: inline-block;
+      width: 200px;
+      padding: 10px;
+      border: solid 2px #ccc;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .gameMode input[type="radio"] {
+      display: none;
+    }
+    .gameMode input[type="radio"]:checked + label {
+      border: solid 2px blue;
+    }
+  </style>
+
+  <body>
+    <h1>Welcome to Hazard a Guess Lobby!</h1>
+    <h2>Waiting for players...</h2>
+
+    <br />
+    <h2>Choose a game mode:</h2>
+
+    <form action="/game" method="POST" class="gameMode">
+      <input
+        type="radio"
+        id="standardRadio"
+        value="Standard"
+        name="gameModeInput"
+        checked="true"
+      />
+      <label for="standardRadio">Standard</label>
+
+      <input
+        type="radio"
+        id="customRadio"
+        value="Custom"
+        name="gameModeInput"
+      />
+      <label for="customRadio">Custom</label>
+
+      <button type="submit" class="btn btn-primary" style="margin: 0.5em">
+        Start Game
+      </button>
+    </form>
+  </body>
+</html>
