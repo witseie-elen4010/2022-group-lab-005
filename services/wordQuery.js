@@ -1,7 +1,6 @@
 const { get } = require('./poolManagement')
 
 module.exports = {
-
   createWord: async function createWord (word) {
     return new Promise((resolve, reject) => {
       const sqlCode = `INSERT INTO [HazardaGuess_db].[dbo].[WordLog] (Word) VALUES ('${word}');`
