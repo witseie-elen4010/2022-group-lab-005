@@ -3,7 +3,7 @@ const path = require('path')
 const express = require('express')
 const mainRouter = express.Router()
 const bodyParser = require('body-parser')
-const { example, changeMode } = require('./public/testDB')
+const { example, changeMode } = require('./services/testDB')
 
 mainRouter.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'index.html'))
