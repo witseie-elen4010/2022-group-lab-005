@@ -6,6 +6,12 @@ const bodyParser = require('body-parser')
 
 const mainRouter = express.Router()
 
+const { example, changeMode } = require('./services/testDB')
+
+mainRouter.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'index.html'))
+
+
 const jsonParser = bodyParser.json()
 // const urlencodedParser = bodyParser.urlencoded({ extended: true })
 
@@ -17,10 +23,34 @@ mainRouter.use(bodyParser.json())
 
 mainRouter.get('/', function (req, res) {
   res.send('Hello World. I\'m a Node app.')
+
 })
 
 mainRouter.get('/about', function (req, res) {
   res.sendFile(path.join(__dirname, 'views', 'about.html'))
+
+})
+
+mainRouter.get('/api/DarkModeData', async function (req, res) {
+  const result = await example('user')
+  res.send(result)
+})
+
+mainRouter.get('/settings', function (req, res) {
+  res.sendFile(path.join(__dirname, 'views', 'settings.html'))
+})
+
+const jsonParser = bodyParser.json()
+const urlencodedParser = bodyParser.urlencoded({ extended: true })
+mainRouter.post('/changeMode', jsonParser, async function (req, res) {
+  const darkMode = req.body.darkMode
+  console.log(`Server received: ${darkMode}`)
+
+  const result = await changeMode(darkMode)
+  res.send(JSON.stringify({ message: `${darkMode} has been saved to the database` }))
+})
+
+
 })
 
 mainRouter.get('/test', function (pos, req) {
@@ -58,5 +88,6 @@ mainRouter.post('/logWord', jsonParser, async function (req, res) {
     res.send(JSON.stringify({ message: `${word} is invalid. It must be 5 letters long and only be alphabetical` }))
   }
 })
+
 
 module.exports = mainRouter

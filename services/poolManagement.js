@@ -1,3 +1,7 @@
+
+'use strict'
+
+
 require('dotenv').config()
 const mssql = require('mssql')
 const pools = new Map()
