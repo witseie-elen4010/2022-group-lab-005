@@ -15,7 +15,7 @@ mainRouter.get('/about', function (req, res) {
 })
 
 
-mainRouter.get('/api/testconnection', async function (req, res) {
+mainRouter.get('/api/DarkModeData', async function (req, res) {
     const result = await example()
     res.send(result)
 })
