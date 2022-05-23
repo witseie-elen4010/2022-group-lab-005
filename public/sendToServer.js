@@ -30,7 +30,7 @@ function dataReceived() {
     msgFmServer.innerHTML = msg
 
     let statusTag = document.getElementById("status")
-    statusTag.innerHTML = 'Status: Word is being logged.'
+    statusTag.innerHTML = 'Status: mode is being logged.'
 }
 
 function onError() {
