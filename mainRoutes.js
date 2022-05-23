@@ -9,7 +9,7 @@ const mainRouter = express.Router()
 const jsonParser = bodyParser.json()
 // const urlencodedParser = bodyParser.urlencoded({ extended: true })
 
-const { createWord } = require('./services/wordQuery')
+const { createWord, checkWord } = require('./services/wordQuery')
 const { resolve } = require('path')
 
 mainRouter.use(bodyParser.urlencoded({ extended: false }))
@@ -39,7 +39,14 @@ mainRouter.post('/logWord', jsonParser, async function (req, res) {
         // console.log(`Num Rows modified: ${numRows}`) for debug
 
         if (numRows === 1) {
-          res.send(JSON.stringify({ message: `${word} has been saved to the database` }))
+          checkWord(word, 1).then((check) => {
+            if (check) {// Displays if the guessed word is correct
+              res.send(JSON.stringify({ 'message': `${word} has been saved to the database, you guess the correct word!` }));
+            }
+            else {
+              res.send(JSON.stringify({ 'message': `${word} has been saved to the database, you NONCE that's the wrong word! D:<` }));
+            }
+          }).catch(console.error)
         } else {
           res.send(JSON.stringify({ message: `There was an error saving ${word} to the database` }))
         }
