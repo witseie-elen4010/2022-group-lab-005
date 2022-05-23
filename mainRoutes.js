@@ -15,7 +15,7 @@ mainRouter.get('/about', function (req, res) {
 })
 
 
-mainRouter.get('/api/DarkModeData', async function (req, res) {
+mainRouter.get('/api/testconnection', async function (req, res) {
     const result = await example()
     res.send(result)
 })
@@ -26,4 +26,21 @@ mainRouter.get('/api/DarkModeData', async function (req, res) {
 
  })
 
- module.exports = mainRouter
+
+let jsonParser = bodyParser.json()
+let urlencodedParser = bodyParser.urlencoded({ extended: true });
+ mainRouter.post('/changeMode', jsonParser, async function (req, res) {
+    const darkMode = req.body.darkMode
+    console.log(`Server received: ${darkMode}`)
+  
+    
+      const result = await changeMode(darkMode)
+      res.send(JSON.stringify({'message' : `${darkMode} has been saved to the database`}));
+
+  })
+
+module.exports = mainRouter
+
+
+
+
