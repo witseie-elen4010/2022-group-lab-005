@@ -4,7 +4,7 @@ const { Connection, Request } = require('tedious')
 const path = require('path') // used later in the exercise
 const express = require('express')
 const app = express()
-const mainRouter = require('./src/mainRoutes.js')
+const mainRouter = require('./mainRoutes.js')
 
 app.use('/', mainRouter)
 
