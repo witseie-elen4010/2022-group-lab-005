@@ -21,11 +21,14 @@ function sendWordToServer () {
   // See (https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/load_event) for more info.
   request.addEventListener('load', dataReceived)
 
+  // Let's reset the status paragraph tag.
+  document.getElementById('status').innerHTML = ''
+  document.getElementById('msgFmServer').innerHTML = ''
+
   // Let's tell the user that the data has been sent.
   // We do this by updating the paragraph tag in the HTML
   // with the id 'status'.
-  const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: Sent word to server'
+  document.getElementById('status').innerHTML = 'Status: Sent word to server'
 }
 
 function dataReceived () {
@@ -45,12 +48,10 @@ function dataReceived () {
   // Let's tell the user that the data from the server has been received.
   // We do this by updating the paragraph tag in the HTML
   // with the id 'status'.
-  const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: Word is being logged.'
+  document.getElementById('status').innerHTML = 'Status: Word has being logged.'
 }
 
 function onError () {
   // Let's tell the user that something wrong happened.
-  const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: Error communicating with server.'
+  document.getElementById('status').innerHTML = 'Status: Error communicating with server.'
 }

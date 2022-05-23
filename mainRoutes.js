@@ -10,6 +10,7 @@ const jsonParser = bodyParser.json()
 // const urlencodedParser = bodyParser.urlencoded({ extended: true })
 
 const { createWord } = require('./services/wordQuery')
+const { resolve } = require('path')
 
 mainRouter.use(bodyParser.urlencoded({ extended: false }))
 mainRouter.use(bodyParser.json())
@@ -30,9 +31,22 @@ mainRouter.post('/logWord', jsonParser, async function (req, res) {
   const word = req.body.wordToLog
 
   if (/^[a-zA-Z]+$/.test(word) === true & word.length === 5) {
-    const result = await createWord(word)
-    console.log(result)
-    res.send(JSON.stringify({ message: `${word} has been saved to the database` }))
+    try {
+      createWord(word).then(data => {
+        // Now we check that the number of rows affected is equal to one since only
+        // one row must be added. If this is anything but one, then an error has occurred.
+        const numRows = JSON.parse(JSON.stringify(data)).rowsAffected.at(0)
+        // console.log(`Num Rows modified: ${numRows}`) for debug
+
+        if (numRows === 1) {
+          res.send(JSON.stringify({ message: `${word} has been saved to the database` }))
+        } else {
+          res.send(JSON.stringify({ message: `There was an error saving ${word} to the database` }))
+        }
+      })
+    } catch (err) {
+      console.log(err)
+    }
   } else {
     res.send(JSON.stringify({ message: `${word} is invalid. It must be 5 letters long and only be alphabetical` }))
   }
