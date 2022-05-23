@@ -16,7 +16,7 @@ function sendModeToServer (darkModeBool) {
   request.addEventListener('load', dataReceived)
 
   const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: Sent word to server'
+  statusTag.innerHTML = 'Status: Sent mode to server'
 }
 
 function dataReceived () {

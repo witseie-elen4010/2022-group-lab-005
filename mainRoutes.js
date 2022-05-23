@@ -14,12 +14,12 @@ mainRouter.get('/about', function (req, res) {
 })
 
 mainRouter.get('/api/DarkModeData', async function (req, res) {
-  const result = await example()
+  const result = await example('user')
   res.send(result)
 })
 
 mainRouter.get('/settings', function (req, res) {
-  res.sendFile(path.join(__dirname, 'settings.html'))
+  res.sendFile(path.join(__dirname, 'views', 'settings.html'))
 })
 
 const jsonParser = bodyParser.json()
