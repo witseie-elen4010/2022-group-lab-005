@@ -24,6 +24,7 @@ lightModeButton.addEventListener('click', function () {
     let mode = "false";
     sendModeToServer(mode);
 }, false)
+
 // when user selects the light mode button send dark mode is false to server
 const backButton = document.getElementById('backButton')
 backButton.addEventListener('click', function () {
