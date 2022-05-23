@@ -8,6 +8,9 @@
     "type": "git",
     "url": "git+https://github.com/witseie-elen4010/2022-group-lab-005.git"
   },
+  "scripts": {
+    "test": "jest --coverage"
+  },
   "author": "Me (Roger)",
   "license": "ISC",
   "bugs": {
