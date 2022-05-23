@@ -35,7 +35,7 @@
 
         //redirect to settings page when button is pressed
         settingsButton.addEventListener('click', function () {
-          location.href = "/settings";//get using path variable
+          location.href = "/settings";
         }, false)
 
         //set colour scheme of this page
