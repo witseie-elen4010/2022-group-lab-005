@@ -1,9 +1,9 @@
 'use strict'
 
-    var results = JSON.stringify();
-    var textColour = sessionStorage.getItem("textColour");
-    var backColour = sessionStorage.getItem("backColour");
-    var buttonColour = sessionStorage.getItem("buttonColour");
+    let results = JSON.stringify();
+    let textColour = sessionStorage.getItem("textColour");
+    let backColour = sessionStorage.getItem("backColour");
+    let buttonColour = sessionStorage.getItem("buttonColour");
 
 // when user selects the dark mode button send dark mode is true to server
     const darkModeButton = document.getElementById('darkButton')
@@ -11,7 +11,7 @@
         textColour = "blue";
         backColour = "black";
         buttonColour = "white"; 
-        var mode = "true";
+        let mode = "true";
         sendModeToServer(mode);
     }, false)
 
@@ -21,7 +21,7 @@
       textColour = "black";
       backColour = "white";
       buttonColour = "grey";
-      var mode = "false";
+      let mode = "false";
       sendModeToServer(mode);
     }, false)
 
@@ -40,52 +40,3 @@ sessionStorage.setItem("backColour", backColour);
 sessionStorage.setItem("buttonColour", buttonColour);
 
   
-  // When response.text() has succeeded, the `then()` handler is called with
-  // the text, and we copy it into the `poemDisplay` box.
-  //.then( text => document.write(text) )
-  // Catch any errors that might happen, and display a message
-  // in the `poemDisplay` box.
-  
-
-// const fetchPromise = fetch("http://127.0.0.1:3000/api/testconnection");
-// fetchPromise.then(response => {
-//   return response.json();
-// }).then(User_Details=> {
-//   const names = User_Details.map(users => users.recordsets).join("\n");
-//     const darkModeButton = document.getElementById('darkButton')
-//     darkModeButton.addEventListener('click', function () {
-//       //  textColour = "blue";
-//       //  backColour = "black";
-//       //  buttonColour = "white"; 
-      
-//       const para = document.createElement('p')
-//       let obj = JSON.parse(data);
-
-//       const text = document.createTextNode(names)
-//       //document.getElementById("demo").innerHTML = obj.Darkmode;
-//       para.appendChild(text)
-//       document.body.appendChild(para)
-//     }, false)
-// });
-
-  
-
-
-
-// let response = fetch("http://127.0.0.1:3000/api/testconnection");
-// // change colour scheme if button is pressed
-// const darkModeButton = document.getElementById('darkButton')
-// darkModeButton.addEventListener('click', function () {
-//   //  textColour = "blue";
-//   //  backColour = "black";
-//   //  buttonColour = "white"; 
-
-//   const para = document.createElement('p')
-//   const text = document.createTextNode(output)
-//   console.log(response)
-//   para.appendChild(text)
-//   document.body.appendChild(para)
-// }, false)
-
-
-

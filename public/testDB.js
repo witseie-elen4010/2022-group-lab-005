@@ -4,21 +4,15 @@ const { get } = require('./poolManagement')
 module.exports = {
     example: async function example() {
         const pool = await get('default')
-        var darkMode = [{ DarkMode: false }]
 
         //Get dark mode setting for specific user
+        var mode = await pool.request().query("SELECT Darkmode FROM User_Details WHERE Username = 'user'");
 
-        var mode = JSON.stringify(await pool.request().query(`SELECT DarkMode FROM User_Details WHERE Username = 'user'`));
-        let obj = JSON.parse(mode);
-        console.log(obj.DarkMode)
-
-        //Return true if user has dark mode selected
-
-        if (obj.DarkMode == false) {
-            return "false";
+        if (mode.recordset[0].Darkmode== true) {
+            return "true";
         }
         else {
-            return "true";
+            return "false";
         }
     },
 

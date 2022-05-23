@@ -1,7 +1,7 @@
     'use strict'
 
     //fetch data from api
-    fetch("http://127.0.0.1:3000/api/DarkModeData")
+    fetch("/api/DarkModeData")
 
       .then(response => {
         if (!response.ok) {
@@ -13,13 +13,13 @@
       .then(function (data) {
         
         //set dark mode setting to data from api
-        var darkMode = data;
-        var textColour = "black";
-        var backColour = "white";
-        var buttonColour = "grey";
+        let darkMode = data;
+        let textColour = "black";
+        let backColour = "white";
+        let buttonColour = "grey";
 
       //  set current current scheme variables
-        if (darkMode == "true") {
+        if (darkMode === "true") {
         textColour = "blue";
         backColour = "black";
         buttonColour = "white";
@@ -35,7 +35,7 @@
 
         //redirect to settings page when button is pressed
         settingsButton.addEventListener('click', function () {
-          location.href = "http://127.0.0.1:3000/settings";//get using path variable
+          location.href = "/settings";//get using path variable
         }, false)
 
         //set colour scheme of this page
