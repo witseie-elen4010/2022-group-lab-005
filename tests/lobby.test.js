@@ -19,8 +19,11 @@ test('Check that the custom game mode is successfully inserted into the database
   })
 })
 
-test('Check that the most recent GameID is successfully selected', () => {
+test('Check that the most recent GameID is successfully inserted into the database Game table', () => {
   Lobby.prevGameID().then(result => {
-    expect(result).toBe(1000)
+    Lobby.createGame('Custom', result).then(gameResult => {
+      const myGameID = gameResult.recordset[0].gameID
+      expect(result).toBe(myGameID)
+    })
   })
 })
