@@ -9,7 +9,7 @@ const mainRouter = require('./mainRoutes')
 
 // app.use('/', mainRouter)
 
-// app.use(express.static('public'))
+app.use(express.static('public'))
 // app.use('/public', express.static(__dirname + '/public'))
 app.use('/public', express.static(__dirname + '/public'))
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
