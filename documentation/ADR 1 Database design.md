@@ -57,3 +57,6 @@ Accepted
 
 ## Consequences
 Due to the nature of the database scheme, changes to features that require more fields to be added to existing tables may impact other code that is in production.
+
+## User Contribution
+Huan Lei -> users table
