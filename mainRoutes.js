@@ -2,22 +2,12 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const { example, createPerson } = require('./services/testDB')
 const { createGame, prevGameID } = require('./services/lobby.js')
-
-
-mainRouter.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'views', 'home.html'))
-'use strict'
-
+const LogIn = require('./services/login_db')
 const express = require('express')
-const path = require('path')
-const bodyParser = require('body-parser')
-
 const mainRouter = express.Router()
-
 const { example, changeMode } = require('./services/testDB')
-
 const jsonParser = bodyParser.json()
-// const urlencodedParser = bodyParser.urlencoded({ extended: true })
+const urlencodedParser = bodyParser.urlencoded({ extended: true })
 
 const { createWord, checkWord } = require('./services/wordQuery')
 const { resolve } = require('path')
@@ -27,8 +17,6 @@ mainRouter.use(bodyParser.json())
 
 mainRouter.get('/', function (req, res) {
   res.send('Hello World. I\'m a Node app.')
-
-
 })
 
 mainRouter.get('/about', function (req, res) {
@@ -67,9 +55,6 @@ mainRouter.post('/game', async function (req, res) {
   res.sendFile(path.join(__dirname, 'views', 'game.html'))
 })
 
-
-})
-
 mainRouter.get('/api/DarkModeData', async function (req, res) {
   const result = await example('user')
   res.send(result)
@@ -79,17 +64,12 @@ mainRouter.get('/settings', function (req, res) {
   res.sendFile(path.join(__dirname, 'views', 'settings.html'))
 })
 
-const jsonParser = bodyParser.json()
-const urlencodedParser = bodyParser.urlencoded({ extended: true })
 mainRouter.post('/changeMode', jsonParser, async function (req, res) {
   const darkMode = req.body.darkMode
   console.log(`Server received: ${darkMode}`)
 
   const result = await changeMode(darkMode)
   res.send(JSON.stringify({ message: `${darkMode} has been saved to the database` }))
-})
-
-
 })
 
 mainRouter.get('/test', function (pos, req) {
@@ -128,5 +108,19 @@ mainRouter.post('/logWord', jsonParser, async function (req, res) {
   }
 })
 
+mainRouter.post('/log', async function (req, res) {
+  const username = req.body.usernameInput
+  const password = req.body.passwordInput
+
+  // This will send the username and password to the server code
+  // the await will wait for the program to finish before carring on
+  const result = await LogIn(username, password)
+  // send the result back to the client
+  res.send({ loggedInOrNot: result })
+})
+
+mainRouter.get('/Login', function (req, res) {
+  res.sendFile(path.join(__dirname, 'views', 'Login.html'))
+})
 
 module.exports = mainRouter
