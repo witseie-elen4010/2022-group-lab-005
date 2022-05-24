@@ -28,7 +28,6 @@ fetch('/api/DarkModeData')
       buttonColour = 'grey'
     }
 
-    const helloButton = document.getElementById('helloButton')
     const settingsButton = document.getElementById('settingsButton')
 
     // redirect to settings page when button is pressed
@@ -39,8 +38,6 @@ fetch('/api/DarkModeData')
     // set colour scheme of this page
     document.body.style.color = textColour
     document.body.style.backgroundColor = backColour
-    helloButton.style.backgroundColor = buttonColour
-    helloButton.style.color = textColour
     settingsButton.style.backgroundColor = buttonColour
     settingsButton.style.color = textColour
 
