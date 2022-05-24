@@ -6,7 +6,7 @@ const express = require('express')
 const LogIn = require('./services/login_db')
 const { createWord, checkWord } = require('./services/wordQuery')
 const { createGame, prevGameID } = require('./services/lobby.js')
-const { example, changeMode } = require('./services/testDB')
+const { getMode, changeMode } = require('./services/settings_db')
 
 const jsonParser = bodyParser.json()
 
@@ -14,6 +14,7 @@ const mainRouter = express.Router()
 mainRouter.use(bodyParser.urlencoded({ extended: false }))
 mainRouter.use(bodyParser.json())
 
+let user = ''
 /* GET */
 
 mainRouter.get('/', function (req, res) { // works
@@ -25,7 +26,7 @@ mainRouter.get('/about', function (req, res) { // works
 })
 
 mainRouter.get('/api/DarkModeData', async function (req, res) {
-  const result = await example('user')
+  const result = await getMode('user')
   res.send(result)
 })
 
@@ -95,7 +96,7 @@ mainRouter.post('/logWord', jsonParser, async function (req, res) { // works
 mainRouter.post('/log', async function (req, res) {
   const username = req.body.usernameInput
   const password = req.body.passwordInput
-
+  user = req.body.usernameInput
   // This will send the username and password to the server code
   // the await will wait for the program to finish before carring on
   const result = await LogIn(username, password)

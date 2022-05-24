@@ -2,7 +2,7 @@
 const { get } = require('./poolManagement')
 
 module.exports = {
-  example: async function example (user) {
+  getMode: async function getMode (user) {
     const pool = await get('default')
 
     // Get dark mode setting for specific user
