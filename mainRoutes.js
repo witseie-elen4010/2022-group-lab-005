@@ -17,7 +17,7 @@ mainRouter.use(bodyParser.json())
 /* GET */
 
 mainRouter.get('/', function (req, res) { // works
-  res.send('Hello World. I\'m a Node app.')
+  res.sendFile(path.join(__dirname, 'views', 'home.html'))
 })
 
 mainRouter.get('/about', function (req, res) { // works
