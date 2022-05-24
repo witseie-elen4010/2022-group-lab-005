@@ -60,4 +60,7 @@ Due to the nature of the database scheme, changes to features that require more 
 
 ## User Contribution
 Huan Lei -> users table
+
 Robyn Gebbie -> Settings related columns on users table
+
+Roger de Mello Koch -> game table
