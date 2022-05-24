@@ -32,7 +32,7 @@ function sendWordToServer () {
 }
 
 function dataReceived () {
-  // Let's get parse the data we just received.
+  // Let's parse the data we just received.
   const response = JSON.parse(this.responseText)
 
   // When we made the JSON object (on the server, look at the code for the /myWord POST function),

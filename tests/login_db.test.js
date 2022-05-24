@@ -1,3 +1,4 @@
+'use strict'
 const LogIn = require('../services/login_db')
 
 test('user login if username input empty', () => {

@@ -4,16 +4,20 @@
     <title>Home Page</title>
     <meta charset="utf-8" />
 
-    <link rel="stylesheet" href="./css/bootstrap.min.css" />
-    <script type="text/javascript" src="services/home.js"></script>
+
   </head>
 
   <body>
     <h1>Welcome to Hazard a Guess!</h1>
     <form action="/lobby" method="POST">
-      <button type="submit" class="btn btn-primary" style="margin: 0.5em">
+      <button type="submit">
         Start Lobby
       </button>
+
     </form>
+
+    <button type="button" id="settingsButton">Settings</button>
+
+    <script defer src = "/public/fetchMode.js">  </script>
   </body>
 </html>

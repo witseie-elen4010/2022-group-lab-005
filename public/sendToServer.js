@@ -20,7 +20,7 @@ function sendModeToServer (darkModeBool) {
 }
 
 function dataReceived () {
-  // Let's get parse the data we just received.
+  // Let's parse the data we just received.
   const response = JSON.parse(this.responseText)
 
   const msg = response.message

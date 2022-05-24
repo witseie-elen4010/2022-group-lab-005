@@ -15,9 +15,6 @@
   "bugs": {
     "url": "https://github.com/witseie-elen4010/2022-group-lab-005/issues"
   },
-  "scripts": {
-    "test": "jest --coverage"
-  },
   "homepage": "https://github.com/witseie-elen4010/2022-group-lab-005#readme",
   "dependencies": {
     "bootstrap": "^5.1.3",
@@ -29,19 +26,5 @@
     "node": "^17.7.2",
     "tedious": "^14.5.0"
   },
-  "scripts": {
-    "test": "jest"
-  },
   "keywords": []
-
-    "body-parser": "^1.20.0",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
-    "jest": "^28.1.0",
-    "mssql": "^8.1.1",
-    "path": "^0.12.7",
-    "standard": "^17.0.0",
-    "tedious": "^14.5.0"
-
-  }
 }
