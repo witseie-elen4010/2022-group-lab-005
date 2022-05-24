@@ -1,7 +1,4 @@
-=======
-
 'use strict'
-
 
 require('dotenv').config()
 const mssql = require('mssql')

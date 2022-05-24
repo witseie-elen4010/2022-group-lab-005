@@ -1,3 +1,4 @@
+'use strict'
 const { get } = require('./poolManagement')
 
 async function LogIn (username, password) {

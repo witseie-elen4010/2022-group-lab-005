@@ -14,12 +14,12 @@ function loggingIn () {
   // send username and password to ther server via json
   request.send(JSON.stringify({ usernameInput: username, passwordInput: password }))
   // wait for server to respond back
-  request.addEventListener('load', recievedValue)
+  request.addEventListener('load', receivedValue)
   // set the output to be visible
   document.getElementById('output').style.display = 'initial'// initial is on
 }
 
-function recievedValue () {
+function receivedValue () {
   // parse the data recieved from server
   const response = JSON.parse(this.responseText)
   // get the msg of the json (get the value of a field loggedInOrNot)
