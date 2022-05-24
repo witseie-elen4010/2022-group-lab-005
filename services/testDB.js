@@ -8,7 +8,7 @@ module.exports = {
     // Get dark mode setting for specific user
     const mode = await pool.request().query("SELECT Darkmode FROM User_Details WHERE Username = '" + user + "'")
 
-    if (mode.recordset[0].Darkmode == true) {
+    if (mode.recordset[0].Darkmode === true) {
       return 'true'
     } else {
       return 'false'
