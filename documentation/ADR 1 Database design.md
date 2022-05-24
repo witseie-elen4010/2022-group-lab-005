@@ -56,7 +56,9 @@ Note that 🔑 indicates a primary key.
 Accepted
 
 ## Consequences
-Due to the nature of the database scheme, changes to features that require more fields to be added to existing tables may impact other code that is in production.
+- Due to the nature of the database scheme, changes to features that require more fields to be added to existing tables may impact other code that is in production.
+- In the case of a draw, there is no way to store both winners.
+- The database is well structured and normalised. This means that to show specific information, calculations and database result sorting will have to occur. 
 
 ## User Contribution
 Huan Lei -> users table
@@ -64,3 +66,5 @@ Huan Lei -> users table
 Robyn Gebbie -> Settings related columns on users table
 
 Roger de Mello Koch -> game table
+
+Jesse van der Merwe -> Winners table and consequences
