@@ -5,7 +5,7 @@ request.addEventListener('error', onError)
 
 function sendModeToServer (darkModeBool) {
   const darkMode = darkModeBool
-  request.open('POST', '/changeMode', true)
+  request.open('POST', '/user/changeMode', true)
 
   // send request to server
   request.setRequestHeader('Content-type', 'application/json')

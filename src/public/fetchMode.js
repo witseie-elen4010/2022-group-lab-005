@@ -1,7 +1,7 @@
 'use strict'
 
 // fetch data from api
-fetch('/api/DarkModeData')
+fetch('/user/api/DarkModeData')
 
   .then(response => {
     if (!response.ok) {
@@ -32,7 +32,7 @@ fetch('/api/DarkModeData')
 
     // redirect to settings page when button is pressed
     settingsButton.addEventListener('click', function () {
-      location.href = '/settings'
+      location.href = '/user/settings'
     }, false)
 
     // set colour scheme of this page
@@ -46,4 +46,4 @@ fetch('/api/DarkModeData')
     sessionStorage.setItem('backColour', backColour)
     sessionStorage.setItem('buttonColour', buttonColour)
   })
-  .catch(error => document.write(`Could not fetch: ${error}`))
+  .catch(error => document.write(`Fetch failed: ${error}`))
