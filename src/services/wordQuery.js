@@ -10,8 +10,8 @@ async function createWord (word) {
         (result) => {
           resolve(result)
         }
-      )// .catch(reject(console.error)) // TODO: find out why this is causing the server to crash
-    )// .catch(reject(console.error)) // TODO: find out why this is causing the server to crash
+      ).catch(reject) // TODO: find out why this is causing the server to crash
+    ).catch(reject) // TODO: find out why this is causing the server to crash
   })
 }
 
@@ -36,7 +36,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
     if (/^[a-zA-Z]+$/.test(word) === true & word.length === 5) {
       try {
-        console.log('hello')
         createWord(word).then(data => {
           // Now we check that the number of rows affected is equal to one since only
           // one row must be added. If this is anything but one, then an error has occurred.
