@@ -8,7 +8,7 @@ function sendWordToServer () {
   const word = document.getElementById('wordID').value
 
   // Then we open a POST request to the server with the url of '/logWord'.
-  request.open('POST', '/logWord', true)
+  request.open('POST', '/game/logWord', true)
 
   // We tell the server we are going to send JSON data.
   request.setRequestHeader('Content-type', 'application/json')
