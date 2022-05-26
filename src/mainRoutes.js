@@ -36,12 +36,12 @@ mainRouter.get('/login', function (req, res) {
 mainRouter.post('/log', async function (req, res) {
   const username = req.body.usernameInput
   const password = req.body.passwordInput
-  let user = req.body.usernameInput
+
   // This will send the username and password to the server code
   // the await will wait for the program to finish before carring on
-  const result = await LogIn(username, password)
-  // send the result back to the client
-  res.send({ loggedInOrNot: result })
+  LogIn(username, password).then((result) => {
+    res.send({ loggedInOrNot: result })
+  })
 })
 
 module.exports = mainRouter
