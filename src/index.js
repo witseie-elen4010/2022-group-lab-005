@@ -25,13 +25,3 @@ app.use(mainRouter)
 const port = process.env.PORT || 3000
 app.listen(port)
 console.log('Express server running on port', port)
-
-if (1 === 1) {
-  const gamePort = process.env.PORT + 1 || 25565
-  const http = require('http')
-  const server = http.createServer(app)
-
-  server.listen(gamePort, () => {
-    console.log(`Game server listening on ${gamePort}`)
-  })
-}
