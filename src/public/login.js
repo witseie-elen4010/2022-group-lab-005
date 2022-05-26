@@ -1,5 +1,4 @@
 'use strict'
-
 const request = new XMLHttpRequest()
 request.addEventListener('error', onError)
 
@@ -41,6 +40,7 @@ function receivedValue () {
     // Let's reset everything
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control'
+    window.location.href = "/loginRedirect"
   }
 }
 

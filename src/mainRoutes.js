@@ -31,6 +31,10 @@ mainRouter.get('/login', function (req, res) {
   res.sendFile(path.join(__dirname, 'views', 'login.html'))
 })
 
+mainRouter.get('/loginRedirect', function (req, res) {
+  res.sendFile(path.join(__dirname, 'views', 'home.html'))
+})
+
 /* POST */
 
 mainRouter.post('/log', async function (req, res) {
