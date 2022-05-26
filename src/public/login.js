@@ -6,7 +6,7 @@ window.onload = function () {
   document.getElementById('loginbutton').addEventListener('click', function (evt) {
     evt.preventDefault()
     // open the post request to the server with url of log
-    request.open('POST', '/log', true)
+    request.open('POST', '/login', true)
     request.setRequestHeader('Content-type', 'application/json')
     // get username and password
     const username = document.getElementById('username').value
@@ -17,6 +17,23 @@ window.onload = function () {
     request.addEventListener('load', receivedValue)
   })
 }
+
+window.onload = function () {
+  document.getElementById('registerButton').addEventListener('click', function (evt) {
+    evt.preventDefault()
+    // open the post request to the server with url of log
+    request.open('POST', '/register', true)
+    request.setRequestHeader('Content-type', 'application/json')
+    // get username and password
+    const username = document.getElementById('username').value
+    const password = document.getElementById('password').value
+    // send username and password to the server via json
+    request.send(JSON.stringify({ usernameInput: username, passwordInput: password }))
+    // wait for server to respond back
+    request.addEventListener('load', receivedValue)
+  })
+}
+
 
 function receivedValue () {
   // parse the data received from server

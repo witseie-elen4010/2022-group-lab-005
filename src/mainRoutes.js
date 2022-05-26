@@ -3,7 +3,7 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const express = require('express')
 
-const LogIn = require('./services/login_db')
+const {LogIn,registerUser} = require('./services/login_db')
 const gameRouter = require('./routes/gameRoutes')
 const lobbyRouter = require('./routes/lobbyRoutes')
 const userRouter = require('./routes/userRoutes')
@@ -37,7 +37,7 @@ mainRouter.get('/loginRedirect', function (req, res) {
 
 /* POST */
 
-mainRouter.post('/log', async function (req, res) {
+mainRouter.post('/login', async function (req, res) {
   const username = req.body.usernameInput
   const password = req.body.passwordInput
 
@@ -47,5 +47,17 @@ mainRouter.post('/log', async function (req, res) {
     res.send({ loggedInOrNot: result })
   })
 })
+
+mainRouter.post('/register', async function (req, res) {
+  const username = req.body.usernameInput
+  const password = req.body.passwordInput
+
+  // This will send the username and password to the server code
+  // the await will wait for the program to finish before carring on
+  registerUser(username, password).then((result) => {
+    res.send({ loggedInOrNot: result })
+  })
+})
+
 
 module.exports = mainRouter
