@@ -36,7 +36,7 @@ body {
   border-top-right-radius: 0;
 }
 
-.Background{
+.background{
   background-image: url('./Background.png');
   min-height : 100%;
   min-width : 100%;
