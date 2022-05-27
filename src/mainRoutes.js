@@ -3,7 +3,7 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const express = require('express')
 
-const LogIn = require('./services/login_db')
+const {LogIn,registerUser} = require('./services/login_db')
 const gameRouter = require('./routes/gameRoutes')
 const lobbyRouter = require('./routes/lobbyRoutes')
 const userRouter = require('./routes/userRoutes')
@@ -31,6 +31,10 @@ mainRouter.get('/login', function (req, res) {
   res.sendFile(path.join(__dirname, 'views', 'login.html'))
 })
 
+mainRouter.get('/loginRedirect', function (req, res) {
+  res.sendFile(path.join(__dirname, 'views', 'home.html'))
+})
+
 /* POST */
 
 mainRouter.post('/log', async function (req, res) {
@@ -43,5 +47,17 @@ mainRouter.post('/log', async function (req, res) {
     res.send({ loggedInOrNot: result })
   })
 })
+
+mainRouter.post('/register', async function (req, res) {
+  const username = req.body.usernameInput
+  const password = req.body.passwordInput
+
+  // This will send the username and password to the server code
+  // the await will wait for the program to finish before carring on
+  registerUser(username, password).then((result) => {
+    res.send({ loggedInOrNot: result })
+  })
+})
+
 
 module.exports = mainRouter

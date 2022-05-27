@@ -1,5 +1,4 @@
 'use strict'
-
 const request = new XMLHttpRequest()
 request.addEventListener('error', onError)
 
@@ -8,6 +7,20 @@ window.onload = function () {
     evt.preventDefault()
     // open the post request to the server with url of log
     request.open('POST', '/log', true)
+    request.setRequestHeader('Content-type', 'application/json')
+    // get username and password
+    const username = document.getElementById('username').value
+    const password = document.getElementById('password').value
+    // send username and password to the server via json
+    request.send(JSON.stringify({ usernameInput: username, passwordInput: password }))
+    // wait for server to respond back
+    request.addEventListener('load', receivedValue)
+  })
+
+  document.getElementById('registerButton').addEventListener('click', function (evt) {
+    evt.preventDefault()
+    // open the post request to the server with url of log
+    request.open('POST', '/register', true)
     request.setRequestHeader('Content-type', 'application/json')
     // get username and password
     const username = document.getElementById('username').value
@@ -37,10 +50,11 @@ function receivedValue () {
   } else if (msg === 'Please input a valid username') {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
-  } else {
+  } else if(msg === "User is now logged in" || msg === "Registration completed"){
     // Let's reset everything
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control'
+    window.location.href = "/loginRedirect"
   }
 }
 
