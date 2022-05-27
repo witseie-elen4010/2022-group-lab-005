@@ -37,7 +37,7 @@ mainRouter.get('/loginRedirect', function (req, res) {
 
 /* POST */
 
-mainRouter.post('/login', async function (req, res) {
+mainRouter.post('/log', async function (req, res) {
   const username = req.body.usernameInput
   const password = req.body.passwordInput
 

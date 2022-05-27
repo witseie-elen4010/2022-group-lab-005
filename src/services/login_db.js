@@ -13,9 +13,9 @@ async function LogIn (username, password) {
       resolve('Please input a password')
     }
 
-    if (/^[a-zA-Z]+$/.test(username) === false & /^[a-zA-Z]+$/.test(password) === false) {
+    if (/^[a-zA-Z0-9]+$/.test(username) === false & /^[a-zA-Z]+$/.test(password) === false) {
       resolve('Username and password are invalid.')
-    } else if (/^[a-zA-Z]+$/.test(username) === false) {
+    } else if (/^[a-zA-Z0-9]+$/.test(username) === false) {
       resolve('Please input a valid username')
     } else if (/^[a-zA-Z0-9!@#$%^&]+$/.test(password) === false) { // Why can the password not contain numbers or special characters?
       resolve('Please input a valid password')
@@ -60,7 +60,7 @@ async function registerUser(username, password) {
       resolve('Please input a password')
     }
 
-    if (/^[a-zA-Z]+$/.test(username) === false & /^[a-zA-Z]+$/.test(password) === false) {
+    if (/^[a-zA-Z0-9]+$/.test(username) === false & /^[a-zA-Z0-9!@#$%^&]+$/.test(password) === false) {
       resolve('Username and password are invalid.')
     } else if (/^[a-zA-Z0-9]+$/.test(username) === false) {
       resolve('Please input a valid username')

@@ -6,7 +6,7 @@ window.onload = function () {
   document.getElementById('loginbutton').addEventListener('click', function (evt) {
     evt.preventDefault()
     // open the post request to the server with url of log
-    request.open('POST', '/login', true)
+    request.open('POST', '/log', true)
     request.setRequestHeader('Content-type', 'application/json')
     // get username and password
     const username = document.getElementById('username').value
@@ -16,9 +16,7 @@ window.onload = function () {
     // wait for server to respond back
     request.addEventListener('load', receivedValue)
   })
-}
 
-window.onload = function () {
   document.getElementById('registerButton').addEventListener('click', function (evt) {
     evt.preventDefault()
     // open the post request to the server with url of log
@@ -33,7 +31,6 @@ window.onload = function () {
     request.addEventListener('load', receivedValue)
   })
 }
-
 
 function receivedValue () {
   // parse the data received from server
@@ -53,7 +50,7 @@ function receivedValue () {
   } else if (msg === 'Please input a valid username') {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
-  } else {
+  } else if(msg === "User is now logged in" || msg === "Registration completed"){
     // Let's reset everything
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control'
