@@ -3,7 +3,7 @@ const { get } = require('./poolManagement')
 
 async function LogIn (username, password) {
   // Gets the word to guess from then checks with the guessed word
-  const sqlCode = `SELECT Password FROM User_Details WHERE Username = '${username}'`
+  const sqlCode = `SELECT Password FROM Users WHERE Username = '${username}'`
   return new Promise((resolve, reject) => {
     if (username === '' & password === '') {
       resolve('Please input a username and password')
@@ -49,8 +49,8 @@ async function LogIn (username, password) {
 
 
 async function registerUser(username, password) {
-  const sqlCode = `INSERT INTO User_Details (Username, Password, Darkmode)
-  VALUES ('${username}','${password}','0');`//default dark mode off
+  const sqlCode = `INSERT INTO Users (Username, Password, SettingID)
+  VALUES ('${username}','${password}','1');`//default dark mode off
   return new Promise((resolve, reject) => {
     if (username === '' & password === '') {
       resolve('Please input a username and password')
