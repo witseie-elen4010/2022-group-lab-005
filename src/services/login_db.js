@@ -13,7 +13,7 @@ async function LogIn (username, password) {
       resolve('Please input a password')
     }
 
-    if (/^[a-zA-Z0-9]+$/.test(username) === false & /^[a-zA-Z]+$/.test(password) === false) {
+    if (/^[a-zA-Z0-9]+$/.test(username) === false & /^[a-zA-Z0-9!@#$%^&]+$/.test(password) === false) {
       resolve('Username and password are invalid.')
     } else if (/^[a-zA-Z0-9]+$/.test(username) === false) {
       resolve('Please input a valid username')
