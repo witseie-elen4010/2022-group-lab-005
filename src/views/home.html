@@ -20,6 +20,20 @@
 
   <button type="button" id="settingsButton">Settings</button>
 
+
+
+  <!-- the script below is for pure testing of if the cookie works  -->
+  <p id="demo">Click me.</p>
+  <script>
+  document.getElementById("demo").onclick = function() {testCookie()};
+  function testCookie() {
+    var username = document.cookie
+    console.log(username)
+    document.getElementById("demo").innerHTML = "the cookie value is " + username
+  }
+  </script>
+  <!-- cookies will now store the username value -->
+
   <!-- <script defer src="/src/public/fetchMode.js">  </script> -->
 </body>
 
