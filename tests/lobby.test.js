@@ -1,5 +1,5 @@
 'use strict'
-const Lobby = require('../services/lobby')
+const Lobby = require('../src/services/lobby')
 
 test('Check that the standard game mode is successfully inserted into the database Game table', () => {
   const gameMode = 'Standard'

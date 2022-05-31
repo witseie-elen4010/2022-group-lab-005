@@ -20,8 +20,8 @@ let currentWordArray = ["H", "E", "L", "L", "O"]
 let currentWordCheck = ["X", "X", "X", "X", "X"]
 let currentWordIndex = 0
 let currentLetterIndex = 0
-let allLettersArray =         ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "ENTER",  "Z", "X", "C", "V", "B", "N", "M", "BACK"]
-let  allLettersColorsArray =  ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D",      "d", "d", "d", "d", "d", "d", "d", "d"]
+const allLettersArray =      ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "ENTER",  "Z", "X", "C", "V", "B", "N", "M", "BACK"]
+let allLettersColorsArray =  ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D",      "d", "d", "d", "d", "d", "d", "d", "d"]
 
 // Updates the page on window load to display the default wordle table and keyboard table
 window.onload = function () {
