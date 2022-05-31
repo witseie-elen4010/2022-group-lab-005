@@ -1,5 +1,5 @@
 'use strict'
-const {LogIn,registerUser} = require('../src/services/login_db')
+const {LogIn,registerUser} = require('../src/services/loginDb')
 jest.useFakeTimers()
 //------------------------------------------------
 //code below is for login function
@@ -149,7 +149,6 @@ test('user login if password is invalid', async() => {
 //   await expect(data).toBe('User is now logged in')
 // })
 // jest.setTimeout(10000)
-
 //code above is for Login function
 //---------------------------------------
 //---------------------------------------
