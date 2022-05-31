@@ -9,13 +9,12 @@
   table-layout: fixed;
   text-align: center;
   width: 100%;
+  border-collapse: separate;
+  border-spacing: 7px;
 }
 
 #wordleTable th{
   height: 4vw;
-  border: 7px solid white;
-  padding: 10px;
-  background-color: grey;
 }
 
 @media only screen and (max-width: 1200px){

@@ -23,15 +23,14 @@ let currentLetterIndex = 0
 let lettersLeft = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 
 window.onload = function () {
-  let table = document.getElementById("wordleTable")
-
-  let th = table.getElementsByTagName("th")
-  for (let i = 0; i< th.length; i++){
-    th[i].style.borderColor = "white" //INSERT BACKGROUND COLOUR HERE DEPENDING ON USER SETTINGS
-  }
   updateWordleTableText()
   updateWordleTableColor()
 }
+
+function getWordleTableColor(){
+  return colorArray
+}
+
 function updateWordleTableColor(){
   let table = document.getElementById("wordleTable")
   let tempColor = "grey"
@@ -74,11 +73,9 @@ function updateWordleTableText(){
 }
 
 function testWord(){
-  console.log(letterArray.length)
   // Check if the letters are in the correct places
   for(let i = 0; i < 5; i++){
     let currentLetter = letterArray[currentWordIndex][i]
-
     if(currentLetter == currentWordArray[i])
     {
       colorArray[currentWordIndex][i] = "c"
@@ -95,15 +92,14 @@ function testWord(){
         {
           colorArray[currentWordIndex][i] = "i"
           currentWordCheck[j] = "Y"
+          j = 5; //Break out of the for-loop as letter has been found
         }
-      }
+      }      
     } 
-  }
-  for(let i = 0; i < 5; i++){
     if(!(colorArray[currentWordIndex][i] == "i" || colorArray[currentWordIndex][i] == "c"))
     {
       colorArray[currentWordIndex][i] = "n"
-    }    
+    }  
   }
   currentWordCheck = ["X", "X", "X", "X", "X"]
   updateWordleTableColor()
