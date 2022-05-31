@@ -1,16 +1,16 @@
 'use strict'
-module.exports = function (io) {  
+module.exports = function (io) {
   io.on('connection', (socket) => {
-    // Let's send a list of all the existing players to the player that
-    // just connected.
-    const players = [];
-    for (let [id, socket] of io.of("/").sockets) {
-      players.push({
-        playerID: id, // This is how the user is identified. Will change soon(tm).
-        playerName: socket.playerName,
-      });
+
+    socket.on("send_guess", function(data){
+      const guessStr = data.wrdToSend.join('')
+      console.log(guessStr)
+    });
+
+    if (io.engine.clientsCount === 2) {
+      io.emit("game_can_start")
     }
-    socket.emit("player_list", players);
+    //socket.emit("player_list", players);
   })
 
   // When a new player attempts to join the server.
