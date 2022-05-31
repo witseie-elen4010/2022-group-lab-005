@@ -8,7 +8,6 @@ const { getBackground, changeBackground } = require('../services/background_db')
 const { createWord, checkWord, makeGuess } = require('../services/wordQuery')
 const mainRouter = require('../mainRoutes')
 
-
 gameRouter.post('/logWord', jsonParser, async function (req, res) { // works
     const word = req.body.wordToLog
     makeGuess(word, 1).then(

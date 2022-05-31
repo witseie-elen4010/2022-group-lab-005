@@ -10,6 +10,10 @@ module.exports = function (io) {
         playerName: socket.playerName,
       });
     }
+    if (players.length === 2) {
+      socket.emit("play")
+    }
+    console.log(players.length)
     socket.emit("player_list", players);
   })
 

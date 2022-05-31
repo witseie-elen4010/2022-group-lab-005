@@ -12,7 +12,7 @@ if (stdConfig === true) {
   const bodyParser = require('body-parser')
   const express = require('express')
   const app = express()
-  const mainRouter = require('./src/mainRoutes')
+  const mainRouter = require('./src/mainRoutes.cjs')
 
   // app.use('/', mainRouter)
 
@@ -43,7 +43,7 @@ if (stdConfig === true) {
   const { Server } = require('socket.io')
   const io = new Server(server)
 
-  const mainRouter = require('./src/mainRoutes')
+  const mainRouter = require('./src/mainRoutes.cjs')
   // app.use('/', mainRouter)
 
   app.use(express.static('public'))
@@ -61,7 +61,7 @@ if (stdConfig === true) {
 
   // Setup the sockets so we can lets the different clients interact through the
   // game server.
-  const soc = require('./src/services/soc')
+  const soc = require('./src/services/soc.cjs')
   soc(io)
 
   const port = process.env.PORT || 3000

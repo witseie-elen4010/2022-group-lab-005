@@ -1,5 +1,5 @@
 'use strict'
-const { get } = require('./poolManagement')
+const { get } = require('./poolManagement.cjs')
 
 module.exports = {
   getMode: async function getMode (user) {

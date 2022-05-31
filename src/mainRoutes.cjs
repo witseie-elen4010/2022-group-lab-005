@@ -3,10 +3,10 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const express = require('express')
 
-const {LogIn,registerUser} = require('./services/loginDb')
-const gameRouter = require('./routes/gameRoutes')
-const lobbyRouter = require('./routes/lobbyRoutes')
-const userRouter = require('./routes/userRoutes')
+const {LogIn,registerUser} = require('./services/loginDb.cjs')
+const gameRouter = require('./routes/gameRoutes.cjs')
+const lobbyRouter = require('./routes/lobbyRoutes.cjs')
+const userRouter = require('./routes/userRoutes.cjs')
 
 const jsonParser = bodyParser.json()
 

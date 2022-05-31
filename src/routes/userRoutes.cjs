@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const jsonParser = bodyParser.json()
 const { getMode, changeMode } = require('../services/settings_db')
-
+const { getBackground } = require('../services/background_db.cjs')
 
 const userRouter = express.Router()
 
