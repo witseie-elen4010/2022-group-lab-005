@@ -11,7 +11,7 @@ test('Check Mountains option is successfully updated into UserSettings Table', (
 
 test('Check Forest option is successfully updated into UserSettings Table', () => {
   const background = 'Forest'
-  GameBackground.changeBackground(background).then(result => {
+  GameBackground.changeBackground(background, '1').then(result => {
     const myBackground = result.recordset[0].Background
     expect(result).toBe(myBackground)
   })
@@ -19,8 +19,18 @@ test('Check Forest option is successfully updated into UserSettings Table', () =
 
 test('Check Beach option is successfully updated into UserSettings Table', () => {
   const background = 'Beach'
-  GameBackground.changeBackground(background).then(result => {
+  GameBackground.changeBackground(background, '1').then(result => {
     const myBackground = result.recordset[0].Background
     expect(result).toBe(myBackground)
   })
 })
+
+test('Check Default userID is present in Table', () => {
+  GameBackground.getBackground('1').then(result => {
+    GameBackground.changeBackground(background, '1').then(result => {
+      const myBackground = result.recordset[0].Background
+      expect(result).toBe(myBackground)
+    })
+  })
+})
+

@@ -2,25 +2,13 @@
 const { get } = require('./poolManagement.cjs')
 
 module.exports = {
-  getBackground: async function getMode (id) {
+  getBackground: async function getBackground (id) {
     // connect to database using pool management
     const pool = await get('default')
 
     // send query to database
     const background = await pool.request().query("SELECT Background FROM [dbo].[UserSettings] WHERE ID = '" + id + "'")
-
-    // return query result
-    if (background.recordset[0].Background === 'Mountains') {
-      return 'Mountains'
-    } else {
-      if (background.recordset[0].Background === 'Forest') {
-        return 'Forest'
-      } else {
-        if (background.recordset[0].Background === 'Beach') {
-          return 'Beach'
-        }
-      }
-    }
+    return background.recordset[0].Background
   },
 
   changeBackground: async function changeBackground (Background, ID) {
@@ -38,3 +26,4 @@ module.exports = {
   }
 
 }
+
