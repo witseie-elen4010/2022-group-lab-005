@@ -19,8 +19,6 @@ lobbyRouter.get('/', async function (req, res) {
 })
 
 lobbyRouter.post('/create', async function (req, res) { // ?
-  const prevResult = await prevGameID()
-  const newID = parseInt(prevResult) + 1
   const result = await createGame(req.body)
   res.sendFile(path.join(__dirname, '../views', 'game.html'))
 })
