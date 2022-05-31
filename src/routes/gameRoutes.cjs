@@ -4,10 +4,9 @@ const express = require('express')
 const jsonParser = bodyParser.json()
 
 const gameRouter = express.Router()
-const { getBackground, changeBackground } = require('../services/background_db')
-const { createWord, checkWord, makeGuess } = require('../services/wordQuery')
-const mainRouter = require('../mainRoutes')
-
+const { getBackground, changeBackground } = require('../services/background_db.cjs')
+const { createWord, checkWord, makeGuess } = require('../services/wordQuery.cjs')
+const mainRouter = require('../mainRoutes.cjs')
 
 gameRouter.post('/logWord', jsonParser, async function (req, res) { // works
     const word = req.body.wordToLog

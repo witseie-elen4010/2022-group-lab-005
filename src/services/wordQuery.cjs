@@ -1,6 +1,6 @@
 'use strict'
 const { resolve } = require('path')
-const { get } = require('./poolManagement')
+const { get } = require('./poolManagement.cjs')
 
 async function createWord(word) {
   return new Promise((resolve, reject) => {

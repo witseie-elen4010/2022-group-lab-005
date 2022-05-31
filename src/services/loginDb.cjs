@@ -1,5 +1,5 @@
 'use strict'
-const { get } = require('./poolManagement')
+const { get } = require('./poolManagement.cjs')
 
 async function LogIn (username, password) {
   // Gets the word to guess from then checks with the guessed word
