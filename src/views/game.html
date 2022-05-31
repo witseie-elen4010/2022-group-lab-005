@@ -10,29 +10,6 @@
 
   <script defer src="/src/public/fetchBackground.js"></script>
   <script type="module" src="/src/public/game.js"></script>
-
-  <!--
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-
-    document.getElementById('worldeDiv').style.display === 'block'
-
-    const socket = io({ autoConnect: false });
-
-    let name = prompt("Please enter your name", "Name here");
-    socket.auth = { 'playerName': name }
-    socket.connect()
-
-    // This will fire if the server is not happy with the connection.
-    socket.on('connect_error', (err) => {
-      // If this is true, then the playername is bad.
-      if (err.message === 'invalid_playername') {
-        console.log('Problem with your username')
-      }
-    });
-
-  </script>
--->
 </head>
 
 <body>

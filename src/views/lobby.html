@@ -6,42 +6,6 @@
   <meta charset="utf-8" />
 
   <link rel="stylesheet" href="/css/bootstrap.min.css" />
-  <!-- NO TOUCHY--> <script src="/socket.io/socket.io.js"></script> <!---->
-  <script>
-    if (1 === 1) {
-    const socket = io({ autoConnect: false });
-
-    socket.onAny((event, ...args) => {
-      console.log(event, args);
-    })
-
-    // This will fire if the server is not happy with the connection.
-    socket.on('connect_error', (err) => {
-      // If this is true, then the playername is bad.
-      if (err.message === 'invalid_playername') {
-      console.log('Problem with your username')
-      }
-    });
-
-    /*socket.on('redirect', (address, identity) => {
-      sessionStorage.setItem('identity', identity)
-      console.log(identity)
-      window.location.href = address
-    })*/
-
-    // Wait for the window to finish loading before adding event listeners.
-    window.onload = function () {
-      // When the user clicks the joingame button, their username is and sent to the server.
-      // If the server is happy, they a socket connection is established.
-      document.getElementById('joingame').addEventListener('click', function (evt) {
-        // We need to actually get the username here.
-        socket.auth = { 'playerName': 'Petzl11'}
-        socket.connect()
-      })
-    }
-  }
-
-  </script>
 </head>
 
 <style>
@@ -81,9 +45,6 @@
       Start Game
     </button>
   </form>
-
-  <!-- NO TOUCHY -->
-  <button id="joingame">Join Game</button><!---->
 </body>
 
 </html>
