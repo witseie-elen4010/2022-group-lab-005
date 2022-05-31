@@ -10,7 +10,6 @@ function sendModeToServer (darkModeBool) {
   // send request to server
   request.setRequestHeader('Content-type', 'application/json')
 
-  // convert the dark mode setting to a JSON object and send it to the server.
   request.send(JSON.stringify({ darkMode }))
 
   request.addEventListener('load', dataReceived)
