@@ -1,0 +1,45 @@
+#wordleDiv{
+  display: block;
+  margin-left: 40vw;
+  margin-right: 40vw;
+  margin-top: 10vw;
+}
+
+#wordleTable{
+  table-layout: fixed;
+  text-align: center;
+  width: 100%;
+  border: 5px solid black;
+
+}
+
+#wordleTable th, td{
+  height: 4vw;
+  border: 7px solid white;
+  padding: 10px;
+  background-color: grey;
+}
+
+@media only screen and (max-width: 1200px){
+  #wordleDiv{
+    margin-left: 30vw;
+    margin-right: 30vw;
+    margin-top: 15vw;
+  }
+  #wordleTable th, td{
+    height: 8vw;
+  }
+}
+
+@media only screen and (max-width: 100px){
+  #wordleDiv{
+    margin-left: 20vw;
+    margin-right: 20vw;
+    margin-top: 20vw;
+  }
+  #wordleTable th, td{
+    height: 12vw;
+  }
+}
+
+
