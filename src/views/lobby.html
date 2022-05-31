@@ -9,7 +9,32 @@
   <script type="text/javascript" src="/src/public/lobby.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io();
+    const socket = io({ autoConnect: false });
+
+    socket.onAny((event, ...args) => {
+      console.log(event, args);
+    })
+
+    socket.on("connect_error", (err) => {
+      if (err.message === "invalid username") {
+        console.log('Invalid username');
+      }
+    });
+
+    socket.on("users", (users) => {
+      users.forEach((user) => {
+        user.self = user.userID === socket.id;
+        console.log(user.userID)
+      });
+
+      window.onload = function () {
+        document.getElementById('joingame').addEventListener('click', function (evt) {
+          // We need to actually get the username here.
+          socket.auth = { 'username': 'usrname' }
+          socket.connect()
+          console.log('hi')
+        })
+      }
   </script>
 </head>
 
@@ -51,7 +76,7 @@
     </button>
   </form>
 
-  <!--NO TOUCHY!!! <button id="joingame">Join Game</button>-->
+  <button id="joingame">Join Game</button>
 </body>
 
 </html>

@@ -48,6 +48,7 @@ if (stdConfig === true) {
 
   app.use(express.static('public'))
   app.use('/src/public', express.static(__dirname + '/src/public'))
+  app.use('/socket.io-client', express.static(path.join(__dirname, '/node_modules/socket.io-client')))
   app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
   app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
   app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
@@ -63,7 +64,41 @@ if (stdConfig === true) {
     socket.on('disconnect', () => {
       console.log('user disconnected')
     })
+
+    // Let the new user know who is in the lobby
+    const users = [];
+    for (let [id, socket] of io.of("/").sockets) {
+      users.push({
+        userID: id,
+        username: socket.username,
+      });
+    }
+    socket.emit("users", users);
+
+    // Tell all the other players that someone has joined the lobby
+    socket.broadcast.emit("user connected", {
+      userID: socket.id,
+      username: socket.username,
+    });
+
   })
+
+  io.use((socket, next) => {
+    const username = socket.handshake.auth.username;
+    if (!username) {
+      return next(new Error("invalid username"));
+    }
+    console.log(username)
+    socket.username = username;
+    next();
+  });
+
+  socket.on("private message", ({ content, to }) => {
+    socket.to(to).emit("private message", {
+      content,
+      from: socket.id,
+    });
+  });
 
   const port = process.env.PORT || 3000
   server.listen(port, () => {
