@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Change Background</title>
+    <meta charset="utf-8" />
+    
+    <!-- defer means that the JS code is executed after the DOM is fully built -->
+   <link rel="stylesheet" href="/src/public/guess.css" />
+    <script defer type="text/javascript" src="/src/public/sendBackgroundToServer.js"></script>
+    <script defer src="/src/public/changeBackground.js"></script>
+</head>
+
+<body>
+    <h1 id="heading">Change Background</h1>
+    <p id="results" style="font-size: 15px; font-weight: bold;"></p>
+    <button type="button" class="btn btn-primary" id="forestButton">Forest</button>
+    <button type="button" class="btn btn-primary" id="sunBeachButton">Sunny Beach</button>
+    <button type="button" class="btn btn-primary" id="mountainsButton">Mountains</button>
+    
+    <p id="status"></p>
+    <p id="msgFmServer"></p>
+</body>
+</html>
