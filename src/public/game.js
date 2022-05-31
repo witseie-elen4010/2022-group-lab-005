@@ -26,12 +26,7 @@ socket.on("game_can_start", () => {
 socket.on("update_opponent_colors", (opponentColors) => {
   updateOpponentColors(opponentColors.colorArr)
   });
-
-
-
-  //}
 });
-
 
 let letterArray = [
   ["", "", "", "", "", ""],

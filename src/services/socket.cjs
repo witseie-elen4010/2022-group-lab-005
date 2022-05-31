@@ -9,12 +9,14 @@ module.exports = function (io) {
       socket.broadcast.emit("update_opponent_colors", {colorArr});
       console.log(guessStr)
 
+      const query = require('./wordQuery.cjs')
+      query.makeGuess(guessStr, 1)
+
     });
 
     if (io.engine.clientsCount === 2) {
       io.emit("game_can_start")
     }
-    //socket.emit("player_list", players);
   })
 
   // When a new player attempts to join the server.
