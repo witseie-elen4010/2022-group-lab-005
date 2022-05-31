@@ -9,8 +9,7 @@ fetch('/game/api/BackgroundData')
     }
     return response.text()
   })
-
-  .then(function (data) {
+.then(function (data) {
     // set background setting to data from api
     // Get HTML head element
 
@@ -36,5 +35,4 @@ fetch('/game/api/BackgroundData')
     }
     
     sessionStorage.setItem('background', back)
-  })
-  .catch(error => document.write(`Fetch failed: ${error}`))
+  }).catch(error => document.write(`Fetch failed: ${error}`))

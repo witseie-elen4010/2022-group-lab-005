@@ -6,18 +6,16 @@ const forestButton = document.getElementById('forestButton')
 if (pageBackground === "Mountains") {
     // document.body.style.backgroundImage = 'url("/src/public/Mountain.jpg")';
     background.style.setProperty('background-image', 'url("/src/public/Mountain.jpg")');
-} else {
-    if (pageBackground  === "Forest") {
+} else if (pageBackground  === "Forest") {
         // document.body.style.backgroundImage = 'url("/src/public/Forest.jpg")';
         background.style.setProperty('background-image', 'url("/src/public/Forest.jpg")');
     }
-    else {
-        if (pageBackground  === "Beach") {
+    else if (pageBackground  === "Beach") {
             //  document.body.style.backgroundImage = 'url("/src/public/Beach.jpg")';
             background.style.setProperty('background-image', 'url("/src/public/Beach.jpg")');
-        }
+        
     }
-}
+
 
 forestButton.addEventListener('click', function () {
     background.style.setProperty('background-image', 'url("/src/public/Forest.jpg")');
