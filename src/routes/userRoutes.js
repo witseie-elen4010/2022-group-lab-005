@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const express = require('express')
 const jsonParser = bodyParser.json()
 const { getMode, changeMode } = require('../services/settings_db')
-const { getBackground } = require('../services/background_db')
+
 
 const userRouter = express.Router()
 
@@ -12,10 +12,6 @@ userRouter.get('/api/DarkModeData', async function (req, res) {
     res.send(result)
 })
 
-userRouter.get('/api/BackgroundData', async function (req, res) {
-    const result = await getBackground('1')
-    res.send(result)
-})
 
 userRouter.get('/settings', function (req, res) { // works
     res.sendFile(path.join(__dirname, '../views', 'settings.html'))
