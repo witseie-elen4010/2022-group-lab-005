@@ -1,11 +1,18 @@
-#wordleDiv{
+#wordleDiv {
   display: block;
   margin-left: 40vw;
   margin-right: 40vw;
   margin-top: 5vw;
 }
 
-#wordleTable{
+#opponentDiv {
+  display: block;
+  margin-left: 40vw;
+  margin-right: 40vw;
+  margin-top: 5vw;
+}
+
+#wordleTable {
   table-layout: fixed;
   text-align: center;
   width: 100%;
@@ -13,18 +20,30 @@
   border-spacing: 7px;
 }
 
-#wordleTable th{
+#opponentColorTable {
+  table-layout: fixed;
+  text-align: center;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 7px;
+}
+
+#wordleTable th {
   height: 4vw;
 }
 
-#keyboardDiv{
+#opponentColorTable th {
+  height: 4vw;
+}
+
+#keyboardDiv {
   display: block;
   margin-left: 25vw;
   margin-right: 25vw;
   margin-top: 5vw;
 }
 
-#keyboardTable{
+#keyboardTable {
   table-layout: fixed;
   text-align: center;
   width: 100%;
@@ -32,28 +51,40 @@
   border-spacing: 7px;
 }
 
-#keyboardTable th{
+#keyboardTable th {
   height: 4vw;
 }
 
-@media only screen and (max-width: 1200px){
-  #wordleDiv{
+@media only screen and (max-width: 1200px) {
+  #wordleDiv {
     margin-left: 30vw;
     margin-right: 30vw;
   }
-  #wordleTable th, td{
+
+  #wordleTable th,
+  td {
+    height: 8vw;
+  }
+
+  #opponentColorTable th,
+  td {
     height: 8vw;
   }
 }
 
-@media only screen and (max-width: 100px){
-  #wordleDiv{
+@media only screen and (max-width: 100px) {
+  #wordleDiv {
     margin-left: 20vw;
     margin-right: 20vw;
   }
-  #wordleTable th, td{
+
+  #wordleTable th,
+  td {
+    height: 12vw;
+  }
+
+  #opponentColorTable th,
+  td {
     height: 12vw;
   }
 }
-
-
