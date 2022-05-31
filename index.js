@@ -1,7 +1,7 @@
 'use strict'
 require('dotenv').config()
 
-const stdConfig = true
+const stdConfig = false
 
 // If stdConfig is true, the code will behave how it used to.
 // If it is false, then the code will behave how it used to but with
@@ -60,6 +60,9 @@ if (stdConfig === true) {
 
   io.on('connection', (socket) => {
     console.log('a user connected')
+    socket.on('disconnect', () => {
+      console.log('user disconnected')
+    })
   })
 
   const port = process.env.PORT || 3000
