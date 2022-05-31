@@ -23,6 +23,12 @@ socket.on("game_can_start", () => {
     gameStart = true
   }
 
+socket.on("update_opponent_colors", (opponentColors) => {
+  updateOpponentColors(opponentColors.colorArr)
+  });
+
+
+
   //}
 });
 
@@ -84,6 +90,33 @@ function updateWordleTableColor() {
   }
 }
 
+function updateOpponentColors(arrayOfColors) {
+  let table = document.getElementById("opponentColorTable")
+  let tempColor = "grey"
+  for (let i = 0; i < table.rows.length; i++) {
+    for (let j = 0; j < table.rows[i].cells.length; j++) {
+      switch (arrayOfColors[i][j]) {
+        case "d":
+        case "D":
+          table.rows[i].cells[j].style.backgroundColor = "lightgrey"
+          break
+        case "n":
+        case "N":
+          table.rows[i].cells[j].style.backgroundColor = "grey"
+          break
+        case "i":
+        case "I":
+          table.rows[i].cells[j].style.backgroundColor = "yellow"
+          break
+        case "c":
+        case "C":
+          table.rows[i].cells[j].style.backgroundColor = "green"
+          break
+      }
+    }
+  }
+}
+
 // Updates the text currently displayed in this user's wordle table
 function updateWordleTableText() {
   let table = document.getElementById("wordleTable")
@@ -96,11 +129,12 @@ function updateWordleTableText() {
 
 // Checks which letters of the inputted word matches the current word
 function testWord() {
+  // params needed to send: letterArray currentWordIndex colorArray  currentWordCheck 
   // Check if the letters are in the correct places
   let correctWordCount = 0
   for (let i = 0; i < 5; i++) {
     let currentLetter = letterArray[currentWordIndex][i]
-    if (currentLetter == currentWordArray[i]) {
+    if (currentLetter == currentWordArray[i]) { // WORD TO GUESS
       colorArray[currentWordIndex][i] = "c"
       currentWordCheck[i] = "Y"
       updateAllLettersColorsArray("c", currentLetter)
@@ -137,9 +171,10 @@ function testWord() {
   }
   else {
     // NICK CONNECTION STUFF GOES HERE FOR WHEN A WORD IS COMPLETED BUT NOT CORRECT
-    const wrdToSend = letterArray[currentWordIndex]
-    socket.emit("send_guess", {wrdToSend})
   }
+
+  const wrdToSend = letterArray[currentWordIndex]
+  socket.emit("send_guess", {wrdToSend, colorArray})
 }
 
 // Updates the variable keeping track of what letter the user is on

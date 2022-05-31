@@ -4,7 +4,11 @@ module.exports = function (io) {
 
     socket.on("send_guess", function(data){
       const guessStr = data.wrdToSend.join('')
+      const colorArr = data.colorArray
+
+      socket.broadcast.emit("update_opponent_colors", {colorArr});
       console.log(guessStr)
+
     });
 
     if (io.engine.clientsCount === 2) {
