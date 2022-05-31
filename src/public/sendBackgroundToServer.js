@@ -4,10 +4,10 @@ const request = new XMLHttpRequest()
 request.addEventListener('error', onError)
 
 function sendBackgroundToServer (background) {
-  
   console.log(background)
   const back = background
 
+  // send new background to page
   request.open('POST', '/game/newBackground', true)
 
   request.setRequestHeader('Content-type', 'application/json')
@@ -21,7 +21,7 @@ function sendBackgroundToServer (background) {
 }
 
 function dataReceived () {
-
+  // get response from server
   const response = JSON.parse(this.responseText)
 
   const msg = response.message
