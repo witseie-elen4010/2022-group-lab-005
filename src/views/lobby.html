@@ -1,67 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>LOBBY</title>
-    <meta charset="utf-8" />
 
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <script type="text/javascript" src="/src/public/lobby.js"></script>
+<head>
+  <title>LOBBY</title>
+  <meta charset="utf-8" />
 
-    <!--NO TOUCHY!!!
-    <script src="/node_modules/socket.io/client-dist/socket.io.js"></script>
-    <script>
-      let io_ = io()
-    </script>
-    <script src="../public/lobby.js"></script>-->
-  </head>
+  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <script type="text/javascript" src="/src/public/lobby.js"></script>
+  <!--NO TOUCHY!!! <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = io();
+  </script>-->
+</head>
 
-  <style>
-    .gameMode label {
-      display: inline-block;
-      width: 200px;
-      padding: 10px;
-      border: solid 2px #ccc;
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-    .gameMode input[type="radio"] {
-      display: none;
-    }
-    .gameMode input[type="radio"]:checked + label {
-      border: solid 2px blue;
-    }
-  </style>
+<style>
+  .gameMode label {
+    display: inline-block;
+    width: 200px;
+    padding: 10px;
+    border: solid 2px #ccc;
+    transition: all 0.3s;
+    cursor: pointer;
+  }
 
-  <body>
-    <h1>Welcome to Hazard a Guess Lobby!</h1>
-    <h2>Waiting for players...</h2>
+  .gameMode input[type="radio"] {
+    display: none;
+  }
 
-    <br />
-    <h2>Choose a game mode:</h2>
+  .gameMode input[type="radio"]:checked+label {
+    border: solid 2px blue;
+  }
+</style>
 
-    <form action="/lobby/create" method="POST" class="gameMode">
-      <input
-        type="radio"
-        id="standardRadio"
-        value="Standard"
-        name="gameModeInput"
-        checked="true"
-      />
-      <label for="standardRadio">Standard</label>
+<body>
+  <h1>Welcome to Hazard a Guess Lobby!</h1>
+  <h2>Waiting for players...</h2>
 
-      <input
-        type="radio"
-        id="customRadio"
-        value="Custom"
-        name="gameModeInput"
-      />
-      <label for="customRadio">Custom</label>
+  <br />
+  <h2>Choose a game mode:</h2>
 
-      <button type="submit" class="btn btn-primary" style="margin: 0.5em">
-        Start Game
-      </button>
-    </form>
+  <form action="/lobby/create" method="POST" class="gameMode">
+    <input type="radio" id="standardRadio" value="Standard" name="gameModeInput" checked="true" />
+    <label for="standardRadio">Standard</label>
 
-    <!--NO TOUCHY!!! <button id="joingame">Join Game</button>-->
-  </body>
+    <input type="radio" id="customRadio" value="Custom" name="gameModeInput" />
+    <label for="customRadio">Custom</label>
+
+    <button type="submit" class="btn btn-primary" style="margin: 0.5em">
+      Start Game
+    </button>
+  </form>
+
+  <!--NO TOUCHY!!! <button id="joingame">Join Game</button>-->
+</body>
+
 </html>
