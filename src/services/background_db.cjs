@@ -26,13 +26,16 @@ module.exports = {
     changeBackground: async function changeBackground(Background, ID) {
 
         const sqlCode = `UPDATE [dbo].[UserSettings] SET Background  = '${Background}' WHERE ID = '1'`
-
-        console.log(sqlCode)
-        get('default').then(
-            (pool) => pool.request().query(sqlCode).then(
-                (result) => { return result }
+        return new Promise((resolve, reject) => {
+            console.log(sqlCode)
+            get('default').then(
+                (pool) => pool.request().query(sqlCode).then(
+                    (result) => { resolve(result) }
+                ).catch(console.error)
             ).catch(console.error)
-        ).catch(console.error)
+
+        })
+
     }
 
 
