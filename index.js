@@ -61,7 +61,7 @@ if (stdConfig === true) {
 
   // Setup the sockets so we can lets the different clients interact through the
   // game server.
-  const soc = require('./src/services/soc.cjs')
+  const soc = require('./src/services/socket.cjs')
   soc(io)
 
   const port = process.env.PORT || 3000
