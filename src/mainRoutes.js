@@ -3,7 +3,7 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const express = require('express')
 
-const {LogIn,registerUser} = require('./services/login_db')
+const {LogIn,registerUser} = require('./services/loginDb')
 const gameRouter = require('./routes/gameRoutes')
 const lobbyRouter = require('./routes/lobbyRoutes')
 const userRouter = require('./routes/userRoutes')
