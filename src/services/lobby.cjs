@@ -9,20 +9,20 @@ async function prevGameID () {
         (result) => {
           console.log(result.recordset[0].GameID)
           resolve(result.recordset[0].GameID)
-        })// .catch(console.error)
-    )// .catch(console.error)
+        }).reject(console.error)
+    ).reject(console.error)
   })
 }
 
-async function createGame (gameMode, newID) {
+async function createGame (input) {
   return new Promise((resolve, reject) => {
-    const sqlCode = `INSERT INTO dbo.Game(GameID, GameType) VALUES ('${newID}', '${gameMode}');`
+    const sqlCode = `INSERT INTO dbo.Game(GameType, NumPlayers) VALUES ('${input.gameModeInput}','${input.numPlayers}');`
     get('default').then((pool) =>
       pool.request().query(sqlCode).then(
         (result) => {
           resolve(result)
-        })// .catch(console.error)
-    )// .catch(console.error)
+        }).reject(console.error)
+    ).reject(console.error)
   })
 }
 
