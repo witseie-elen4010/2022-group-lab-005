@@ -9,11 +9,9 @@
   table-layout: fixed;
   text-align: center;
   width: 100%;
-  border: 5px solid black;
-
 }
 
-#wordleTable th, td{
+#wordleTable th{
   height: 4vw;
   border: 7px solid white;
   padding: 10px;
