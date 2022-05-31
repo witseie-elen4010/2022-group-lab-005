@@ -48,6 +48,7 @@ if (stdConfig === true) {
 
   app.use(express.static('public'))
   app.use('/src/public', express.static(__dirname + '/src/public'))
+  app.use('/socket.io-client', express.static(path.join(__dirname, '/node_modules/socket.io-client')))
   app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
   app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
   app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
@@ -58,9 +59,10 @@ if (stdConfig === true) {
   app.use(mainRouter)
   // app.use('/public', express.static(__dirname + '/public'))
 
-  io.on('connection', (socket) => {
-    console.log('a user connected')
-  })
+  // Setup the sockets so we can lets the different clients interact through the
+  // game server.
+  const soc = require('./src/services/soc')
+  soc(io)
 
   const port = process.env.PORT || 3000
   server.listen(port, () => {
