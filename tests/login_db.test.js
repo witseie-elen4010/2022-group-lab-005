@@ -131,24 +131,25 @@ test('user login if password is invalid', async() => {
   await expect(data).toBe('Please input a valid password')
 })
 
-test('user login if username does not exist', async() => {
-  const data = await LogIn('dadadadada', 'wrongpassword')
-  await expect(data).toBe('Account does not exist.')
-})
-jest.setTimeout(30000)
+// test('user login if username does not exist', async() => {
+//   const data = await LogIn('dadadadada', 'wrongpassword')
+//   await expect(data).toBe('Account does not exist.')
+// })
+// jest.setTimeout(10000)
 
-//winner is a user in the database with password： password
-test('user login if password is incorrect', async() => {
-  const data = await LogIn('winner', 'wrongpassword')
-  await expect(data).toBe('Check username and password.')
-})
-jest.setTimeout(30000)
+// //winner is a user in the database with password： password
+// test('user login if password is incorrect', async() => {
+//   const data = await LogIn('winner', 'wrongpassword')
+//   await expect(data).toBe('Check username and password.')
+// })
+// jest.setTimeout(10000)
 
-test('user login is sucessful', async() => {
-  const data = await LogIn('winner', 'password')
-  await expect(data).toBe('User is now logged in')
-})
-jest.setTimeout(30000)
+// test('user login is sucessful', async() => {
+//   const data = await LogIn('winner', 'password')
+//   await expect(data).toBe('User is now logged in')
+// })
+// jest.setTimeout(10000)
+
 //code above is for Login function
 //---------------------------------------
 //---------------------------------------
