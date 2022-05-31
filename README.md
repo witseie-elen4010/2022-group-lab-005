@@ -1,5 +1,6 @@
 # 2022-group-lab-005
 App title - Hazard a guess
+[![Build and deploy Node.js app to Azure Web App - HazardAguess](https://github.com/witseie-elen4010/2022-group-lab-005/actions/workflows/main_hazardaguess.yml/badge.svg)](https://github.com/witseie-elen4010/2022-group-lab-005/actions/workflows/main_hazardaguess.yml)
 ## Members
 Nicholas Warrener
 
