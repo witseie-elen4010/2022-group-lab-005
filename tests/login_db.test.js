@@ -154,39 +154,32 @@ jest.setTimeout(30000)
 //---------------------------------------
 //code below is for registeration function
 
+test('user login if username input empty and password is empty', async() => {
+  const data = await registerUser('', '')
+  await expect(data).toBe('Please input a username and password')
+})
 
-// test('user login if username input empty and password is empty', () => {
-//   registerUser('', '').then(data => {
-//     expect(data).toBe('Please input a username and password')
-//   })
-// })
+test('user login if username input empty', async() => {
+  const data = await registerUser('', 'password')
+  await expect(data).toBe('Please input a username')
+})
 
-// test('user login if username input empty', () => {
-//   registerUser('', 'password').then(data => {
-//     expect(data).toBe('Please input a username')
-//   })
-// })
+test('user login if password input empty', async() => {
+  const data = await registerUser('user', '')
+  await expect(data).toBe('Please input a password')
+})
 
-// test('user login if password input empty', () => {
-//   registerUser('user', '').then(data => {
-//     expect(data).toBe('Please input a password')
-//   })
-// })
+test('user login if username and password is invalid', async() => {
+  const data = await registerUser('@dmin', '!@）#$')
+  await expect(data).toBe('Username and password are invalid.')
+})
 
-// test('user login if username and password is invalid', () => {
-//   registerUser('@dmin', '!@）#$').then(data => {
-//     expect(data).toBe('Username and password are invalid.')
-//   })
-// })
+test('user login if username is invalid', async() => {
+  const data = await registerUser('@dmin', 'password')
+  await expect(data).toBe('Please input a valid username')
+})
 
-// test('user login if username is invalid', () => {
-//   registerUser('@dmin', 'password').then(data => {
-//     expect(data).toBe('Please input a valid username')
-//   })
-// })
-
-// test('user login if password is invalid', () => {
-//   registerUser('admin', '!@）#$').then(data => {
-//     expect(data).toBe('Please input a valid password')
-//   })
-// })
+test('user login if password is invalid', async() => {
+  const data = await registerUser('admin', '!@）#$')
+  await expect(data).toBe('Please input a valid password')
+})
