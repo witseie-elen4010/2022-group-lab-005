@@ -15,23 +15,26 @@ fetch('/game/api/BackgroundData')
     // Get HTML head element
 
     const background = document.querySelector('html, .background');
-
+    let back = '';
     if (data === "Mountains") {
      // document.body.style.backgroundImage = 'url("/src/public/Mountain.jpg")';
+     back = "Mountains";
      background.style.setProperty('background-image', 'url("/src/public/Mountain.jpg")');
     } else {
       if (data === "Forest") {
        // document.body.style.backgroundImage = 'url("/src/public/Forest.jpg")';
+       back = "Forest";
        background.style.setProperty('background-image', 'url("/src/public/Forest.jpg")');
       }
       else {
         if (data === "Beach") {
         //  document.body.style.backgroundImage = 'url("/src/public/Beach.jpg")';
+        back = "Beach";
         background.style.setProperty('background-image', 'url("/src/public/Beach.jpg")');
         }
       }
     }
-    var head = document.getElementsByTagName('HEAD')[0];
-
+    
+    sessionStorage.setItem('background', back)
   })
   .catch(error => document.write(`Fetch failed: ${error}`))
