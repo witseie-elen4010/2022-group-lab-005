@@ -3,6 +3,7 @@
 <head>
     <title>Testing...1...2...3</title>
     <meta charset="utf-8" />
+     <link rel="stylesheet" href="/src/public/guess.css" />
     <script defer type="text/javascript" src="/src/public/guessWord.js"></script>
 </head>
 
@@ -11,5 +12,7 @@
     <button onclick="sendWordToServer();">Send</button>
     <p id="status"></p>
     <p id="msgFmServer"></p>
+
+    <button type="button" onclick="location.href = '/game/changeBackground';"  id="changeBackgroundButton">Change Background</button>
 </body>
 </html>
