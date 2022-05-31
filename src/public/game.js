@@ -1,5 +1,31 @@
-//import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
-//const socket = io();
+'use strict'
+import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
+const socket = io({ autoConnect: false });
+
+let gameStart = false
+
+const username = prompt("Please enter your name", "Name here");
+// When the user clicks the joingame button, their username is and sent to the server.
+// If the server is happy, they a socket connection is established.
+// We need to actually get the username here.
+socket.auth = { 'playerName': username }
+socket.connect()
+
+socket.on("game_can_start", () => {
+  if (gameStart === false) {
+  // Now that everyone has connected, we can start the game.
+  // Updates the page on window load to display the default wordle table and keyboard table
+ // window.onload = function () {
+    updateWordleTableText()
+    updateWordleTableColor()
+    updateKeyboard()
+    createKeyboard()
+    gameStart = true
+  }
+
+  //}
+});
+
 
 let letterArray = [
   ["", "", "", "", "", ""],
@@ -22,32 +48,21 @@ let currentWordArray = ["H", "E", "L", "L", "O"]
 let currentWordCheck = ["X", "X", "X", "X", "X"]
 let currentWordIndex = 0
 let currentLetterIndex = 0
-const allLettersArray =      ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "ENTER",  "Z", "X", "C", "V", "B", "N", "M", "BACK"]
-let allLettersColorsArray =  ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D",      "d", "d", "d", "d", "d", "d", "d", "d"]
-
-// Updates the page on window load to display the default wordle table and keyboard table
-window.onload = function () {
-  updateWordleTableText()
-  updateWordleTableColor()
-  updateKeyboard()
-  createKeyboard()
-}
+const allLettersArray = ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "ENTER", "Z", "X", "C", "V", "B", "N", "M", "BACK"]
+let allLettersColorsArray = ["d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "d", "D", "d", "d", "d", "d", "d", "d", "d", "d"]
 
 // Returns the table color array
-function getWordleTableColor(){
+function getWordleTableColor() {
   return colorArray
 }
 
 // Updates the color currently displayed in this user's wordle table
-function updateWordleTableColor(){
+function updateWordleTableColor() {
   let table = document.getElementById("wordleTable")
   let tempColor = "grey"
-  for(let i = 0; i < table.rows.length; i++)
-  {
-    for(let j = 0; j < table.rows[i].cells.length; j++)
-    {
-      switch(colorArray[i][j])
-      {
+  for (let i = 0; i < table.rows.length; i++) {
+    for (let j = 0; j < table.rows[i].cells.length; j++) {
+      switch (colorArray[i][j]) {
         case "d":
         case "D":
           table.rows[i].cells[j].style.backgroundColor = "lightgrey"
@@ -70,25 +85,22 @@ function updateWordleTableColor(){
 }
 
 // Updates the text currently displayed in this user's wordle table
-function updateWordleTableText(){
+function updateWordleTableText() {
   let table = document.getElementById("wordleTable")
-  for(let i = 0; i < table.rows.length; i++)
-  {
-    for(let j = 0; j < table.rows[i].cells.length; j++)
-    {
+  for (let i = 0; i < table.rows.length; i++) {
+    for (let j = 0; j < table.rows[i].cells.length; j++) {
       table.rows[i].cells[j].innerHTML = letterArray[i][j]
     }
   }
 }
 
 // Checks which letters of the inputted word matches the current word
-function testWord(){
+function testWord() {
   // Check if the letters are in the correct places
   let correctWordCount = 0
-  for(let i = 0; i < 5; i++){
+  for (let i = 0; i < 5; i++) {
     let currentLetter = letterArray[currentWordIndex][i]
-    if(currentLetter == currentWordArray[i])
-    {
+    if (currentLetter == currentWordArray[i]) {
       colorArray[currentWordIndex][i] = "c"
       currentWordCheck[i] = "Y"
       updateAllLettersColorsArray("c", currentLetter)
@@ -96,49 +108,46 @@ function testWord(){
     }
   }
   // Check if the letters are in the word at all 
-  for(let i = 0; i < 5; i++){
+  for (let i = 0; i < 5; i++) {
     let currentLetter = letterArray[currentWordIndex][i]
-    for(let j = 0; j < 5; j++){
-      if(currentLetter == currentWordArray[j])
-      {
-        if(currentWordCheck[j] == "X")
-        {
+    for (let j = 0; j < 5; j++) {
+      if (currentLetter == currentWordArray[j]) {
+        if (currentWordCheck[j] == "X") {
           colorArray[currentWordIndex][i] = "i"
           currentWordCheck[j] = "Y"
           updateAllLettersColorsArray("i", currentLetter)
           j = 5; //Break out of the for-loop as letter has been found
         }
-      }      
-    } 
+      }
+    }
     // Checks if the letter is not in the word at all to change the colors to dark grey
-    if(!(colorArray[currentWordIndex][i] == "i" || colorArray[currentWordIndex][i] == "c"))
-    {
+    if (!(colorArray[currentWordIndex][i] == "i" || colorArray[currentWordIndex][i] == "c")) {
       colorArray[currentWordIndex][i] = "n"
       updateAllLettersColorsArray("n", currentLetter)
-    }  
+    }
   }
   currentWordCheck = ["X", "X", "X", "X", "X"]
   updateWordleTableColor()
   updateKeyboard()
 
   // Checks if the user inputted the correct word
-  if(correctWordCount == 5)
-  {
+  if (correctWordCount == 5) {
     console.log("WINNER WINNER CHICKEN DINNER")
     // NICK CONNECTION STUFF GOES HERE FOR WHEN A WORD IS COMPLETED AND CORRECT
   }
-  else{
+  else {
     // NICK CONNECTION STUFF GOES HERE FOR WHEN A WORD IS COMPLETED BUT NOT CORRECT
+    const wrdToSend = letterArray[currentWordIndex]
+    socket.emit("send_guess", {wrdToSend})
   }
 }
 
 // Updates the variable keeping track of what letter the user is on
-function incrementLetterIndex(){
-  if(currentLetterIndex < 4)
-  {
+function incrementLetterIndex() {
+  if (currentLetterIndex < 4) {
     currentLetterIndex = currentLetterIndex + 1
   }
-  else{
+  else {
     testWord()
     currentLetterIndex = 0
     currentWordIndex = currentWordIndex + 1
@@ -146,25 +155,22 @@ function incrementLetterIndex(){
 }
 
 // Updates the letter color tracking array
-function updateAllLettersColorsArray(color, letter){
-  for(let i = 0; i < allLettersArray.length; i++)
-  {
-    if(allLettersArray[i] == letter){
-      switch(color){
+function updateAllLettersColorsArray(color, letter) {
+  for (let i = 0; i < allLettersArray.length; i++) {
+    if (allLettersArray[i] == letter) {
+      switch (color) {
         case "i":
-          if( allLettersColorsArray[i] != "c")
-          {
-             allLettersColorsArray[i] = color
+          if (allLettersColorsArray[i] != "c") {
+            allLettersColorsArray[i] = color
           }
           break
         case "c":
-           allLettersColorsArray[i] = color
+          allLettersColorsArray[i] = color
           break
         case "n":
-          if( allLettersColorsArray[i] != "c" &&  allLettersColorsArray[i] != "i")
-          {
-             allLettersColorsArray[i] = color
-          }          
+          if (allLettersColorsArray[i] != "c" && allLettersColorsArray[i] != "i") {
+            allLettersColorsArray[i] = color
+          }
           break
       }
     }
@@ -172,14 +178,12 @@ function updateAllLettersColorsArray(color, letter){
 }
 
 // Initialize the on-screen keyboard with the correct innerHTML and default grey colors
-function createKeyboard(){
+function createKeyboard() {
   let keyboardTable = document.getElementById("keyboardTable")
   let count = 0
 
-  for(let i = 0; i < keyboardTable.rows.length; i++)
-  {
-    for(let j = 0; j < keyboardTable.rows[i].cells.length; j++)
-    {
+  for (let i = 0; i < keyboardTable.rows.length; i++) {
+    for (let j = 0; j < keyboardTable.rows[i].cells.length; j++) {
       keyboardTable.rows[i].cells[j].innerHTML = allLettersArray[count]
       keyboardTable.rows[i].cells[j].style.backgroundColor = "lightgrey"
       count = count + 1
@@ -188,14 +192,12 @@ function createKeyboard(){
 }
 
 // Updates the on-screen keyboard's colors
-function updateKeyboard(){
+function updateKeyboard() {
   let keyboardTable = document.getElementById("keyboardTable")
   let count = 0
-  for(let i = 0; i < keyboardTable.rows.length; i++)
-  {
-    for(let j = 0; j < keyboardTable.rows[i].cells.length; j++)
-    {
-      switch(allLettersColorsArray[count]){
+  for (let i = 0; i < keyboardTable.rows.length; i++) {
+    for (let j = 0; j < keyboardTable.rows[i].cells.length; j++) {
+      switch (allLettersColorsArray[count]) {
         case "d":
         case "D":
           keyboardTable.rows[i].cells[j].style.backgroundColor = "lightgrey"
@@ -216,23 +218,19 @@ function updateKeyboard(){
       count = count + 1
     }
   }
-}    
+}
 
-document.addEventListener('keydown', function(event){
-  if(event.key == "Backspace")
-  {
-    if(currentLetterIndex > 0){
+document.addEventListener('keydown', function (event) {
+  if (event.key == "Backspace") {
+    if (currentLetterIndex > 0) {
       currentLetterIndex = currentLetterIndex - 1
     }
     letterArray[currentWordIndex][currentLetterIndex] = ""
     updateWordleTableText()
   }
-  else
-  {
-    for(let i = 0; i < allLettersArray.length; i++)
-    {
-      if(event.key.toUpperCase() == allLettersArray[i])
-      {
+  else {
+    for (let i = 0; i < allLettersArray.length; i++) {
+      if (event.key.toUpperCase() == allLettersArray[i]) {
         letterArray[currentWordIndex][currentLetterIndex] = event.key.toUpperCase()
         updateWordleTableText()
         incrementLetterIndex()
