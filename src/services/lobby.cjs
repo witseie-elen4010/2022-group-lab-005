@@ -20,7 +20,7 @@ async function createGame (input) {
     if(input.gameModeInput === 'Standard'){
       modeChosen = 1
     }
-    else{
+    else{ // More modes can be added here in future, this conversion to int could be done initially. ie Player choosing standard sends 1
       modeChosen = 2
     }
     const sqlCode = `INSERT INTO [dbo].[Game] (GameType, WordToGuess, NumPlayers)
