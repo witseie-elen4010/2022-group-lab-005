@@ -41,6 +41,9 @@
     <input type="radio" id="customRadio" value="Custom" name="gameModeInput" />
     <label for="customRadio">Custom</label>
 
+    <label for="numPlayers">Choose number of players (between 1 and 10):</label>
+    <input type="number" id="numPlayers" name="numPlayers" min="1" max="10">
+    <!-- No input checking is currently present, we should address this next sprint! -->
     <button type="submit" class="btn btn-primary" style="margin: 0.5em">
       Start Game
     </button>
