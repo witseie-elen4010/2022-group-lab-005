@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 <head>
   <title>GAME</title>
   <meta charset="utf-8" />
@@ -19,7 +18,9 @@
   <button type="button" onclick="location.href = '/game/changeBackground';" id="changeBackgroundButton">Change
     Background</button>
 
-  <div id="wordleDiv">
+    <h1 id="winner"></h1>
+
+  <div id="wordleDiv" class="unselectable">
     <table id="wordleTable">
       <tr>
         <th></th>
@@ -66,7 +67,7 @@
     </table>
   </div>
 
-  <div id="keyboardDiv">
+  <div id="keyboardDiv" class="unselectable">
     <table id="keyboardTable">
       <tr>
         <th></th>
@@ -105,54 +106,52 @@
     </table>
   </div>
 
-
-
-  <div id="opponentDiv">
-  <table id="opponentColorTable">
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </table>
-</div>
+  <div id="opponentDiv" class="unselectable">
+    <table id="opponentColorTable">
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+      <tr>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </table>
+  </div>
 </body>
 
 </html>
