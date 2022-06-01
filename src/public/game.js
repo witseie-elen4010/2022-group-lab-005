@@ -13,20 +13,32 @@ socket.connect()
 
 socket.on("game_can_start", () => {
   if (gameStart === false) {
-  // Now that everyone has connected, we can start the game.
-  // Updates the page on window load to display the default wordle table and keyboard table
- // window.onload = function () {
+    // Now that everyone has connected, we can start the game.
+    // Updates the page on window load to display the default wordle table and keyboard table
+    // window.onload = function () {
     updateWordleTableText()
     updateWordleTableColor()
     updateKeyboard()
     createKeyboard()
     gameStart = true
   }
-
-socket.on("update_opponent_colors", (opponentColors) => {
-  updateOpponentColors(opponentColors.colorArr)
-  });
 });
+
+socket.on("update_opponent_colors", (colorArr) => {
+  updateOpponentColors(colorArr)
+})
+
+socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr) => {
+  currentLetterIndex = 0
+  letterArray = letterArr
+  currentWordIndex = currWordIndex + 1
+  colorArray = colorArr
+  currentWordCheck = currWordCheck
+  allLettersColorsArray = allLettersColorsArr
+
+  updateWordleTableColor()
+  updateKeyboard()
+})
 
 let letterArray = [
   ["", "", "", "", "", ""],
@@ -45,7 +57,6 @@ let colorArray = [
   ["d", "d", "d", "d", "d", "d"]
 ]
 
-let currentWordArray = ["H", "E", "L", "L", "O"]
 let currentWordCheck = ["X", "X", "X", "X", "X"]
 let currentWordIndex = 0
 let currentLetterIndex = 0
@@ -122,6 +133,7 @@ function updateWordleTableText() {
   }
 }
 
+/*
 // Checks which letters of the inputted word matches the current word
 function testWord() {
   // params needed to send: letterArray currentWordIndex colorArray  currentWordCheck 
@@ -170,7 +182,7 @@ function testWord() {
 
   const wrdToSend = letterArray[currentWordIndex]
   socket.emit("send_guess", {wrdToSend, colorArray})
-}
+}*/
 
 // Updates the variable keeping track of what letter the user is on
 function incrementLetterIndex() {
@@ -178,12 +190,12 @@ function incrementLetterIndex() {
     currentLetterIndex = currentLetterIndex + 1
   }
   else {
-    testWord()
-    currentLetterIndex = 0
-    currentWordIndex = currentWordIndex + 1
+    //testWord()
+    socket.emit("send_guess", letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray)
   }
 }
 
+/*
 // Updates the letter color tracking array
 function updateAllLettersColorsArray(color, letter) {
   for (let i = 0; i < allLettersArray.length; i++) {
@@ -205,7 +217,7 @@ function updateAllLettersColorsArray(color, letter) {
       }
     }
   }
-}
+}*/
 
 // Initialize the on-screen keyboard with the correct innerHTML and default grey colors
 function createKeyboard() {
