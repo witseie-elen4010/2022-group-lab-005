@@ -2,20 +2,27 @@
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 const socket = io({ autoConnect: false });
 
-let gameStart = false
-
+// This is used to itentify the user. It will be replaced with the identity from the login system.
 const username = prompt("Please enter your name", "Name here");
-// When the user clicks the joingame button, their username is and sent to the server.
-// If the server is happy, they a socket connection is established.
-// We need to actually get the username here.
+// If the server is happy, then a connection is established.
 socket.auth = { 'playerName': username }
 socket.connect()
 
+// This will fire if the server is unhappy with something.
+socket.on("connect_error", (err) => {
+  if (err.message === 'invalid_playername') {
+    console.log('Your username in invalid.')
+  }
+});
+
+
+// This will fire when the server tells the clients that the right number of players have joined the game.
+// There must be a more elegant solution than this implementation.
+let gameStart = false
 socket.on("game_can_start", () => {
   if (gameStart === false) {
     // Now that everyone has connected, we can start the game.
     // Updates the page on window load to display the default wordle table and keyboard table
-    // window.onload = function () {
     updateWordleTableText()
     updateWordleTableColor()
     updateKeyboard()
