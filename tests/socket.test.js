@@ -37,8 +37,28 @@ describe('Test socket.cjs', () => {
     closeClientSocket(clientSocket3)
   })
 
-  test('Send invalid session information', (done) => {
+  test('Send invalid session information (invalid character for number of players)', (done) => {
     clientSocket1.auth = { sessionInfo: 'xazwsx!', playerName: 'nick' }
+    clientSocket1.connect()
+
+    clientSocket1.on('connect_error', (err) => {
+      expect(err.message).toBe('invalid_game_id')
+      done()
+    })
+  })
+
+  test('Send invalid session information (number of players too small)', (done) => {
+    clientSocket1.auth = { sessionInfo: 'xazwsx0', playerName: 'nick' }
+    clientSocket1.connect()
+
+    clientSocket1.on('connect_error', (err) => {
+      expect(err.message).toBe('invalid_game_id')
+      done()
+    })
+  })
+
+  test('Send invalid session information (number of players too large)', (done) => {
+    clientSocket1.auth = { sessionInfo: 'xazwsx9', playerName: 'nick' }
     clientSocket1.connect()
 
     clientSocket1.on('connect_error', (err) => {
