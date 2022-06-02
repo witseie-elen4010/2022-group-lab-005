@@ -38,6 +38,12 @@ socket.on('connect_error', (err) => {
   }
 })
 
+// When this is fired, the server is telling us that it is waiting for more players to join.
+// So, we show the loading icon so that the player knows.
+socket.on('waiting_for_players', () => {
+  document.getElementById('spinner').style.display = 'block'
+})
+
 // This will fire when the server tells the clients that the right number of players have joined the game.
 // There must be a more elegant solution than this implementation.
 let gameStart = false
@@ -46,6 +52,8 @@ socket.on('game_can_start', () => {
     // Now that everyone has connected, we can start the game.
     // Updates the page on window load to display the default wordle table and keyboard table
     // Also attach the event listener for the keydown event so the user can use their keyboard.
+    // Also remove the loading icon.
+    document.getElementById('spinner').style.display = 'none'
     document.addEventListener('keydown', keyboardInputEvent)
     updateWordleTableText()
     updateWordleTableColor()
