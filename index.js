@@ -1,6 +1,8 @@
 'use strict'
+
 require('dotenv').config()
 
+/*
 const stdConfig = false
 
 // If stdConfig is true, the code will behave how it used to.
@@ -32,7 +34,7 @@ if (stdConfig === true) {
   const port = process.env.PORT || 3000
   app.listen(port)
   console.log('Express server running on port', port)
-} else {
+} else {*/
   const path = require('path')
   const bodyParser = require('body-parser')
   const express = require('express')
@@ -68,4 +70,4 @@ if (stdConfig === true) {
   server.listen(port, () => {
     console.log(`listening on *:${port}`)
   })
-}
+//}

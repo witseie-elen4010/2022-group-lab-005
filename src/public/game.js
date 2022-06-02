@@ -31,8 +31,10 @@ const socket = io({ autoConnect: false })
 
 // This will fire if the server is unhappy with something.
 socket.on('connect_error', (err) => {
-  if (err.message === 'invalid_playername') {
-    console.log('Your username in invalid.')
+  if (err.message === 'invalid_game_id') {
+    console.log('Game code is invalid.')
+  } else if (err.message === 'game_already_running') {
+    console.log('You cannot join a game that is already in progress!')
   }
 })
 
@@ -89,9 +91,13 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
 /** ********* General code ***********/
 
 // This is used to identify the user. It will be replaced with the identity from the login system.
-const username = prompt('Please enter your name', 'Name here')
+const gameID = prompt('Please enter your game ID', 'ID')
+// Last digit of gameID is the number of players!
+
+const userName = prompt('Please enter your username', 'Username')
+
 // Try establish a connection with the server.
-socket.auth = { playerName: username }
+socket.auth = { sessionInfo: gameID, playerName: userName }
 socket.connect()
 
 // Updates the color currently displayed in this user's wordle table

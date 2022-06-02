@@ -25,6 +25,7 @@
     "mssql": "^8.1.1",
     "mysql": "^2.18.1",
     "node": "^17.7.2",
+    "randomstring": "^1.2.2",
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1",
     "standard": "^17.0.0",
