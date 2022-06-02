@@ -1,26 +1,12 @@
 'use strict'
 const { get } = require('./poolManagement.cjs')
-// import {JSEncrypt} from 'jsencrypt'
-
-// const { JSDOM } = require('jsdom');
-// const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
-// const { window } = jsdom;
-// global.window = window;
-// global.document = window.document;
-// global.navigator ={userAgent: 'node.js'};
-
-// global.navigator = { appName: 'protractor' };
-
-// global.window = {}; 
-// const {JSEncrypt} = require('../node_modules/jsencrypt/bin/jsencrypt')
-// // const JSEncrypt = require('../node_modules/jsencrypt/bin/jsencrypt.min.js')
-// // import * as JSEncrypt from '../node_modules/jsencrypt/bin/jsencrypt'
-const { JSDOM } = require('jsdom');
-const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
-const { window } = jsdom;
-global.window = window;
+//this below enables the usage of JSEncrypt
+const { JSDOM } = require('jsdom')
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>')
+const { window } = jsdom
+global.window = window
 global.document = window.document;
-global.navigator ={userAgent: 'node.js'};
+global.navigator ={userAgent: 'node.js'}
 
 const JSEncrypt  = require('jsencrypt')
 
