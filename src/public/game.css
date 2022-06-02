@@ -97,3 +97,14 @@
   -ms-user-select: none;
   user-select: none;
 }
+
+#spinner {
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  margin-top: -50px;
+  margin-left: -50px;
+  width: 250px;
+  height: 100px;
+}

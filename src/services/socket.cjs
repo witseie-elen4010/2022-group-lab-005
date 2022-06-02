@@ -38,9 +38,12 @@ module.exports = function (io) {
     // We make sure that the gameID is valid (i.e. is of the correct form and has no invalid characters)
     // TODO: Validate the gameID. If we use UUID for the gameID, then we can just use a pre-made validator.
     if (numPlayers <= 6 && numPlayers > 1 && !isNaN(numPlayers)) {
-      if (parseInt(io.sockets.adapter.rooms.get(gameID).size) >= parseInt(numPlayers)) {
+      // If the room doesn't exist, then we can check how many players are in it!
+      if (io.sockets.adapter.rooms.get(gameID) !== undefined && parseInt(io.sockets.adapter.rooms.get(gameID).size) > parseInt(numPlayers)) {
         return next(new Error('game_already_running'))
       } else {
+        // This code is run if the room does not exist yet OR if the room does exist but it isn't at capacity yet.
+
         // Add the player to the room specified by gameID.
         socket.join(gameID)
         console.log(`${playerName} has joined ${gameID}`)
@@ -58,6 +61,8 @@ module.exports = function (io) {
           // except to the sender. The second line sends the 'game_can_start' event to the sender.
           socket.to(socket.data.roomID).emit('game_can_start')
           socket.emit('game_can_start')
+        } else {
+          socket.emit('waiting_for_players')
         }
 
         // Add a listener for when a connected socket leaves the server.
