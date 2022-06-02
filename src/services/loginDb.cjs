@@ -1,18 +1,9 @@
 'use strict'
 const { get } = require('./poolManagement.cjs')
-//this below enables the usage of JSEncrypt
-const { JSDOM } = require('jsdom')
-const jsdom = new JSDOM('<!doctype html><html><body></body></html>')
-const { window } = jsdom
-global.window = window
-global.document = window.document;
-global.navigator ={userAgent: 'node.js'}
-
-const JSEncrypt  = require('jsencrypt')
 
 async function LogIn (username, password) {
 
-  const decryptedPassword = decryptMessage(password)
+
   const sqlCode = `SELECT Password FROM Users WHERE Username = '${username}'`
   return new Promise((resolve, reject) => {
     //validate username input, password does not need to be validated due to base64 format from encryption
@@ -30,8 +21,7 @@ async function LogIn (username, password) {
           try {
             if (list !== undefined) { // If this is true, then the username does not exist.
               const obj = JSON.parse(list)
-              const decryptedDatabaseMessage = decryptMessage(obj.Password)
-              if (decryptedDatabaseMessage === decryptedPassword ) {//this compares the two decrpted messages
+              if (obj.Password === password ) {
                 resolve('User is now logged in')
               } else {
                 resolve('Check username and password.')
@@ -97,13 +87,13 @@ async function registerUser(username, password) {
   })
 }
 
-function decryptMessage(encrypted){
-  //get private key with env file
-  const private_key = process.env.private_key
-  const decrypt = new JSEncrypt()
-  decrypt.setPrivateKey(private_key)
-  //decrypt message with private key and return
-  const decrypted = decrypt.decrypt(encrypted)
-  return decrypted
-}
+// function decryptMessage(encrypted){
+//   //get private key with env file
+//   const private_key = process.env.private_key
+//   const decrypt = new JSEncrypt()
+//   decrypt.setPrivateKey(private_key)
+//   //decrypt message with private key and return
+//   const decrypted = decrypt.decrypt(encrypted)
+//   return decrypted
+// }
 module.exports = {LogIn,registerUser}
