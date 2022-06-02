@@ -27,10 +27,114 @@ module.exports = function (io) {
 
     // We extract the gameID from the sessionInfo string.
     const gameID = socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length - 1)
-    // We extract the number of players from the sessionInfo string.
-    const numPlayers = socket.handshake.auth.sessionInfo.substring(socket.handshake.auth.sessionInfo.length - 1)
+
     // We get the player's name.
     const playerName = socket.handshake.auth.playerName
+
+    // We extract the number of players from the sessionInfo string.
+    const numPlayers = validateNumPlayers(socket.handshake.auth.sessionInfo.substring(socket.handshake.auth.sessionInfo.length - 1))
+
+    if (numPlayers !== -1 && gameID.length !== 0 && playerName.length !== 0) {
+      if (!isRoomEmpty(io, gameID)) {
+        // This socket is not the first player to join the room. Let's check that the room isn't full
+        if (numPlayers > parseInt(io.sockets.adapter.rooms.get(gameID).size)) {
+          // The room isn't full yet so the game hasn't started.
+          socket = addPlayerToRoom(socket, gameID, playerName, numPlayers)
+
+          // Check if the room is now full. If it is, start the game. Otherwise, tell the socket that just joined to wait.
+          if (parseInt(io.sockets.adapter.rooms.get(socket.data.roomID).size) === parseInt(socket.data.numPlayers)) {
+            // The room is now full. Let's start the game.
+            console.log(`All ${socket.data.numPlayers} players have joined ${socket.data.roomID}, starting the game.`)
+
+            // I think there's a better way to do this (only using one event) but I couldn't get anything to work
+            // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room
+            // except to the sender. The second line sends the 'game_can_start' event to the sender.
+            socket.to(socket.data.roomID).emit('game_can_start')
+            socket.emit('game_can_start')
+          } else {
+            // The room is not full yet so we tell the socket that just joined to wait.
+            socket.emit('waiting_for_players') 
+          }
+
+          // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
+          next()
+
+        } else {
+          // The room is full and the game is running
+          return next(new Error('game_already_running'))
+        }
+
+      } else {
+        // This socket is the first player to join the room.
+        socket = addPlayerToRoom(socket, gameID, playerName, numPlayers)
+        socket.emit('waiting_for_players')
+
+        // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
+        next()
+      }
+    } else {
+      return next(new Error('invalid_game_id'))
+    }
+
+
+
+
+
+
+
+    /*
+    if (!isNaN(numPlayers) && parseInt(numPlayers) <= 6 && parseInt(numPlayers) > 1) {
+
+      if (io.sockets.adapter.rooms.get(gameID) === undefined) { // If the room is undefined, nobody is in it.
+        // If the numPlayers are valid, add the player to the new room.
+        // Add the player to the room specified by gameID.
+        socket.join(gameID)
+        console.log(`${playerName} has joined ${gameID}`)
+
+        // We add a 'playerName' attribute *to* the socket object so we can
+        // use that name later on.
+        socket.data.playerName = playerName
+        socket.data.roomID = gameID
+        socket.data.numPlayers = numPlayers
+
+        socket.emit('waiting_for_players')
+      } else {
+        // If we reach this block, then the room is valid. Now we must check if the player can join.
+        if (parseInt(io.sockets.adapter.rooms.get(gameID).size) <= parseInt(numPlayers)) {
+          // Add the player to the room specified by gameID.
+          socket.join(gameID)
+          console.log(`${playerName} has joined ${gameID}`)
+
+          // We add a 'playerName' attribute *to* the socket object so we can
+          // use that name later on.
+          socket.data.playerName = playerName
+          socket.data.roomID = gameID
+          socket.data.numPlayers = numPlayers
+
+          if (parseInt(io.sockets.adapter.rooms.get(socket.data.roomID).size) === parseInt(socket.data.numPlayers)) { // If this is true, then the game can start since the last player has just joined.
+            console.log(`All ${socket.data.numPlayers} players have joined ${socket.data.roomID}, starting the game.`)
+
+            // I think there's a better way to do this (only using one event) but I couldn't get anything to work
+            // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room
+            // except to the sender. The second line sends the 'game_can_start' event to the sender.
+            socket.to(socket.data.roomID).emit('game_can_start')
+            socket.emit('game_can_start')
+          } else { // Not enough players have joined
+            socket.emit('waiting_for_players')
+          }
+        } else {
+          return next(new Error('game_already_running'))
+          //socket.emit('waiting_for_players')
+        }
+      }
+    } else {
+      return next(new Error('invalid_game_id'))
+    }*/
+
+
+
+
+    /*
 
     // Here is where we validate the session info.
     // We make sure that the number of players is actually a number.
@@ -75,7 +179,7 @@ module.exports = function (io) {
       }
     } else {
       return next(new Error('invalid_game_id'))
-    }
+    }*/
   })
 }
 
@@ -87,7 +191,7 @@ module.exports = function (io) {
  * @param {any[]} allLettersColorsArray
  * @param {any[]} currentWordArray
  */
-function testWord (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray) {
+function testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray) {
   // Check if the letters are in the correct places
   let correctWordCount = 0
   for (let i = 0; i < 5; i++) {
@@ -136,7 +240,7 @@ function testWord (letterArray, currentWordIndex, colorArray, currentWordCheck, 
  * @param {any[]} allLettersColorsArray
  * @returns {any[]} allLettersColorsArray
  */
-function updateAllLettersColorsArray (color, letter, allLettersColorsArray) {
+function updateAllLettersColorsArray(color, letter, allLettersColorsArray) {
   for (let i = 0; i < allLettersArray.length; i++) {
     if (allLettersArray[i] === letter) {
       switch (color) {
@@ -158,4 +262,60 @@ function updateAllLettersColorsArray (color, letter, allLettersColorsArray) {
   }
 
   return allLettersColorsArray
+}
+
+/*
+* Returns -1 if numPlayers is invalid. Returns numPlayers if the number if valid.
+*/
+function validateNumPlayers(numPlayersUnchecked) {
+  if (isNaN(numPlayersUnchecked)) {
+    // Not a number
+    return -1
+  } else {
+    let temp = parseInt(numPlayersUnchecked)
+    if (Number.isInteger(temp)) {
+      if (temp > 0 && temp < 7) {
+        // Number is valid
+        return temp
+      } else {
+        // Integer isn't between 1 and 6 (inclusive).
+        return -1
+      }
+    }
+    else {
+      // Number isn't an integer.
+      return -1
+    }
+  }
+}
+
+// Returns true if the specified room is empty. False otherwise.
+function isRoomEmpty(io, gameID) {
+  if (io.sockets.adapter.rooms.get(gameID) === undefined) {
+    return true
+  } else {
+    return false
+  }
+}
+
+// Adds a player to the specified room and returns the socket object.
+// Adds a disconnect listener to the socket.
+function addPlayerToRoom(socket, gameID, playerName, numPlayers) {
+  // This socket is the first player to join the room.
+  // Add the player to the room specified by gameID.
+  socket.join(gameID)
+  console.log(`${playerName} has joined ${gameID}`)
+
+  // We add a 'playerName' attribute *to* the socket object so we can
+  // use that name later on.
+  socket.data.playerName = playerName
+  socket.data.roomID = gameID
+  socket.data.numPlayers = numPlayers
+
+  // Add a listener for when a connected socket leaves the server.
+  socket.on('disconnect', () => {
+    console.log(`${socket.data.playerName} has disconnected`)
+  })
+
+  return socket
 }
