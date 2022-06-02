@@ -15,10 +15,17 @@
 
 <body>
 
+  <div id="spinner" style="display: none;" class="unselectable">
+    <p>Waiting for other players...</p>
+    <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+      <span class="sr-only"></span>
+    </div>
+  </div>
+
   <button type="button" onclick="location.href = '/game/changeBackground';" id="changeBackgroundButton">Change
     Background</button>
 
-    <h1 id="winner"></h1>
+  <h1 id="winner"></h1>
 
   <div id="wordleDiv" class="unselectable">
     <table id="wordleTable">
