@@ -1,8 +1,32 @@
 'use strict'
 const { get } = require('./poolManagement.cjs')
+// import {JSEncrypt} from 'jsencrypt'
+
+// const { JSDOM } = require('jsdom');
+// const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+// const { window } = jsdom;
+// global.window = window;
+// global.document = window.document;
+// global.navigator ={userAgent: 'node.js'};
+
+// global.navigator = { appName: 'protractor' };
+
+// global.window = {}; 
+// const {JSEncrypt} = require('../node_modules/jsencrypt/bin/jsencrypt')
+// // const JSEncrypt = require('../node_modules/jsencrypt/bin/jsencrypt.min.js')
+// // import * as JSEncrypt from '../node_modules/jsencrypt/bin/jsencrypt'
+const { JSDOM } = require('jsdom');
+const jsdom = new JSDOM('<!doctype html><html><body></body></html>');
+const { window } = jsdom;
+global.window = window;
+global.document = window.document;
+global.navigator ={userAgent: 'node.js'};
+
+const JSEncrypt  = require('jsencrypt')
 
 async function LogIn (username, password) {
-  // Gets the word to guess from then checks with the guessed word
+
+  const decryptedPassword = decryptMessage(password)
   const sqlCode = `SELECT Password FROM Users WHERE Username = '${username}'`
   return new Promise((resolve, reject) => {
     if (username === '' & password === '') {
@@ -13,13 +37,15 @@ async function LogIn (username, password) {
       resolve('Please input a password')
     }
 
-    if (/^[a-zA-Z0-9]+$/.test(username) === false & /^[a-zA-Z0-9!@#$%^&]+$/.test(password) === false) {
-      resolve('Username and password are invalid.')
-    } else if (/^[a-zA-Z0-9]+$/.test(username) === false) {
+    // if (/^[a-zA-Z0-9]+$/.test(username) === false /*& /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(password) === false*/) {
+    //   resolve('Username and password are invalid.')
+    // } else 
+    if (/^[a-zA-Z0-9]+$/.test(username) === false) {
       resolve('Please input a valid username')
-    } else if (/^[a-zA-Z0-9!@#$%^&]+$/.test(password) === false) { // Why can the password not contain numbers or special characters?
-      resolve('Please input a valid password')
-    }
+    } 
+    // else if (/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(password) === false) { // Why can the password not contain numbers or special characters?
+    //   resolve('Please input a valid password')
+    // }
 
     get('default').then(
       (pool) => pool.request().query(sqlCode).then(
@@ -29,7 +55,8 @@ async function LogIn (username, password) {
           try {
             if (list !== undefined) { // If this is true, then the username does not exist.
               const obj = JSON.parse(list)
-              if (obj.Password === password) {
+              const decryptedDatabaseMessage = decryptMessage(obj.Password)
+              if (decryptedDatabaseMessage === decryptedPassword ) {
                 resolve('User is now logged in')
               } else {
                 resolve('Check username and password.')
@@ -60,13 +87,15 @@ async function registerUser(username, password) {
       resolve('Please input a password')
     }
 
-    if (/^[a-zA-Z0-9]+$/.test(username) === false & /^[a-zA-Z0-9!@#$%^&]+$/.test(password) === false) {
-      resolve('Username and password are invalid.')
-    } else if (/^[a-zA-Z0-9]+$/.test(username) === false) {
+    // if (/^[a-zA-Z0-9]+$/.test(username) === false /*& /^[a-zA-Z0-9-+/=]+$/.test(password) === false*/) {
+    //   resolve('Username and password are invalid.')
+    // } else 
+    if (/^[a-zA-Z0-9]+$/.test(username) === false) {
       resolve('Please input a valid username')
-    } else if (/^[a-zA-Z0-9!@#$%^&]+$/.test(password) === false) { // Why can the password not contain numbers or special characters?
-      resolve('Please input a valid password')
-    }
+    } 
+    // else if (/^[a-zA-Z0-9-+/=]+$/.test(password) === false) { // Why can the password not contain numbers or special characters?
+    //   resolve('Please input a valid password')
+    // }
     
     get('default').then(
       (pool) => pool.request().query(sqlCode).then(
@@ -76,5 +105,13 @@ async function registerUser(username, password) {
       ).catch(reject) // TODO: find out why this is causing the server to crash
     ).catch(reject) // TODO: find out why this is causing the server to crash
   })
+}
+function decryptMessage(encrypted){
+  const private_key = process.env.private_key
+
+  const decrypt = new JSEncrypt()
+  decrypt.setPrivateKey(private_key)
+  const decrypted = decrypt.decrypt(encrypted)
+  return decrypted
 }
 module.exports = {LogIn,registerUser}

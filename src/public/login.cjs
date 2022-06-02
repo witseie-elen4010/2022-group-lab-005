@@ -2,6 +2,8 @@
 const request = new XMLHttpRequest()
 request.addEventListener('error', onError)
 
+// import { nacl } from '../../node_modules/tweetnacl'
+
 window.onload = function () {
   document.getElementById('loginbutton').addEventListener('click', function (evt) {
     evt.preventDefault()
@@ -11,8 +13,10 @@ window.onload = function () {
     // get username and password
     const username = document.getElementById('username').value
     const password = document.getElementById('password').value
+    const encryptPassword = encryptWithPublicKey(password)
+    console.log(encryptPassword)
     // send username and password to the server via json
-    request.send(JSON.stringify({ usernameInput: username, passwordInput: password }))
+    request.send(JSON.stringify({ usernameInput: username, passwordInput: encryptPassword }))
     // wait for server to respond back
     request.addEventListener('load', receivedValue)
   })
@@ -25,8 +29,10 @@ window.onload = function () {
     // get username and password
     const username = document.getElementById('username').value
     const password = document.getElementById('password').value
+    const encryptPassword = encryptWithPublicKey(password)
+    console.log(encryptPassword)
     // send username and password to the server via json
-    request.send(JSON.stringify({ usernameInput: username, passwordInput: password }))
+    request.send(JSON.stringify({ usernameInput: username, passwordInput: encryptPassword }))
     // wait for server to respond back
     request.addEventListener('load', receivedValue)
   })
@@ -65,4 +71,16 @@ function receivedValue () {
 function onError () {
   // Let's tell the user that something wrong happened.
   document.getElementById('output').innerHTML = 'Status: Error communicating with server.'
+}
+
+function encryptWithPublicKey(password){
+  var public_key = '-----BEGIN PUBLIC KEY-----'
+  public_key += 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9/sIkCl5JcgxrkeAUOIjSYR4o'
+  public_key += 'ZQmsxKF2oKYxpExb2fafvxUv3ZdXwCLmsjMkvO0gctHaajLKdqLah9TgioMOhrGX'
+  public_key += 'a2p8LJIROvd63KJ5Y5Wa5ZCCRa3Nx3pCFY0rKz18OB/1rZ1TJPJnlLOo36+Cq7dm/OIgy6aNFaIFa2MQYQIDAQAB'
+  public_key += '-----END PUBLIC KEY-----'
+  const encrypt = new JSEncrypt()
+  encrypt.setPublicKey(public_key)
+  const encrypted = encrypt.encrypt(password)
+  return encrypted
 }
