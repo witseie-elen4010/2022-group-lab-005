@@ -10,15 +10,28 @@ window.onload = function () {
     // open the post request to the server with url of log
     request.open('POST', '/log', true)
     request.setRequestHeader('Content-type', 'application/json')
-    // get username and password
-    const username = document.getElementById('username').value
-    const password = document.getElementById('password').value
-    const encryptPassword = encryptWithPublicKey(password)
-    console.log(encryptPassword)
-    // send username and password to the server via json
-    request.send(JSON.stringify({ usernameInput: username, passwordInput: encryptPassword }))
-    // wait for server to respond back
-    request.addEventListener('load', receivedValue)
+
+    //check if user have inputed anything
+    if (document.getElementById('username').value === '') {
+      document.getElementById('username').className = 'form-control is-invalid'
+      document.getElementById('password').className = 'form-control'
+      document.getElementById('output').innerHTML = 'Please input your username'
+      console.log(document.getElementById('username').value)
+    } 
+    else if (document.getElementById('password').value === '') {
+      document.getElementById('username').className = 'form-control'
+      document.getElementById('password').className = 'form-control is-invalid'
+      document.getElementById('output').innerHTML = 'Please input your password'
+    } else {
+      // get username and password
+      const username = document.getElementById('username').value
+      const password = document.getElementById('password').value
+      const encryptPassword = encryptWithPublicKey(password)
+      // send username and password to the server via json
+      request.send(JSON.stringify({ usernameInput: username, passwordInput: encryptPassword }))
+      // wait for server to respond back
+      request.addEventListener('load', receivedValue)
+    }
   })
 
   document.getElementById('registerButton').addEventListener('click', function (evt) {
@@ -26,15 +39,27 @@ window.onload = function () {
     // open the post request to the server with url of log
     request.open('POST', '/register', true)
     request.setRequestHeader('Content-type', 'application/json')
-    // get username and password
-    const username = document.getElementById('username').value
-    const password = document.getElementById('password').value
-    const encryptPassword = encryptWithPublicKey(password)
-    console.log(encryptPassword)
-    // send username and password to the server via json
-    request.send(JSON.stringify({ usernameInput: username, passwordInput: encryptPassword }))
-    // wait for server to respond back
-    request.addEventListener('load', receivedValue)
+
+    //check if user have inputed anything
+    if (document.getElementById('username').value === '') {
+      document.getElementById('username').className = 'form-control is-invalid'
+      document.getElementById('password').className = 'form-control'
+      document.getElementById('output').innerHTML = 'Please input your username'
+    } 
+    else if (document.getElementById('password').value === '') {
+      document.getElementById('username').className = 'form-control'
+      document.getElementById('password').className = 'form-control is-invalid'
+      document.getElementById('output').innerHTML = 'Please input your password'
+    } else {
+      // get username and password
+      const username = document.getElementById('username').value
+      const password = document.getElementById('password').value
+      const encryptPassword = encryptWithPublicKey(password)
+      // send username and password to the server via json
+      request.send(JSON.stringify({ usernameInput: username, passwordInput: encryptPassword }))
+      // wait for server to respond back
+      request.addEventListener('load', receivedValue)
+    }
   })
 }
 
@@ -47,13 +72,8 @@ function receivedValue () {
   // out put the value
   document.getElementById('output').innerHTML = msg
 
-  if (msg === 'Username and password are invalid.') {
-    document.getElementById('password').className = 'form-control is-invalid'
-    document.getElementById('username').className = 'form-control is-invalid'
-  } else if (msg === 'Please input a valid password') {
-    document.getElementById('username').className = 'form-control'
-    document.getElementById('password').className = 'form-control is-invalid'
-  } else if (msg === 'Please input a valid username') {
+
+  if (msg === 'Please input a valid username') {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
   } else if(msg === "User is now logged in" || msg === "Registration completed"){

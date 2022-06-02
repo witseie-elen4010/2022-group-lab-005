@@ -29,34 +29,23 @@ async function LogIn (username, password) {
   const decryptedPassword = decryptMessage(password)
   const sqlCode = `SELECT Password FROM Users WHERE Username = '${username}'`
   return new Promise((resolve, reject) => {
-    if (username === '' & password === '') {
-      resolve('Please input a username and password')
-    } else if (username === '') {
+    //validate username input, password does not need to be validated due to base64 format from encryption
+    if (username === '') {
       resolve('Please input a username')
-    } else if (password === '') {
-      resolve('Please input a password')
-    }
-
-    // if (/^[a-zA-Z0-9]+$/.test(username) === false /*& /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(password) === false*/) {
-    //   resolve('Username and password are invalid.')
-    // } else 
+    } 
     if (/^[a-zA-Z0-9]+$/.test(username) === false) {
       resolve('Please input a valid username')
     } 
-    // else if (/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(password) === false) { // Why can the password not contain numbers or special characters?
-    //   resolve('Please input a valid password')
-    // }
 
     get('default').then(
       (pool) => pool.request().query(sqlCode).then(
         (result) => {
           const list = JSON.stringify(result.recordset[0])
-
           try {
             if (list !== undefined) { // If this is true, then the username does not exist.
               const obj = JSON.parse(list)
               const decryptedDatabaseMessage = decryptMessage(obj.Password)
-              if (decryptedDatabaseMessage === decryptedPassword ) {
+              if (decryptedDatabaseMessage === decryptedPassword ) {//this compares the two decrpted messages
                 resolve('User is now logged in')
               } else {
                 resolve('Check username and password.')
@@ -76,6 +65,7 @@ async function LogIn (username, password) {
 
 
 async function registerUser(username, password) {
+  const sqlCodeCheckUserExist = `SELECT Password FROM Users WHERE Username = '${username}'`
   const sqlCode = `INSERT INTO Users (Username, Password, SettingID)
   VALUES ('${username}','${password}','1');`//default dark mode off
   return new Promise((resolve, reject) => {
@@ -87,30 +77,46 @@ async function registerUser(username, password) {
       resolve('Please input a password')
     }
 
-    // if (/^[a-zA-Z0-9]+$/.test(username) === false /*& /^[a-zA-Z0-9-+/=]+$/.test(password) === false*/) {
-    //   resolve('Username and password are invalid.')
-    // } else 
     if (/^[a-zA-Z0-9]+$/.test(username) === false) {
       resolve('Please input a valid username')
     } 
-    // else if (/^[a-zA-Z0-9-+/=]+$/.test(password) === false) { // Why can the password not contain numbers or special characters?
-    //   resolve('Please input a valid password')
-    // }
     
     get('default').then(
-      (pool) => pool.request().query(sqlCode).then(
+      (pool) => pool.request().query(sqlCodeCheckUserExist).then( //first query to see if the inputed username exists
         (result) => {
-          resolve("Registration completed")
+          const list = JSON.stringify(result.recordset[0])
+          try {
+            if (list === undefined) { // If this is true, then the username does not exist.
+              //if username does not exist it will insert new into database
+              //this is the actual sql insert, it will insert the username and password onto the database
+              get('default').then(
+                (pool) => pool.request().query(sqlCode).then(
+                  () => {
+                    resolve()
+                  }
+                ).catch(reject)
+              ).catch(reject)
+              
+              resolve("Registration completed")
+            } else {
+              resolve('Account exists already.')
+            }
+          } catch (err) {
+            console.log(err)
+            reject(err)
+          }
         }
-      ).catch(reject) // TODO: find out why this is causing the server to crash
-    ).catch(reject) // TODO: find out why this is causing the server to crash
+      ).catch(reject)
+    ).catch(reject)
   })
 }
-function decryptMessage(encrypted){
-  const private_key = process.env.private_key
 
+function decryptMessage(encrypted){
+  //get private key with env file
+  const private_key = process.env.private_key
   const decrypt = new JSEncrypt()
   decrypt.setPrivateKey(private_key)
+  //decrypt message with private key and return
   const decrypted = decrypt.decrypt(encrypted)
   return decrypted
 }
