@@ -53,17 +53,15 @@ module.exports = function (io) {
             socket.emit('game_can_start')
           } else {
             // The room is not full yet so we tell the socket that just joined to wait.
-            socket.emit('waiting_for_players') 
+            socket.emit('waiting_for_players')
           }
 
           // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
           next()
-
         } else {
           // The room is full and the game is running
           return next(new Error('game_already_running'))
         }
-
       } else {
         // This socket is the first player to join the room.
         socket = addPlayerToRoom(socket, gameID, playerName, numPlayers)
@@ -75,12 +73,6 @@ module.exports = function (io) {
     } else {
       return next(new Error('invalid_game_id'))
     }
-
-
-
-
-
-
 
     /*
     if (!isNaN(numPlayers) && parseInt(numPlayers) <= 6 && parseInt(numPlayers) > 1) {
@@ -129,10 +121,7 @@ module.exports = function (io) {
       }
     } else {
       return next(new Error('invalid_game_id'))
-    }*/
-
-
-
+    } */
 
     /*
 
@@ -179,7 +168,7 @@ module.exports = function (io) {
       }
     } else {
       return next(new Error('invalid_game_id'))
-    }*/
+    } */
   })
 }
 
@@ -191,7 +180,7 @@ module.exports = function (io) {
  * @param {any[]} allLettersColorsArray
  * @param {any[]} currentWordArray
  */
-function testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray) {
+function testWord (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray) {
   // Check if the letters are in the correct places
   let correctWordCount = 0
   for (let i = 0; i < 5; i++) {
@@ -240,7 +229,7 @@ function testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, a
  * @param {any[]} allLettersColorsArray
  * @returns {any[]} allLettersColorsArray
  */
-function updateAllLettersColorsArray(color, letter, allLettersColorsArray) {
+function updateAllLettersColorsArray (color, letter, allLettersColorsArray) {
   for (let i = 0; i < allLettersArray.length; i++) {
     if (allLettersArray[i] === letter) {
       switch (color) {
@@ -267,12 +256,12 @@ function updateAllLettersColorsArray(color, letter, allLettersColorsArray) {
 /*
 * Returns -1 if numPlayers is invalid. Returns numPlayers if the number if valid.
 */
-function validateNumPlayers(numPlayersUnchecked) {
+function validateNumPlayers (numPlayersUnchecked) {
   if (isNaN(numPlayersUnchecked)) {
     // Not a number
     return -1
   } else {
-    let temp = parseInt(numPlayersUnchecked)
+    const temp = parseInt(numPlayersUnchecked)
     if (Number.isInteger(temp)) {
       if (temp > 0 && temp < 7) {
         // Number is valid
@@ -281,8 +270,7 @@ function validateNumPlayers(numPlayersUnchecked) {
         // Integer isn't between 1 and 6 (inclusive).
         return -1
       }
-    }
-    else {
+    } else {
       // Number isn't an integer.
       return -1
     }
@@ -290,7 +278,7 @@ function validateNumPlayers(numPlayersUnchecked) {
 }
 
 // Returns true if the specified room is empty. False otherwise.
-function isRoomEmpty(io, gameID) {
+function isRoomEmpty (io, gameID) {
   if (io.sockets.adapter.rooms.get(gameID) === undefined) {
     return true
   } else {
@@ -300,7 +288,7 @@ function isRoomEmpty(io, gameID) {
 
 // Adds a player to the specified room and returns the socket object.
 // Adds a disconnect listener to the socket.
-function addPlayerToRoom(socket, gameID, playerName, numPlayers) {
+function addPlayerToRoom (socket, gameID, playerName, numPlayers) {
   // This socket is the first player to join the room.
   // Add the player to the room specified by gameID.
   socket.join(gameID)
