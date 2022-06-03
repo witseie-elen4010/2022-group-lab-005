@@ -6,6 +6,7 @@
   <meta charset="utf-8" />
 
   <link rel="stylesheet" href="/css/bootstrap.min.css" />
+  <script type="module" src="/src/public/lobby.js"></script>
 </head>
 
 <style>
@@ -29,7 +30,7 @@
 
 <body>
   <h1>Welcome to Hazard a Guess Lobby!</h1>
-  <h2>Waiting for players...</h2>
+  <h2 id="openGames"></h2>
 
   <br />
   <h2>Choose a game mode:</h2>
@@ -48,6 +49,27 @@
       Start Game
     </button>
   </form>
+
+  <div>
+    <table class="table" id="gameInfo">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Available Slots</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mark</td>
+          <td>@mdo</td>
+        </tr>
+        <tr>
+          <td>Jacob</td>
+          <td>@fat</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </body>
 
 </html>

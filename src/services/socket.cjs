@@ -3,6 +3,11 @@
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 
 module.exports = function (io) {
+  io.of('/rooms').use((socket, next) => {
+    const roomList = getOpenGames(io)
+    socket.emit('update_game_list', roomList)
+    next()
+  })
 
   io.on('connection', (socket) => {
     socket.on('send_guess', function (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray) {
@@ -26,14 +31,14 @@ module.exports = function (io) {
     // When the a connection is attempted, the client sends an object that contains the player's name and a string called sessionInfo. This string is of the format:
     // x....xy where all the xs form the roomID and y is the number of players that are going to be in the game.
 
-    // We extract the gameID from the sessionInfo string.
-    const gameID = socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length - 1)
-
     // We get the player's name.
     const playerName = socket.handshake.auth.playerName
 
     // We extract the number of players from the sessionInfo string.
     const numPlayers = validateNumPlayers(socket.handshake.auth.sessionInfo.substring(socket.handshake.auth.sessionInfo.length - 1))
+
+     // We extract the gameID from the sessionInfo string.
+     const gameID = socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length - 1) + '_game_' + numPlayers.toString() 
 
     if (numPlayers !== -1 && gameID.length !== 0 && playerName.length !== 0) {
       if (!isRoomEmpty(io, gameID)) {
@@ -200,17 +205,15 @@ function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
     socket.data.playerNum = parseInt(io.sockets.adapter.rooms.get(gameID).size) + 1
   }
 
-  // Add the player to the room specified by gameID.
-  socket.join(gameID)
-  console.log(`${playerName} has joined ${gameID}`)
-
   // We add a 'playerName' attribute *to* the socket object so we can
   // use that name later on.
   socket.data.playerName = playerName
   socket.data.roomID = gameID
   socket.data.numPlayers = numPlayers
 
-
+  // Add the player to the room specified by gameID.
+  socket.join(socket.data.roomID)
+  console.log(`${playerName} has joined ${gameID}`)
 
   // Add a listener for when a connected socket leaves the server.
   socket.on('disconnect', () => {
@@ -218,4 +221,32 @@ function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
   })
 
   return socket
+}
+
+function getOpenGames(io) {
+  const rooms = io.sockets.adapter.rooms
+  let roomList = ''
+
+  rooms.forEach((value, key) => {
+    if (key.includes('game')) {
+      // Now we know that this room is a game room.
+      // Let's see how many players are going to be playing.
+      const expectedPlayerNum = parseInt(key.substring(key.length - 1))
+
+      // Let's check if the room is empty
+      if (isRoomEmpty(io, key)) {
+        // The room is empty
+        // idk what to do here. This code shouldn't be reachable tho.
+      } else {
+        const currentPlayerNum = parseInt(io.sockets.adapter.rooms.get(key).size)
+
+        if (expectedPlayerNum > currentPlayerNum) {
+          // There's at least one slot available.
+          roomList += `${key} has ${expectedPlayerNum - currentPlayerNum} slot(s) remaining\n`
+        }
+      }
+    }
+  })
+
+  return roomList
 }
