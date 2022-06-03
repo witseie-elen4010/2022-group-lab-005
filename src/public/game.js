@@ -64,7 +64,7 @@ socket.on('game_can_start', () => {
 })
 
 // This will fire when the server sends the opponents' colours to the client.
-socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName) => {
+socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum) => {
   if (didTheyWin) {
     // Disable the keyboard.
     document.removeEventListener('keydown', keyboardInputEvent)
@@ -72,7 +72,7 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName) => {
     socket.emit('game_over')
   }
 
-  updateOpponentColors(colorArr)
+  updateOpponentColors(colorArr, playerNum)
 })
 
 // This will fire when the server sends the results of the word validation and testing to the client.
@@ -136,8 +136,10 @@ function updateWordleTableColor () {
   }
 }
 
-function updateOpponentColors (arrayOfColors) {
-  const table = document.getElementById('opponentColorTable')
+function updateOpponentColors (arrayOfColors, playerNum) {
+  let table = document.getElementById(`opponent${playerNum}Table`)
+
+  //const table = document.getElementById('opponentColorTable')
   // const tempColor = 'grey'
   for (let i = 0; i < table.rows.length; i++) {
     for (let j = 0; j < table.rows[i].cells.length; j++) {
