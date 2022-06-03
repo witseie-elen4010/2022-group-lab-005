@@ -3,30 +3,30 @@
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 
 module.exports = function (io) {
-  io.of('/rooms').use((socket, next) => {
-    const roomArr = getOpenGames(io)
-    socket.emit('update_game_list', roomArr)
-    next()
-  })
-
-  io.on('connection', (socket) => {
-    socket.on('send_guess', function (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray) {
-      const currentWordArray = ['H', 'E', 'L', 'L', 'O']
-      const [letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin] = testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray)
-
-      socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
-      socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
-    })
-
-    socket.on('game_over', () => {
-      socket.disconnect()
-    })
-  })
-
+  /**************** Middleware *****************/
   // This is called a middleware. Its a type of function that is run for every incoming connection.
   // In this case, it is being used for authentication. If the code is happy with the details that the
   // incoming connection specified, this code will add that connection to the specific room for the game.
   // See https://socket.io/docs/v4/middlewares/ for details.
+
+  // This middleware will only fire if a connection is coming from the '/rooms' namespace.
+  io.of('/rooms').use((socket, next) => {
+    console.log(`A lobby client has connected`)
+
+    // Attach a disconnect listener
+    socket.on('disconnect', () => {
+      console.log(`A lobby client has disconnected`)
+    })
+
+    // Get the open games and send them back to the client.
+    const roomArr = getOpenGames(io)
+    socket.emit('update_game_list', roomArr)
+
+     // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
+    next()
+  })
+
+  // This middleware will only fire if a connection is coming from the default ('/') namespace.
   io.use((socket, next) => {
     // When the a connection is attempted, the client sends an object that contains the player's name and a string called sessionInfo. This string is of the format:
     // x....xy where all the xs form the roomID and y is the number of players that are going to be in the game.
@@ -86,7 +86,34 @@ module.exports = function (io) {
       return next(new Error('invalid_game_id'))
     }
   })
+
+  /***************Regular listeners*****************/
+
+  // This listener will only fire if a connection is coming from the '/rooms' namespace.
+  io.of('/rooms').on('connection', (socket) => {
+    socket.on('create_game', function(gameType, numPlayers) {
+      console.log(`Type: ${gameType} Number of players: ${numPlayers}`)
+    })
+
+  })
+
+  // This listener will fire for a connection that comes from the default ('/') namespace.
+  io.on('connection', (socket) => {
+    socket.on('send_guess', function (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray) {
+      const currentWordArray = ['H', 'E', 'L', 'L', 'O']
+      const [letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin] = testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray)
+
+      socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
+      socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
+    })
+
+    socket.on('game_over', () => {
+      socket.disconnect()
+    })
+  })
 }
+
+/*********** Helper functions **************/
 
 /**
  * @param {{ [x: string]: any[]; }} letterArray

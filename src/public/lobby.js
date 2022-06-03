@@ -26,3 +26,22 @@ socket.on('update_game_list', (openGames) => {
         table.parentNode.replaceChild(emptyTblBdy, table)
     }
 })
+
+document.getElementById('createGameBtn').addEventListener('click', () => {
+    // Get the number of players
+    const numPlayers = document.getElementById('playerRnge').value
+
+    let gameType
+
+    // Check the radio buttons
+    if (document.getElementById('standardRdo').checked) {
+        //console.log(`Standard game with ${numPlayers} players.`)
+        gameType = 'standard'
+    } else {
+        //console.log(`Custom game with ${numPlayers} players.`)
+        gameType = 'custom'
+    }
+
+    socket.connect()
+    socket.emit('create_game', gameType, numPlayers)
+})
