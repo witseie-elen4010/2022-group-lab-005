@@ -6,9 +6,9 @@ module.exports = {
     const pool = await get('default')
 
     // Get dark mode setting for specific user
-    const mode = await pool.request().query("SELECT Darkmode FROM User_Details WHERE Username = '" + user + "'")
+    const mode = await pool.request().query("SELECT DarkMode FROM [dbo].[UserSettings] WHERE ID = '1'")
 
-    if (mode.recordset[0].Darkmode === true) {
+    if (mode.recordset[0].DarkMode === true) {
       return 'true'
     } else {
       return 'false'
@@ -16,9 +16,9 @@ module.exports = {
   },
 
   // This should go in its own file, not in testDB which is for testing the DB and pool.
-  changeMode: async function changeMode (Darkmode) {
+  changeMode: async function changeMode (DarkMode) {
     // update users table if dark mode has changed
-    const sqlCode = `UPDATE dbo.User_Details SET DarkMode = '${Darkmode}' WHERE Username = 'user'`
+    const sqlCode = `UPDATE [dbo].[UserSettings] SET DarkMode = '${DarkMode}' WHERE ID = '1'`
 
     console.log(sqlCode)
     get('default').then(

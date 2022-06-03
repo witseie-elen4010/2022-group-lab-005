@@ -16,12 +16,14 @@ fetch('/user/api/DarkModeData')
     let textColour = 'black'
     let backColour = 'white'
     let buttonColour = 'grey'
-
+    const dark = document.querySelectorAll('.dark-mode')
+    document.style = ".dark-mode";
     //  set current current scheme variables
     if (darkMode === 'true') {
       textColour = 'blue'
       backColour = 'black'
       buttonColour = 'white'
+      document.body.classList.toggle("dark-mode");
     } else {
       textColour = 'black'
       backColour = 'white'
@@ -30,20 +32,15 @@ fetch('/user/api/DarkModeData')
 
     const settingsButton = document.getElementById('settingsButton')
 
-    // redirect to settings page when button is pressed
-    settingsButton.addEventListener('click', function () {
-      location.href = '/user/settings'
-    }, false)
-
     // set colour scheme of this page
-    document.body.style.color = textColour
-    document.body.style.backgroundColor = backColour
-    settingsButton.style.backgroundColor = buttonColour
-    settingsButton.style.color = textColour
+    // document.body.style.color = textColour
+    // document.body.style.backgroundColor = backColour
+    // settingsButton.style.backgroundColor = buttonColour
+    // settingsButton.style.color = textColour
 
-    // set current current scheme variables
-    sessionStorage.setItem('textColour', textColour)
-    sessionStorage.setItem('backColour', backColour)
-    sessionStorage.setItem('buttonColour', buttonColour)
+    // // set current current scheme variables
+    // sessionStorage.setItem('textColour', textColour)
+    // sessionStorage.setItem('backColour', backColour)
+    // sessionStorage.setItem('buttonColour', buttonColour)
   })
   .catch(error => document.write(`Fetch failed: ${error}`))
