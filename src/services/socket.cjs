@@ -3,13 +3,14 @@
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 
 module.exports = function (io) {
+
   io.on('connection', (socket) => {
     socket.on('send_guess', function (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray) {
       const currentWordArray = ['H', 'E', 'L', 'L', 'O']
       const [letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin] = testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray)
 
       socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
-      socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName) // These values get broadcast to everyone except the sender.
+      socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
     })
 
     socket.on('game_over', () => {
@@ -39,7 +40,7 @@ module.exports = function (io) {
         // This socket is not the first player to join the room. Let's check that the room isn't full
         if (numPlayers > parseInt(io.sockets.adapter.rooms.get(gameID).size)) {
           // The room isn't full yet so the game hasn't started.
-          socket = addPlayerToRoom(socket, gameID, playerName, numPlayers)
+          socket = addPlayerToRoom(socket, gameID, playerName, numPlayers, io)
 
           // Check if the room is now full. If it is, start the game. Otherwise, tell the socket that just joined to wait.
           if (parseInt(io.sockets.adapter.rooms.get(socket.data.roomID).size) === parseInt(socket.data.numPlayers)) {
@@ -64,7 +65,7 @@ module.exports = function (io) {
         }
       } else {
         // This socket is the first player to join the room.
-        socket = addPlayerToRoom(socket, gameID, playerName, numPlayers)
+        socket = addPlayerToRoom(socket, gameID, playerName, numPlayers, io)
         socket.emit('waiting_for_players')
 
         // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
@@ -73,102 +74,6 @@ module.exports = function (io) {
     } else {
       return next(new Error('invalid_game_id'))
     }
-
-    /*
-    if (!isNaN(numPlayers) && parseInt(numPlayers) <= 6 && parseInt(numPlayers) > 1) {
-
-      if (io.sockets.adapter.rooms.get(gameID) === undefined) { // If the room is undefined, nobody is in it.
-        // If the numPlayers are valid, add the player to the new room.
-        // Add the player to the room specified by gameID.
-        socket.join(gameID)
-        console.log(`${playerName} has joined ${gameID}`)
-
-        // We add a 'playerName' attribute *to* the socket object so we can
-        // use that name later on.
-        socket.data.playerName = playerName
-        socket.data.roomID = gameID
-        socket.data.numPlayers = numPlayers
-
-        socket.emit('waiting_for_players')
-      } else {
-        // If we reach this block, then the room is valid. Now we must check if the player can join.
-        if (parseInt(io.sockets.adapter.rooms.get(gameID).size) <= parseInt(numPlayers)) {
-          // Add the player to the room specified by gameID.
-          socket.join(gameID)
-          console.log(`${playerName} has joined ${gameID}`)
-
-          // We add a 'playerName' attribute *to* the socket object so we can
-          // use that name later on.
-          socket.data.playerName = playerName
-          socket.data.roomID = gameID
-          socket.data.numPlayers = numPlayers
-
-          if (parseInt(io.sockets.adapter.rooms.get(socket.data.roomID).size) === parseInt(socket.data.numPlayers)) { // If this is true, then the game can start since the last player has just joined.
-            console.log(`All ${socket.data.numPlayers} players have joined ${socket.data.roomID}, starting the game.`)
-
-            // I think there's a better way to do this (only using one event) but I couldn't get anything to work
-            // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room
-            // except to the sender. The second line sends the 'game_can_start' event to the sender.
-            socket.to(socket.data.roomID).emit('game_can_start')
-            socket.emit('game_can_start')
-          } else { // Not enough players have joined
-            socket.emit('waiting_for_players')
-          }
-        } else {
-          return next(new Error('game_already_running'))
-          //socket.emit('waiting_for_players')
-        }
-      }
-    } else {
-      return next(new Error('invalid_game_id'))
-    } */
-
-    /*
-
-    // Here is where we validate the session info.
-    // We make sure that the number of players is actually a number.
-    // We make sure that the number of players is between (inclusive) 2 and HOW MANY PLAYERS??
-    // We make sure that the gameID is valid (i.e. is of the correct form and has no invalid characters)
-    // TODO: Validate the gameID. If we use UUID for the gameID, then we can just use a pre-made validator.
-    if (numPlayers <= 6 && numPlayers > 1 && !isNaN(numPlayers)) {
-      // If the room doesn't exist, then we can check how many players are in it!
-      if (io.sockets.adapter.rooms.get(gameID) !== undefined && parseInt(io.sockets.adapter.rooms.get(gameID).size) > parseInt(numPlayers)) {
-        return next(new Error('game_already_running'))
-      } else {
-        // This code is run if the room does not exist yet OR if the room does exist but it isn't at capacity yet.
-
-        // Add the player to the room specified by gameID.
-        socket.join(gameID)
-        console.log(`${playerName} has joined ${gameID}`)
-
-        // We add a 'playerName' attribute *to* the socket object so we can
-        // use that name later on.
-        socket.data.playerName = playerName
-        socket.data.roomID = gameID
-        socket.data.numPlayers = numPlayers
-
-        if (parseInt(io.sockets.adapter.rooms.get(socket.data.roomID).size) === parseInt(socket.data.numPlayers)) {
-          console.log(`All ${socket.data.numPlayers} players have joined ${socket.data.roomID}, starting the game.`)
-          // I think there's a better way to do this (only using one event) but I couldn't get anything to work
-          // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room
-          // except to the sender. The second line sends the 'game_can_start' event to the sender.
-          socket.to(socket.data.roomID).emit('game_can_start')
-          socket.emit('game_can_start')
-        } else {
-          socket.emit('waiting_for_players')
-        }
-
-        // Add a listener for when a connected socket leaves the server.
-        socket.on('disconnect', () => {
-          console.log(`${socket.data.playerName} has disconnected`)
-        })
-
-        // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
-        next()
-      }
-    } else {
-      return next(new Error('invalid_game_id'))
-    } */
   })
 }
 
@@ -288,8 +193,13 @@ function isRoomEmpty (io, gameID) {
 
 // Adds a player to the specified room and returns the socket object.
 // Adds a disconnect listener to the socket.
-function addPlayerToRoom (socket, gameID, playerName, numPlayers) {
-  // This socket is the first player to join the room.
+function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
+  if (isRoomEmpty(io, gameID)) {
+    socket.data.playerNum = 1
+  } else {
+    socket.data.playerNum = parseInt(io.sockets.adapter.rooms.get(gameID).size) + 1
+  }
+
   // Add the player to the room specified by gameID.
   socket.join(gameID)
   console.log(`${playerName} has joined ${gameID}`)
@@ -299,6 +209,8 @@ function addPlayerToRoom (socket, gameID, playerName, numPlayers) {
   socket.data.playerName = playerName
   socket.data.roomID = gameID
   socket.data.numPlayers = numPlayers
+
+
 
   // Add a listener for when a connected socket leaves the server.
   socket.on('disconnect', () => {
