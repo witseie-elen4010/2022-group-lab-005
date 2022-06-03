@@ -4,8 +4,8 @@ const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 
 
 module.exports = function (io) {
   io.of('/rooms').use((socket, next) => {
-    const roomList = getOpenGames(io)
-    socket.emit('update_game_list', roomList)
+    const roomArr = getOpenGames(io)
+    socket.emit('update_game_list', roomArr)
     next()
   })
 
@@ -37,8 +37,8 @@ module.exports = function (io) {
     // We extract the number of players from the sessionInfo string.
     const numPlayers = validateNumPlayers(socket.handshake.auth.sessionInfo.substring(socket.handshake.auth.sessionInfo.length - 1))
 
-     // We extract the gameID from the sessionInfo string.
-     const gameID = socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length - 1) + '_game_' + numPlayers.toString() 
+    // We extract the gameID from the sessionInfo string.
+    const gameID = socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length - 1) + '_game_' + numPlayers.toString()
 
     if (numPlayers !== -1 && gameID.length !== 0 && playerName.length !== 0) {
       if (!isRoomEmpty(io, gameID)) {
@@ -62,6 +62,9 @@ module.exports = function (io) {
             socket.emit('waiting_for_players')
           }
 
+          // Update all the clients looking at the lobby page.
+          io.of('/rooms').emit('update_game_list', getOpenGames(io))
+
           // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
           next()
         } else {
@@ -72,6 +75,9 @@ module.exports = function (io) {
         // This socket is the first player to join the room.
         socket = addPlayerToRoom(socket, gameID, playerName, numPlayers, io)
         socket.emit('waiting_for_players')
+
+        // Update all the clients looking at the lobby page.
+        io.of('/rooms').emit('update_game_list', getOpenGames(io))
 
         // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
         next()
@@ -90,7 +96,7 @@ module.exports = function (io) {
  * @param {any[]} allLettersColorsArray
  * @param {any[]} currentWordArray
  */
-function testWord (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray) {
+function testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray) {
   // Check if the letters are in the correct places
   let correctWordCount = 0
   for (let i = 0; i < 5; i++) {
@@ -139,7 +145,7 @@ function testWord (letterArray, currentWordIndex, colorArray, currentWordCheck, 
  * @param {any[]} allLettersColorsArray
  * @returns {any[]} allLettersColorsArray
  */
-function updateAllLettersColorsArray (color, letter, allLettersColorsArray) {
+function updateAllLettersColorsArray(color, letter, allLettersColorsArray) {
   for (let i = 0; i < allLettersArray.length; i++) {
     if (allLettersArray[i] === letter) {
       switch (color) {
@@ -166,7 +172,7 @@ function updateAllLettersColorsArray (color, letter, allLettersColorsArray) {
 /*
 * Returns -1 if numPlayers is invalid. Returns numPlayers if the number if valid.
 */
-function validateNumPlayers (numPlayersUnchecked) {
+function validateNumPlayers(numPlayersUnchecked) {
   if (isNaN(numPlayersUnchecked)) {
     // Not a number
     return -1
@@ -188,7 +194,7 @@ function validateNumPlayers (numPlayersUnchecked) {
 }
 
 // Returns true if the specified room is empty. False otherwise.
-function isRoomEmpty (io, gameID) {
+function isRoomEmpty(io, gameID) {
   if (io.sockets.adapter.rooms.get(gameID) === undefined) {
     return true
   } else {
@@ -198,7 +204,7 @@ function isRoomEmpty (io, gameID) {
 
 // Adds a player to the specified room and returns the socket object.
 // Adds a disconnect listener to the socket.
-function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
+function addPlayerToRoom(socket, gameID, playerName, numPlayers, io) {
   if (isRoomEmpty(io, gameID)) {
     socket.data.playerNum = 1
   } else {
@@ -224,8 +230,8 @@ function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
 }
 
 function getOpenGames(io) {
-  const rooms = io.sockets.adapter.rooms
-  let roomList = ''
+  const rooms = io.sockets.adapter.rooms // https://simplernerd.com/js-socketio-active-rooms/
+  let roomArr = []
 
   rooms.forEach((value, key) => {
     if (key.includes('game')) {
@@ -240,13 +246,15 @@ function getOpenGames(io) {
       } else {
         const currentPlayerNum = parseInt(io.sockets.adapter.rooms.get(key).size)
 
-        if (expectedPlayerNum > currentPlayerNum) {
+        if (currentPlayerNum < expectedPlayerNum) {
           // There's at least one slot available.
-          roomList += `${key} has ${expectedPlayerNum - currentPlayerNum} slot(s) remaining\n`
+          const temp = expectedPlayerNum - currentPlayerNum
+          roomArr.push({ roomName: key.substring(0, key.indexOf('_')), availSlots: temp })
         }
       }
     }
   })
 
-  return roomList
+
+  return roomArr
 }
