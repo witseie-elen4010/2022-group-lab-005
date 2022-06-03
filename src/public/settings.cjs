@@ -12,6 +12,7 @@ darkModeButton.addEventListener('click', function () {
   backColour = 'black'
   buttonColour = 'white'
   const mode = 'true'
+  document.body.classList.toggle("dark-mode")
   sendModeToServer(mode)
 }, false)
 
@@ -22,6 +23,7 @@ lightModeButton.addEventListener('click', function () {
   backColour = 'white'
   buttonColour = 'grey'
   const mode = 'false'
+  document.body.classList.toggle("light-mode");
   sendModeToServer(mode)
 }, false)
 
