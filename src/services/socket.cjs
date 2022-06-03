@@ -1,5 +1,7 @@
 'use strict'
 
+const { v4: uuidv4 } = require('uuid')
+
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 
 module.exports = function (io) {
@@ -38,7 +40,8 @@ module.exports = function (io) {
     const numPlayers = validateNumPlayers(socket.handshake.auth.sessionInfo.substring(socket.handshake.auth.sessionInfo.length - 1))
 
     // We extract the gameID from the sessionInfo string.
-    const gameID = socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length - 1) + '_game_' + numPlayers.toString()
+    // We add _game_ and numPlayers to the gameID so that we can determine if the room (socket.io) (which has a identity of gameID) is a game or if it is some other room.
+    const gameID = socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length) + '_game_' + numPlayers.toString()
 
     if (numPlayers !== -1 && gameID.length !== 0 && playerName.length !== 0) {
       if (!isRoomEmpty(io, gameID)) {
@@ -93,6 +96,8 @@ module.exports = function (io) {
   io.of('/rooms').on('connection', (socket) => {
     socket.on('create_game', function(gameType, numPlayers) {
       console.log(`Type: ${gameType} Number of players: ${numPlayers}`)
+      const gameID = uuidv4().toString() + numPlayers.toString()
+      socket.emit('get_game_id', gameID)
     })
 
   })

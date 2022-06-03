@@ -102,7 +102,7 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
 /** ********* General code ***********/
 
 // This is used to identify the user. It will be replaced with the identity from the login system.
-const gameID = prompt('Please enter your game ID', 'ID')
+const gameID = window.sessionStorage.getItem('gameID') //prompt('Please enter your game ID', 'ID')
 // Last digit of gameID is the number of players!
 
 const userName = prompt('Please enter your username', 'Username')
