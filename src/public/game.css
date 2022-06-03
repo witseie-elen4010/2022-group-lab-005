@@ -1,58 +1,80 @@
+#gridContainer{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  align-content: center;
+  flex-wrap: nowrap;
+  height: 100vh;
+}
+#opponentsDivLeft {
+  order: 1;
+  width:30%;
+  background-color: lemonchiffon;
+
+}
+
+#playerDiv{
+  order: 2;
+  width:40%;
+}
+
+#opponentsDivRight{
+  order: 3;
+  width:30%;
+  background-color: red;
+
+}
+
+
+
 #wordleDiv {
   display: block;
-  margin-left: 40vw;
-  margin-right: 40vw;
-  margin-top: 5vw;
-}
-
-#opponentDiv {
-  display: block;
-  margin-left: 40vw;
-  margin-right: 40vw;
-  margin-top: 5vw;
-}
-
-#wordleTable {
-  table-layout: fixed;
-  text-align: center;
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 7px;
-}
-
-#opponentColorTable {
-  table-layout: fixed;
   text-align: center;
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 7px;
+}
+.wordleRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
 }
 
-#wordleTable th {
-  height: 4vw;
-}
-
-#opponentColorTable th {
-  height: 4vw;
+.wordleRow .block{
+  flex-grow: 1;
+  margin: 5px;
+  border-radius: 10%;
+  min-height: 4vw;
+  text-align: center;
+  max-width: 4vw;
 }
 
 #keyboardDiv {
+  padding-top: 10%;
   display: block;
-  margin-left: 25vw;
-  margin-right: 25vw;
-  margin-top: 5vw;
-}
-
-#keyboardTable {
-  table-layout: fixed;
-  text-align: center;
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 7px;
+}
+.keyboardRow{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+#keyboardDiv .keyboardRow .key{
+  flex-grow: 1;
+  margin: 5px;
+  border-radius: 10%;
+  cursor: pointer;
+  min-height: 3vw;
+  text-align: center;
 }
 
-#keyboardTable th {
-  height: 4vw;
+#opponentDiv {
+}
+#opponentColorTable {
+}
+#opponentColorTable th {
 }
 
 @media only screen and (max-width: 1200px) {
