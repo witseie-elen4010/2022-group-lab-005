@@ -3,21 +3,21 @@ import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 
 /** ********* Variables ***********/
 let letterArray = [
-  [' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ']
+  [' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' ']
 ]
 
 let colorArray = [
-  ['d', 'd', 'd', 'd', 'd', 'd'],
-  ['d', 'd', 'd', 'd', 'd', 'd'],
-  ['d', 'd', 'd', 'd', 'd', 'd'],
-  ['d', 'd', 'd', 'd', 'd', 'd'],
-  ['d', 'd', 'd', 'd', 'd', 'd'],
-  ['d', 'd', 'd', 'd', 'd', 'd']
+  ['d', 'd', 'd', 'd', 'd'],
+  ['d', 'd', 'd', 'd', 'd'],
+  ['d', 'd', 'd', 'd', 'd'],
+  ['d', 'd', 'd', 'd', 'd'],
+  ['d', 'd', 'd', 'd', 'd'],
+  ['d', 'd', 'd', 'd', 'd']
 ]
 
 let currentWordCheck = ['X', 'X', 'X', 'X', 'X']
@@ -47,7 +47,7 @@ socket.on('waiting_for_players', () => {
 // This will fire when the server tells the clients that the right number of players have joined the game.
 // There must be a more elegant solution than this implementation.
 let gameStart = false
-socket.on('game_can_start', () => {
+socket.on('game_can_start', (playerNames) => {
   if (gameStart === false) {
     // Now that everyone has connected, we can start the game.
     // Updates the page on window load to display the default wordle table and keyboard table
@@ -74,8 +74,7 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
     document.getElementById('winner').innerHTML = `${playerName} won the game!`
     socket.emit('game_over')
   }
-
-  updateOpponentColors(colorArr, playerNum)
+  updateOpponentColors(colorArr, playerNum, playerName)
 })
 
 // This will fire when the server sends the results of the word validation and testing to the client.
@@ -114,9 +113,13 @@ socket.connect()
 
 // Updates the color currently displayed in this user's wordle table
 function updateWordleTableColor () {
-  const wordleGrid = document.getElementById('wordleDiv')
+  const wordlePlayer = document.getElementById('playerDiv')
+  const wordleGrid = wordlePlayer.getElementsByClassName('wordleDiv')[0]
   let wordleRows = wordleGrid.getElementsByClassName('wordleRow')
-  // const tempColor = 'grey'
+  updateWordleColors(wordleRows, colorArray)
+}
+
+function updateWordleColors(wordleRows, colorArray){
   for (let i = 0; i < wordleRows.length; i++) {
     let wordleBlocks = wordleRows[i].getElementsByClassName('block')
     for (let j = 0; j < wordleBlocks.length; j++) {
@@ -142,38 +145,23 @@ function updateWordleTableColor () {
   }
 }
 
-function updateOpponentColors (arrayOfColors, playerNum) {
-  let table = document.getElementById(`opponent${playerNum}Table`)
+function updateOpponentColors (arrayOfColors, playerNum, playerName) {
+  const wordleGrid = document.getElementById(`opponent${playerNum}`)
 
-  //const table = document.getElementById('opponentColorTable')
-  // const tempColor = 'grey'
-  for (let i = 0; i < table.rows.length; i++) {
-    for (let j = 0; j < table.rows[i].cells.length; j++) {
-      switch (arrayOfColors[i][j]) {
-        case 'd':
-        case 'D':
-          table.rows[i].cells[j].style.backgroundColor = 'lightgrey'
-          break
-        case 'n':
-        case 'N':
-          table.rows[i].cells[j].style.backgroundColor = 'grey'
-          break
-        case 'i':
-        case 'I':
-          table.rows[i].cells[j].style.backgroundColor = 'yellow'
-          break
-        case 'c':
-        case 'C':
-          table.rows[i].cells[j].style.backgroundColor = 'green'
-          break
-      }
-    }
+  //NICK TO LOOK HERE - this updates every time the player submits a word - should update all of them only once when the game starts
+  //Although.. maybe a good thing because when people reconnect it updates
+  if(playerName){ 
+    let name = wordleGrid.getElementsByTagName('h2')[0]
+    name.innerHTML = playerName 
   }
+  let wordleRows = wordleGrid.getElementsByClassName('wordleRow')
+  updateWordleColors(wordleRows, arrayOfColors)
 }
 
 // Updates the text currently displayed in this user's wordle table
 function updateWordleTableText () {
-  const wordleGrid = document.getElementById('wordleDiv')
+  const wordlePlayer = document.getElementById('playerDiv')
+  const wordleGrid = wordlePlayer.getElementsByClassName('wordleDiv')[0]
   let wordleRows = wordleGrid.getElementsByClassName('wordleRow')
 
   for (let i = 0; i < wordleRows.length; i++) {
@@ -241,16 +229,24 @@ function updateKeyboard () {
       }
       count = count + 1
     }
-    
   }
 }
 
 function createOpponentBoards(){
   let numPlayers = gameID[gameID.length-1]
-  console.log(numPlayers)
- // document.getElementById("opponentsTableRight")
+  for(let i = 1; i <= numPlayers; i++)
+  {
+    const opponent = document.getElementById(`opponent${i}`)
+    let opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+    opponentNameHeading.innerHTML = 'Opponent ' + i
+    updateOpponentColors(colorArray, i)
+  }
+  for(let i = numPlayers; i < 6; i++)
+  {
+    const opponent = document.getElementById(`opponent${i}`)
+    opponent.style.display = "none"
+  }
 }
-
 
 function keyboardInputEvent (event) {
   if (event.key === 'Backspace') {

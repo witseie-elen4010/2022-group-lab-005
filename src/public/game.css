@@ -7,32 +7,29 @@
   flex-wrap: nowrap;
   height: 100vh;
 }
-#opponentsDivLeft {
-  order: 1;
-  width:30%;
-  background-color: lemonchiffon;
-
-}
-
 #playerDiv{
   order: 2;
-  width:40%;
+  width:60%;
 }
-
+#opponentsDivLeft {
+  order: 1;
+  width:20%;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-self: flex-start;
+}
 #opponentsDivRight{
   order: 3;
-  width:30%;
-  background-color: red;
-
+  width:20%;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-self: flex-start;
 }
 
 
 
-#wordleDiv {
-  display: block;
-  width: 100%;
-  text-align: center;
-}
 .wordleRow {
   display: flex;
   align-items: center;
@@ -40,7 +37,20 @@
   flex-wrap: nowrap;
 }
 
-.wordleRow .block{
+#opponentsDivLeft .wordleDiv, #opponentsDivRight .wordleDiv{
+  width: 100%;
+  padding-top: 10%;
+}
+
+#opponentsDivLeft .wordleDiv .wordleRow .block, #opponentsDivRight .wordleDiv .wordleRow .block{
+  flex-grow: 1;
+  margin: 2px;
+  border-radius: 10%;
+  min-height: 1.5vw;
+  text-align: center;
+  max-width: 1.5vw;
+}
+#playerDiv .wordleDiv .wordleRow .block{
   flex-grow: 1;
   margin: 5px;
   border-radius: 10%;
@@ -49,10 +59,16 @@
   max-width: 4vw;
 }
 
+h2{
+  text-align: center;
+}
+
 #keyboardDiv {
   padding-top: 10%;
   display: block;
-  width: 100%;
+  width: 80%;
+  text-align: center;
+  margin: auto;
 }
 .keyboardRow{
   width: 100%;
@@ -70,45 +86,12 @@
   text-align: center;
 }
 
-#opponentDiv {
-}
-#opponentColorTable {
-}
-#opponentColorTable th {
-}
-
 @media only screen and (max-width: 1200px) {
-  #wordleDiv {
-    margin-left: 30vw;
-    margin-right: 30vw;
-  }
 
-  #wordleTable th,
-  td {
-    height: 8vw;
-  }
-
-  #opponentColorTable th,
-  td {
-    height: 8vw;
-  }
 }
 
 @media only screen and (max-width: 100px) {
-  #wordleDiv {
-    margin-left: 20vw;
-    margin-right: 20vw;
-  }
 
-  #wordleTable th,
-  td {
-    height: 12vw;
-  }
-
-  #opponentColorTable th,
-  td {
-    height: 12vw;
-  }
 }
 
 .unselectable {
