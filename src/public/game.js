@@ -3,12 +3,12 @@ import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 
 /** ********* Variables ***********/
 let letterArray = [
-  ['', '', '', '', '', ''],
-  ['', '', '', '', '', ''],
-  ['', '', '', '', '', ''],
-  ['', '', '', '', '', ''],
-  ['', '', '', '', '', ''],
-  ['', '', '', '', '', '']
+  [' ', ' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' ']
 ]
 
 let colorArray = [
@@ -55,10 +55,12 @@ socket.on('game_can_start', () => {
     // Also remove the loading icon.
     document.getElementById('spinner').style.display = 'none'
     document.addEventListener('keydown', keyboardInputEvent)
+    document.addEventListener('click', virtualKeyboardInputEvent)
     updateWordleTableText()
     updateWordleTableColor()
     updateKeyboard()
     createKeyboard()
+    createOpponentBoards()
     gameStart = true
   }
 })
@@ -68,6 +70,7 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
   if (didTheyWin) {
     // Disable the keyboard.
     document.removeEventListener('keydown', keyboardInputEvent)
+    document.removeEventListener('click', virtualKeyboardInputEvent)
     document.getElementById('winner').innerHTML = `${playerName} won the game!`
     socket.emit('game_over')
   }
@@ -88,6 +91,7 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
   if (didTheyWin) {
     // Disable the keyboard.
     document.removeEventListener('keydown', keyboardInputEvent)
+    document.removeEventListener('click', virtualKeyboardInputEvent)
     document.getElementById('winner').innerHTML = 'You won the game!'
     socket.emit('game_over')
   }
@@ -110,26 +114,28 @@ socket.connect()
 
 // Updates the color currently displayed in this user's wordle table
 function updateWordleTableColor () {
-  const table = document.getElementById('wordleTable')
+  const wordleGrid = document.getElementById('wordleDiv')
+  let wordleRows = wordleGrid.getElementsByClassName('wordleRow')
   // const tempColor = 'grey'
-  for (let i = 0; i < table.rows.length; i++) {
-    for (let j = 0; j < table.rows[i].cells.length; j++) {
+  for (let i = 0; i < wordleRows.length; i++) {
+    let wordleBlocks = wordleRows[i].getElementsByClassName('block')
+    for (let j = 0; j < wordleBlocks.length; j++) {
       switch (colorArray[i][j]) {
         case 'd':
         case 'D':
-          table.rows[i].cells[j].style.backgroundColor = 'lightgrey'
+          wordleBlocks[j].style.backgroundColor = 'lightgrey'
           break
         case 'n':
         case 'N':
-          table.rows[i].cells[j].style.backgroundColor = 'grey'
+          wordleBlocks[j].style.backgroundColor = 'grey'
           break
         case 'i':
         case 'I':
-          table.rows[i].cells[j].style.backgroundColor = 'yellow'
+          wordleBlocks[j].style.backgroundColor = 'yellow'
           break
         case 'c':
         case 'C':
-          table.rows[i].cells[j].style.backgroundColor = 'green'
+          wordleBlocks[j].style.backgroundColor = 'green'
           break
       }
     }
@@ -167,10 +173,13 @@ function updateOpponentColors (arrayOfColors, playerNum) {
 
 // Updates the text currently displayed in this user's wordle table
 function updateWordleTableText () {
-  const table = document.getElementById('wordleTable')
-  for (let i = 0; i < table.rows.length; i++) {
-    for (let j = 0; j < table.rows[i].cells.length; j++) {
-      table.rows[i].cells[j].innerHTML = letterArray[i][j]
+  const wordleGrid = document.getElementById('wordleDiv')
+  let wordleRows = wordleGrid.getElementsByClassName('wordleRow')
+
+  for (let i = 0; i < wordleRows.length; i++) {
+    let wordleBlocks = wordleRows[i].getElementsByClassName('block')
+    for (let j = 0; j < wordleBlocks.length; j++) {
+      wordleBlocks[j].innerHTML = letterArray[i][j]
     }
   }
 }
@@ -186,13 +195,16 @@ function incrementLetterIndex () {
 
 // Initialize the on-screen keyboard with the correct innerHTML and default grey colors
 function createKeyboard () {
-  const keyboardTable = document.getElementById('keyboardTable')
+  const keyboardDiv = document.getElementById('keyboardDiv')
+  let keyboardRows = keyboardDiv.getElementsByClassName('keyboardRow')
   let count = 0
 
-  for (let i = 0; i < keyboardTable.rows.length; i++) {
-    for (let j = 0; j < keyboardTable.rows[i].cells.length; j++) {
-      keyboardTable.rows[i].cells[j].innerHTML = allLettersArray[count]
-      keyboardTable.rows[i].cells[j].style.backgroundColor = 'lightgrey'
+  for (let i = 0; i < keyboardRows.length; i++) {
+    let keys = keyboardRows[i].getElementsByClassName('key')
+    for(let j = 0; j < keys.length; j++)
+    {
+      keys[j].innerHTML = allLettersArray[count]
+      keys[j].style.backgroundColor = 'lightgrey'
       count = count + 1
     }
   }
@@ -200,32 +212,45 @@ function createKeyboard () {
 
 // Updates the on-screen keyboard's colors
 function updateKeyboard () {
-  const keyboardTable = document.getElementById('keyboardTable')
+  const keyboardDiv = document.getElementById('keyboardDiv')
+  let keyboardRows = keyboardDiv.getElementsByClassName('keyboardRow')
   let count = 0
-  for (let i = 0; i < keyboardTable.rows.length; i++) {
-    for (let j = 0; j < keyboardTable.rows[i].cells.length; j++) {
+
+  for (let i = 0; i < keyboardRows.length; i++) {
+    let keys = keyboardRows[i].getElementsByClassName('key')
+
+    for(let j = 0; j < keys.length; j++)
+    {
       switch (allLettersColorsArray[count]) {
         case 'd':
         case 'D':
-          keyboardTable.rows[i].cells[j].style.backgroundColor = 'lightgrey'
+          keys[j].style.backgroundColor = 'lightgrey'
           break
         case 'n':
         case 'N':
-          keyboardTable.rows[i].cells[j].style.backgroundColor = 'grey'
+          keys[j].style.backgroundColor = 'grey'
           break
         case 'i':
         case 'I':
-          keyboardTable.rows[i].cells[j].style.backgroundColor = 'yellow'
+          keys[j].style.backgroundColor = 'yellow'
           break
         case 'c':
         case 'C':
-          keyboardTable.rows[i].cells[j].style.backgroundColor = 'green'
+          keys[j].style.backgroundColor = 'green'
           break
       }
       count = count + 1
     }
+    
   }
 }
+
+function createOpponentBoards(){
+  let numPlayers = gameID[gameID.length-1]
+  console.log(numPlayers)
+ // document.getElementById("opponentsTableRight")
+}
+
 
 function keyboardInputEvent (event) {
   if (event.key === 'Backspace') {
@@ -240,6 +265,37 @@ function keyboardInputEvent (event) {
         letterArray[currentWordIndex][currentLetterIndex] = event.key.toUpperCase()
         updateWordleTableText()
         incrementLetterIndex()
+      }
+    }
+  }
+}
+
+function virtualKeyboardInputEvent (event){
+  let keys = document.getElementsByClassName('key')
+  for(let i = 0; i < keys.length; i++){
+    let key = keys[i]
+    if(key === event.target){
+      let keyText = key.innerHTML.toUpperCase()
+      if(keyText === "BACK"){
+        if (currentLetterIndex > 0) {
+          currentLetterIndex = currentLetterIndex - 1
+        }
+        letterArray[currentWordIndex][currentLetterIndex] = ''
+        updateWordleTableText()
+      } else if(keyText === "ENTER"){
+        if(currentLetterIndex < 5)
+        {
+          console.log("NOT ENOUGH LETTERS!")
+        }
+      }
+      else{
+        for (let i = 0; i < allLettersArray.length; i++) {
+          if (keyText === allLettersArray[i]) {
+            letterArray[currentWordIndex][currentLetterIndex] = keyText
+            updateWordleTableText()
+            incrementLetterIndex()
+          }
+        }
       }
     }
   }
