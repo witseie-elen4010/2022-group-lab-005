@@ -60,9 +60,11 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
     const numPlayers = $("#numPlayers").val()
     const gameType = $("#gameMode").val()
     let modeChosen = 1
+    
+    // Checks if the custom word chosen is valid if the game mode is custom
     if ($("#gameMode").val() === "custom") {
         modeChosen = 2
-        if ($("#customWord").val() != "") {
+        if ($("#customWord").val() != "") { 
             if ($("#customWord").val().length != 5) {
                 window.alert("Oi, words have to be 5 letters, so I think you should do that.")
                 $("#customWord").focus()
@@ -74,6 +76,7 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
             return
         }
     }
+    // Creates the game in the database
     console.log("HELLO about to send")
     request.open('POST', '/lobby/create', true)
     request.setRequestHeader('Content-type', 'application/json')
