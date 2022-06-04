@@ -100,7 +100,11 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
 })
 
 /** ********* General code ***********/
-
+if (window.sessionStorage.getItem('gameID') === null) {
+  // If the client doesn't have a gameID in their session storage, then they
+  // have navigated to this page without going through the lobby. We redirect them to it.
+  window.location.href = `/lobby` 
+}
 // This is used to identify the user. It will be replaced with the identity from the login system.
 const gameID = window.sessionStorage.getItem('gameID') //prompt('Please enter your game ID', 'ID')
 // Last digit of gameID is the number of players!
