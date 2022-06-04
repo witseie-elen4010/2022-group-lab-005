@@ -1,9 +1,28 @@
 'use strict'
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 const socket = io('/rooms')
-
+const request = new XMLHttpRequest()
 // Try establish a connection with the server.
 socket.connect()
+
+$("#customWordField").hide() // Standard is default so the custom word field is hidden
+
+$("#currentNumPlayers").html($("#numPlayers").val())
+
+// Makes the customWord field visible if the mode is custom
+$("#gameMode").on('change', function () {
+    if (this.value === "custom") {
+        $("#customWordField").show()
+    }
+    else {
+        $("#customWordField").hide()
+    }
+})
+
+// Dynamically changes the number of players displayed
+$("#numPlayers").on('change', function() {
+    $("#currentNumPlayers").html($("#numPlayers").val())
+})
 
 // When this is fired, the game list is updated with a new list of open games.
 // This will be triggered when some event causes one or more players to join or leave games.
@@ -38,19 +57,30 @@ socket.on('get_game_id', (gameID) => {
 })
 
 document.getElementById('createGameBtn').addEventListener('click', () => {
-    // Get the number of players
-    const numPlayers = document.getElementById('playerRnge').value
-
-    let gameType
-
-    // Check the radio buttons
-    if (document.getElementById('standardRdo').checked) {
-        //console.log(`Standard game with ${numPlayers} players.`)
-        gameType = 'standard'
-    } else {
-        //console.log(`Custom game with ${numPlayers} players.`)
-        gameType = 'custom'
+    const numPlayers = $("#numPlayers").val()
+    const gameType = $("#gameMode").val()
+    let modeChosen = 1
+    
+    // Checks if the custom word chosen is valid if the game mode is custom
+    if ($("#gameMode").val() === "custom") {
+        modeChosen = 2
+        if ($("#customWord").val() !== "") { 
+            if ($("#customWord").val().length !== 5) {
+                window.alert("Oi, words have to be 5 letters, so I think you should do that.")
+                $("#customWord").focus()
+                return
+            }
+        } else {
+            window.alert("If you didn't want to pick a word, why did you pick custom... Standard is fun cause it's a random word.")
+            $("#customWord").focus()
+            return
+        }
     }
+    // Creates the game in the database
+    console.log("HELLO about to send")
+    request.open('POST', '/lobby/create', true)
+    request.setRequestHeader('Content-type', 'application/json')
+    request.send(JSON.stringify({ numPlayers: $("#numPlayers").val() , customWord: $("#customWord").val(), gameMode: modeChosen}))
 
     socket.connect()
     socket.emit('create_game', gameType, numPlayers)
