@@ -64,8 +64,8 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
     // Checks if the custom word chosen is valid if the game mode is custom
     if ($("#gameMode").val() === "custom") {
         modeChosen = 2
-        if ($("#customWord").val() != "") { 
-            if ($("#customWord").val().length != 5) {
+        if ($("#customWord").val() !== "") { 
+            if ($("#customWord").val().length !== 5) {
                 window.alert("Oi, words have to be 5 letters, so I think you should do that.")
                 $("#customWord").focus()
                 return
