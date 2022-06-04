@@ -7,6 +7,7 @@
 
   <link rel="stylesheet" href="/css/bootstrap.min.css" />
   <script type="module" src="/src/public/lobby.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 
 <style>
@@ -76,7 +77,8 @@
       <label for="customRange2" class="form-label">
         Number of players
       </label>
-      <input type="range" class="form-range" min="2" max="6" step="1" value="3" id="playerRnge">
+      <input type="range" class="form-range" min="2" max="6" step="1" id="numPlayers">
+      <p>Number of players: <span id="currentNumPlayers"></span></p>
     </div>
     <button class="btn btn-primary col-4" id="createGameBtn">Create game</button>
   </div>
