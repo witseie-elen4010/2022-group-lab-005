@@ -6,7 +6,7 @@ const jsonParser = bodyParser.json()
 
 const lobbyRouter = express.Router()
 
-const { createGame, prevGameID } = require('../services/lobby.cjs')
+const { createGame } = require('../services/lobby.cjs')
 
 lobbyRouter.post('/', async function (req, res) { // ?
   res.sendFile(path.join(__dirname, '../views', 'lobby.html'))
@@ -20,7 +20,6 @@ lobbyRouter.get('/', async function (req, res) {
 
 lobbyRouter.post('/create', async function (req, res) { // ?
   const result = await createGame(req.body)
-  res.sendFile(path.join(__dirname, '../views', 'game.html'))
 })
 
 module.exports = lobbyRouter

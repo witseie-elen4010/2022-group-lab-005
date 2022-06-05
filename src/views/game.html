@@ -27,137 +27,342 @@
 
   <h1 id="winner"></h1>
 
-  <div id="wordleDiv" class="unselectable">
-    <table id="wordleTable">
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-    </table>
-  </div>
+  <div id = gridContainer>
+    <div id = "playerDiv" class="unselectable">
+      <div class="wordleDiv" >
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+      </div>
 
-  <div id="keyboardDiv" class="unselectable">
-    <table id="keyboardTable">
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-    </table>
-  </div>
+      <div id="keyboardDiv" class="unselectable">
+        <div class="keyboardRow">
+          <div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div>
+        </div>
+        <div class="keyboardRow">
+          <div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div>
+        </div>
+        <div class="keyboardRow">
+          <div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div>
+        </div>
+      </div>
+    </div>
 
-  <div id="opponentDiv" class="unselectable">
-    <table id="opponentColorTable">
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-    </table>
+
+    <div id="opponentsDivLeft" class="unselectable">
+      <div id="opponent1" class = wordleDiv>
+        <h2></h2>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+      </div>
+      <div id="opponent2" class = wordleDiv>
+        <h2></h2>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+      </div>
+      <div id="opponent3" class = wordleDiv>
+        <h2></h2>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="opponentsDivRight" class="unselectable">
+      <div id="opponent4" class = wordleDiv>
+        <h2></h2>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+      </div>
+      <div id="opponent5" class = wordleDiv>
+        <h2></h2>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+      </div>
+      <div id="opponent6" class = wordleDiv>
+        <h2></h2>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+        <div class="wordleRow">
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+          <div class="block"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 

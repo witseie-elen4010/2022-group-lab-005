@@ -1,92 +1,97 @@
-#wordleDiv {
-  display: block;
-  margin-left: 40vw;
-  margin-right: 40vw;
-  margin-top: 5vw;
+#gridContainer{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: stretch;
+  align-content: center;
+  flex-wrap: nowrap;
+  height: 100vh;
+}
+#playerDiv{
+  order: 2;
+  width:60%;
+}
+#opponentsDivLeft {
+  order: 1;
+  width:20%;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-self: flex-start;
+}
+#opponentsDivRight{
+  order: 3;
+  width:20%;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-self: flex-start;
 }
 
-#opponentDiv {
-  display: block;
-  margin-left: 40vw;
-  margin-right: 40vw;
-  margin-top: 5vw;
+
+
+.wordleRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
 }
 
-#wordleTable {
-  table-layout: fixed;
-  text-align: center;
+#opponentsDivLeft .wordleDiv, #opponentsDivRight .wordleDiv{
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 7px;
+  padding-top: 10%;
 }
 
-#opponentColorTable {
-  table-layout: fixed;
+#opponentsDivLeft .wordleDiv .wordleRow .block, #opponentsDivRight .wordleDiv .wordleRow .block{
+  flex-grow: 1;
+  margin: 2px;
+  border-radius: 10%;
+  min-height: 1.5vw;
   text-align: center;
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 7px;
+  max-width: 1.5vw;
+}
+#playerDiv .wordleDiv .wordleRow .block{
+  flex-grow: 1;
+  margin: 5px;
+  border-radius: 10%;
+  min-height: 4vw;
+  text-align: center;
+  max-width: 4vw;
 }
 
-#wordleTable th {
-  height: 4vw;
-}
-
-#opponentColorTable th {
-  height: 4vw;
+h2{
+  text-align: center;
 }
 
 #keyboardDiv {
+  padding-top: 10%;
   display: block;
-  margin-left: 25vw;
-  margin-right: 25vw;
-  margin-top: 5vw;
-}
-
-#keyboardTable {
-  table-layout: fixed;
+  width: 80%;
   text-align: center;
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 7px;
+  margin: auto;
 }
-
-#keyboardTable th {
-  height: 4vw;
+.keyboardRow{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+}
+#keyboardDiv .keyboardRow .key{
+  flex-grow: 1;
+  margin: 5px;
+  border-radius: 10%;
+  cursor: pointer;
+  min-height: 3vw;
+  text-align: center;
 }
 
 @media only screen and (max-width: 1200px) {
-  #wordleDiv {
-    margin-left: 30vw;
-    margin-right: 30vw;
-  }
 
-  #wordleTable th,
-  td {
-    height: 8vw;
-  }
-
-  #opponentColorTable th,
-  td {
-    height: 8vw;
-  }
 }
 
 @media only screen and (max-width: 100px) {
-  #wordleDiv {
-    margin-left: 20vw;
-    margin-right: 20vw;
-  }
 
-  #wordleTable th,
-  td {
-    height: 12vw;
-  }
-
-  #opponentColorTable th,
-  td {
-    height: 12vw;
-  }
 }
 
 .unselectable {
