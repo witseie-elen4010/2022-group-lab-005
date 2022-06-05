@@ -91,4 +91,19 @@ async function registerUser(username, password) {
   })
 }
 
-module.exports = {LogIn,registerUser}
+async function getUser(username) {
+  // Returns whether the user exists
+  const sqlCode = `SELECT * FROM [dbo].[Users]
+  WHERE [dbo].[Users].Username = '${username}';`
+  return new Promise((resolve, reject) => {
+    get('default').then(
+      (pool) => pool.request().query(sqlCode).then(
+        (result) => {
+          resolve(result)
+        }
+      ).catch(reject)
+    ).catch(reject)
+  })
+}
+
+module.exports = {LogIn,registerUser, getUser}
