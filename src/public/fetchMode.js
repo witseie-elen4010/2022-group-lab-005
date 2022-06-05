@@ -1,4 +1,5 @@
 'use strict'
+
 //the issue is that fetch only happens in home page, the update is not instant
 // fetch data from api
 fetch('/user/api/DarkModeData') .then(response => {
@@ -11,5 +12,5 @@ fetch('/user/api/DarkModeData') .then(response => {
     // set dark mode setting to data from api
     const darkMode = data
     sessionStorage.setItem("mode", darkMode);
-    
+
   }).catch(error => document.write(`Fetch failed: ${error}`))

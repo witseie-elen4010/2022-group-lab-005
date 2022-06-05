@@ -1,3 +1,4 @@
+'use strict'
 
 const darkMode = sessionStorage.getItem("mode");
 
