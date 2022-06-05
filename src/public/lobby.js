@@ -4,6 +4,15 @@ const socket = io('/rooms')
 
 // Try establish a connection with the server.
 socket.connect()
+$(document).ready(function () {
+    checkUser(document.cookie).then(
+      (result) => {
+        if(result === false){
+          window.location.href = "/login"
+        }
+      }
+    ).catch()
+})
 
 // Hide the custom word field for now since the standard radio button is selected by default.
 $('#customWordField').hide()
