@@ -6,7 +6,7 @@ module.exports = {
     const pool = await get('default')
 
     // Get dark mode setting for specific user
-    const modeRequest = `SELECT DarkMode FROM [dbo].[UserSettings] WHERE ID = '1'`
+    const modeRequest = 'SELECT DarkMode FROM [dbo].[UserSettings] WHERE ID = \'1\''
     return new Promise((resolve, reject) => {
       get('default').then(
         (pool) => pool.request().query(modeRequest).then(
@@ -16,7 +16,6 @@ module.exports = {
         ).catch(reject)
       ).catch(reject)
     })
-    
   },
 
   // This should go in its own file, not in testDB which is for testing the DB and pool.

@@ -1,12 +1,12 @@
 'use strict'
 
-function getMode(){
+function getMode () {
   request.open('GET', '/user/api/DarkModeData', true)
   request.addEventListener('load', setMode)
   request.send()
 }
 
-function setMode(){
+function setMode () {
   const response = JSON.parse(this.responseText)
-  sessionStorage.setItem("mode", response);
+  sessionStorage.setItem('mode', response)
 }
