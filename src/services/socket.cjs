@@ -25,7 +25,7 @@ module.exports = function (io) {
     const roomArr = getOpenGames(io)
     socket.emit('update_game_list', roomArr)
 
-     // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
+    // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
     next()
   })
 
@@ -57,17 +57,16 @@ module.exports = function (io) {
             console.log(`All ${socket.data.numPlayers} players have joined ${socket.data.roomID}, starting the game.`)
 
             // Before we start the game, let's query the DB and get a list of player names.
+            let playerNames
             getPlayerNames(38).then(
               (result) => {
-                console.log(result)
+                // I think there's a better way to do this (only using one event) but I couldn't get anything to work
+                // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room
+                // except to the sender. The second line sends the 'game_can_start' event to the sender.
+                socket.to(socket.data.roomID).emit('game_can_start', result.recordset)
+                socket.emit('game_can_start', result.recordset)
               }
             ).catch(console.error)
-
-            // I think there's a better way to do this (only using one event) but I couldn't get anything to work
-            // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room
-            // except to the sender. The second line sends the 'game_can_start' event to the sender.
-            socket.to(socket.data.roomID).emit('game_can_start')
-            socket.emit('game_can_start')
           } else {
             // The room is not full yet so we tell the socket that just joined to wait.
             socket.emit('waiting_for_players')
@@ -102,7 +101,7 @@ module.exports = function (io) {
 
   // This listener will only fire if a connection is coming from the '/rooms' namespace.
   io.of('/rooms').on('connection', (socket) => {
-    socket.on('create_game', function(gameType, numPlayers) {
+    socket.on('create_game', function (gameType, numPlayers) {
       console.log(`Type: ${gameType} Number of players: ${numPlayers}`)
       const gameID = uuidv4().toString() + numPlayers.toString()
       socket.emit('get_game_id', gameID)

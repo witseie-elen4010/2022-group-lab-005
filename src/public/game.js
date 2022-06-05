@@ -25,6 +25,7 @@ let currentWordIndex = 0
 let currentLetterIndex = 0
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'D', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
+let playerNamesArr = []
 
 /** ********* Socket.io events ***********/
 const socket = io({ autoConnect: false })
@@ -49,7 +50,12 @@ socket.on('waiting_for_players', () => {
 let gameStart = false
 socket.on('game_can_start', (playerNames) => {
   if (gameStart === false) {
-    // Now that everyone has connected, we can start the game.
+    // Let's process the playerNames object so its a bit more friendly.
+    for (let i = 0; i < playerNames.length; i++) {
+      playerNamesArr.push(playerNames[i].Username)
+    }
+
+    // Now that everyone has connected, and we know their names, we can start the game.
     // Updates the page on window load to display the default wordle table and keyboard table
     // Also attach the event listener for the keydown event so the user can use their keyboard.
     // Also remove the loading icon.

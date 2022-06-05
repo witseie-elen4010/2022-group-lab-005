@@ -39,5 +39,4 @@ async function getPlayerNames(gameID) {
   })
 }
 
-module.exports = { createGame }
-module.exports = { getPlayerNames }
+module.exports = { createGame, getPlayerNames }
