@@ -1,7 +1,7 @@
 'use strict'
 
 const { v4: uuidv4 } = require('uuid')
-const { getPlayerNames } = require('../services/lobby.cjs')
+const { createGame, getPlayerNames } = require('../services/lobby.cjs')
 
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 
@@ -101,12 +101,28 @@ module.exports = function (io) {
 
   // This listener will only fire if a connection is coming from the '/rooms' namespace.
   io.of('/rooms').on('connection', (socket) => {
-    socket.on('create_game', function (gameType, numPlayers) {
-      console.log(`Type: ${gameType} Number of players: ${numPlayers}`)
-      const gameID = uuidv4().toString() + numPlayers.toString()
-      socket.emit('get_game_id', gameID)
-    })
+    socket.on('create_game', function (numPlayers, modeChosen, customWord) {
+      let gameType = ''
 
+      if (modeChosen === 1) { // Regular game
+        console.log(`Regular game, Number of players: ${numPlayers}`)
+        const clientGameID = uuidv4().toString() + numPlayers.toString()
+
+        // DO INPUT CHECKS
+        // THEN createGame()
+        socket.emit('get_game_id_reg_game', clientGameID)
+
+      } else if (modeChosen === 2) { // Custom word
+        console.log(`Custom word: ${customWord}, Number of players: ${numPlayers}`)
+        const clientGameID = uuidv4().toString() + numPlayers.toString()
+
+        // DO INPUT CHECKS
+        // THEN createGame()
+        socket.emit('get_game_id_custom_game', clientGameID)
+      } else {
+        socket.emit('invalid_game_mode')
+      }
+    })
   })
 
   // This listener will fire for a connection that comes from the default ('/') namespace.

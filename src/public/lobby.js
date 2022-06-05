@@ -58,13 +58,29 @@ socket.on('update_game_list', (openGames) => {
     }
 })
 
+// When the user clicks the create game button and the game is standard, the server is sent the details of the game. If it is happy, 
+// it will create an unique game ID that will be received here.
+socket.on('get_game_id_reg_game', (gameID) => {
+    sessionStorage.setItem('gameID', gameID)
+    sessionStorage.setItem('gameType', 'regular')
+    window.location.href = `/game/play`  
+})
+
+// When the user clicks the create game button and the game is custom, the server is sent the details of the game. If it is happy, 
+// it will create an unique game ID that will be received here.
+socket.on('get_game_id_custom_game', (gameID) => {
+    sessionStorage.setItem('gameID', gameID)
+    sessionStorage.setItem('gameType', 'custom')
+    window.location.href = `/game/play`  
+})
+
+
 function joinRunningGame() {
     sessionStorage.setItem('gameID', this.id)
     window.location.href = `/game/play` 
 }
 
-// When the user clicks the create game button, the server is sent the details of the game. If it is happy, 
-// it will create an unique game ID that will be received here.
+
 socket.on('get_game_id', (gameID) => {
     sessionStorage.setItem('gameID', gameID)
     window.location.href = `/game/play`  
@@ -101,12 +117,17 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
             return
         }
     }
+
+    socket.connect()
+    socket.emit('create_game', numPlayers, modeChosen, document.getElementById('customWord').value)
+    /*
     // Creates the game in the database
     console.log("HELLO about to send")
     request.open('POST', '/lobby/create', true)
     request.setRequestHeader('Content-type', 'application/json')
     request.send(JSON.stringify({ numPlayers: $("#numPlayers").val() , customWord: document.getElementById('customWord').value, gameMode: modeChosen}))
-
+    
     socket.connect()
     socket.emit('create_game', gameType, numPlayers)
+    */
 })

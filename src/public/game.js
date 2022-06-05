@@ -26,6 +26,7 @@ let currentLetterIndex = 0
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'D', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
 let playerNamesArr = []
+let isPlayerWordCreator = false
 
 /** ********* Socket.io events ***********/
 const socket = io({ autoConnect: false })
@@ -60,13 +61,17 @@ socket.on('game_can_start', (playerNames) => {
     // Also attach the event listener for the keydown event so the user can use their keyboard.
     // Also remove the loading icon.
     document.getElementById('spinner').style.display = 'none'
-    document.addEventListener('keydown', keyboardInputEvent)
-    document.addEventListener('click', virtualKeyboardInputEvent)
-    updateWordleTableText()
-    updateWordleTableColor()
-    updateKeyboard()
-    createKeyboard()
-    createOpponentBoards()
+
+    if (isPlayerWordCreator === false) {
+      document.addEventListener('keydown', keyboardInputEvent)
+      document.addEventListener('click', virtualKeyboardInputEvent)
+      updateWordleTableText()
+      updateWordleTableColor()
+      updateKeyboard()
+      createKeyboard()
+      createOpponentBoards()
+    }
+
     gameStart = true
   }
 })
@@ -86,33 +91,38 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
 // This will fire when the server sends the results of the word validation and testing to the client.
 // This basically contains the results of the game logic on the server.
 socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) => {
-  currentLetterIndex = 0
-  letterArray = letterArr
-  currentWordIndex = currWordIndex + 1 // Move the keyboard to the next row on the grid.
-  colorArray = colorArr
-  currentWordCheck = currWordCheck
-  allLettersColorsArray = allLettersColorsArr
+  if (isPlayerWordCreator === false) {
+    currentLetterIndex = 0
+    letterArray = letterArr
+    currentWordIndex = currWordIndex + 1 // Move the keyboard to the next row on the grid.
+    colorArray = colorArr
+    currentWordCheck = currWordCheck
+    allLettersColorsArray = allLettersColorsArr
 
-  if (didTheyWin) {
-    // Disable the keyboard.
-    document.removeEventListener('keydown', keyboardInputEvent)
-    document.removeEventListener('click', virtualKeyboardInputEvent)
-    document.getElementById('winner').innerHTML = 'You won the game!'
-    socket.emit('game_over')
+    if (didTheyWin) {
+      // Disable the keyboard.
+      document.removeEventListener('keydown', keyboardInputEvent)
+      document.removeEventListener('click', virtualKeyboardInputEvent)
+      document.getElementById('winner').innerHTML = 'You won the game!'
+      socket.emit('game_over')
+    }
+
+    updateWordleTableColor()
+    updateKeyboard()
   }
-
-  updateWordleTableColor()
-  updateKeyboard()
 })
 
 /** ********* General code ***********/
 if (window.sessionStorage.getItem('gameID') === null) {
   // If the client doesn't have a gameID in their session storage, then they
   // have navigated to this page without going through the lobby. We redirect them to it.
-  window.location.href = `/lobby` 
+  window.location.href = `/lobby`
 }
 // This is used to identify the user. It will be replaced with the identity from the login system.
-const gameID = window.sessionStorage.getItem('gameID') //prompt('Please enter your game ID', 'ID')
+const gameID = window.sessionStorage.getItem('gameID')
+if (window.sessionStorage.getItem('gameType') === 'custom') {
+  isPlayerWordCreator = true
+}
 // Last digit of gameID is the number of players!
 
 const userName = prompt('Please enter your username', 'Username')
@@ -122,14 +132,14 @@ socket.auth = { sessionInfo: gameID, playerName: userName }
 socket.connect()
 
 // Updates the color currently displayed in this user's wordle table
-function updateWordleTableColor () {
+function updateWordleTableColor() {
   const wordlePlayer = document.getElementById('playerDiv')
   const wordleGrid = wordlePlayer.getElementsByClassName('wordleDiv')[0]
   let wordleRows = wordleGrid.getElementsByClassName('wordleRow')
   updateWordleColors(wordleRows, colorArray)
 }
 
-function updateWordleColors(wordleRows, colorArray){
+function updateWordleColors(wordleRows, colorArray) {
   for (let i = 0; i < wordleRows.length; i++) {
     let wordleBlocks = wordleRows[i].getElementsByClassName('block')
     for (let j = 0; j < wordleBlocks.length; j++) {
@@ -155,21 +165,21 @@ function updateWordleColors(wordleRows, colorArray){
   }
 }
 
-function updateOpponentColors (arrayOfColors, playerNum, playerName) {
+function updateOpponentColors(arrayOfColors, playerNum, playerName) {
   const wordleGrid = document.getElementById(`opponent${playerNum}`)
 
   //NICK TO LOOK HERE - this updates every time the player submits a word - should update all of them only once when the game starts
   //Although.. maybe a good thing because when people reconnect it updates
-  if(playerName){ 
+  if (playerName) {
     let name = wordleGrid.getElementsByTagName('h2')[0]
-    name.innerHTML = playerName 
+    name.innerHTML = playerName
   }
   let wordleRows = wordleGrid.getElementsByClassName('wordleRow')
   updateWordleColors(wordleRows, arrayOfColors)
 }
 
 // Updates the text currently displayed in this user's wordle table
-function updateWordleTableText () {
+function updateWordleTableText() {
   const wordlePlayer = document.getElementById('playerDiv')
   const wordleGrid = wordlePlayer.getElementsByClassName('wordleDiv')[0]
   let wordleRows = wordleGrid.getElementsByClassName('wordleRow')
@@ -183,7 +193,7 @@ function updateWordleTableText () {
 }
 
 // Updates the variable keeping track of what letter the user is on
-function incrementLetterIndex () {
+function incrementLetterIndex() {
   if (currentLetterIndex < 4) {
     currentLetterIndex = currentLetterIndex + 1
   } else {
@@ -192,15 +202,14 @@ function incrementLetterIndex () {
 }
 
 // Initialize the on-screen keyboard with the correct innerHTML and default grey colors
-function createKeyboard () {
+function createKeyboard() {
   const keyboardDiv = document.getElementById('keyboardDiv')
   let keyboardRows = keyboardDiv.getElementsByClassName('keyboardRow')
   let count = 0
 
   for (let i = 0; i < keyboardRows.length; i++) {
     let keys = keyboardRows[i].getElementsByClassName('key')
-    for(let j = 0; j < keys.length; j++)
-    {
+    for (let j = 0; j < keys.length; j++) {
       keys[j].innerHTML = allLettersArray[count]
       keys[j].style.backgroundColor = 'lightgrey'
       count = count + 1
@@ -209,7 +218,7 @@ function createKeyboard () {
 }
 
 // Updates the on-screen keyboard's colors
-function updateKeyboard () {
+function updateKeyboard() {
   const keyboardDiv = document.getElementById('keyboardDiv')
   let keyboardRows = keyboardDiv.getElementsByClassName('keyboardRow')
   let count = 0
@@ -217,8 +226,7 @@ function updateKeyboard () {
   for (let i = 0; i < keyboardRows.length; i++) {
     let keys = keyboardRows[i].getElementsByClassName('key')
 
-    for(let j = 0; j < keys.length; j++)
-    {
+    for (let j = 0; j < keys.length; j++) {
       switch (allLettersColorsArray[count]) {
         case 'd':
         case 'D':
@@ -242,23 +250,21 @@ function updateKeyboard () {
   }
 }
 
-function createOpponentBoards(){
-  let numPlayers = gameID[gameID.length-1]
-  for(let i = 1; i <= numPlayers; i++)
-  {
+function createOpponentBoards() {
+  let numPlayers = gameID[gameID.length - 1]
+  for (let i = 1; i <= numPlayers; i++) {
     const opponent = document.getElementById(`opponent${i}`)
     let opponentNameHeading = opponent.getElementsByTagName('h2')[0]
     opponentNameHeading.innerHTML = 'Opponent ' + i
     updateOpponentColors(colorArray, i)
   }
-  for(let i = numPlayers; i < 6; i++)
-  {
+  for (let i = numPlayers; i < 6; i++) {
     const opponent = document.getElementById(`opponent${i}`)
     opponent.style.display = "none"
   }
 }
 
-function keyboardInputEvent (event) {
+function keyboardInputEvent(event) {
   if (event.key === 'Backspace') {
     if (currentLetterIndex > 0) {
       currentLetterIndex = currentLetterIndex - 1
@@ -276,25 +282,24 @@ function keyboardInputEvent (event) {
   }
 }
 
-function virtualKeyboardInputEvent (event){
+function virtualKeyboardInputEvent(event) {
   let keys = document.getElementsByClassName('key')
-  for(let i = 0; i < keys.length; i++){
+  for (let i = 0; i < keys.length; i++) {
     let key = keys[i]
-    if(key === event.target){
+    if (key === event.target) {
       let keyText = key.innerHTML.toUpperCase()
-      if(keyText === "BACK"){
+      if (keyText === "BACK") {
         if (currentLetterIndex > 0) {
           currentLetterIndex = currentLetterIndex - 1
         }
         letterArray[currentWordIndex][currentLetterIndex] = ''
         updateWordleTableText()
-      } else if(keyText === "ENTER"){
-        if(currentLetterIndex < 5)
-        {
+      } else if (keyText === "ENTER") {
+        if (currentLetterIndex < 5) {
           console.log("NOT ENOUGH LETTERS!")
         }
       }
-      else{
+      else {
         for (let i = 0; i < allLettersArray.length; i++) {
           if (keyText === allLettersArray[i]) {
             letterArray[currentWordIndex][currentLetterIndex] = keyText
