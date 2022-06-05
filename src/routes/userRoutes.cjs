@@ -5,6 +5,7 @@ const jsonParser = bodyParser.json()
 const { getMode, changeMode } = require('../services/settings_db.cjs')
 const { getBackground } = require('../services/background_db.cjs')
 const { getUserGames, getUserStats} = require('../services/matchHistory.cjs')
+const { getUserFriends } = require('../services/friendsDb.cjs')
 
 const userRouter = express.Router()
 
@@ -45,4 +46,16 @@ userRouter.post('/changeMode', jsonParser, async function (req, res) { // ?
     res.send(JSON.stringify({ message: `${darkMode} has been saved to the database` }))
 })
 
+userRouter.get('/friends', function (req,res){
+    res.sendFile(path.join(__dirname, '../views', 'friends.html'))
+})
+
+userRouter.post('/post/friends', function(req,res){
+    const username = req.body.usernameInput;
+    getUserFriends(username).then(
+        (result) => {    
+            res.send(result)
+        }
+    ).catch(console.error)
+})
 module.exports = userRouter
