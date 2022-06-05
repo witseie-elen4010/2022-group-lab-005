@@ -8,13 +8,8 @@ window.onload = function () {
     // open the post request to the server with url of log
     request.open('POST', '/log', true)
     request.setRequestHeader('Content-type', 'application/json')
-    // get username and password
-    const username = document.getElementById('username').value
-    const password = document.getElementById('password').value
-    // send username and password to the server via json
-    request.send(JSON.stringify({ usernameInput: username, passwordInput: password }))
-    // wait for server to respond back
-    request.addEventListener('load', receivedValue)
+
+    updateAndSendFormControl()
   })
 
   document.getElementById('registerButton').addEventListener('click', function (evt) {
@@ -22,14 +17,30 @@ window.onload = function () {
     // open the post request to the server with url of log
     request.open('POST', '/register', true)
     request.setRequestHeader('Content-type', 'application/json')
-    // get username and password
-    const username = document.getElementById('username').value
-    const password = document.getElementById('password').value
-    // send username and password to the server via json
-    request.send(JSON.stringify({ usernameInput: username, passwordInput: password }))
-    // wait for server to respond back
-    request.addEventListener('load', receivedValue)
+    updateAndSendFormControl()
   })
+}
+
+function updateAndSendFormControl(){
+      //check if user have inputed anything
+      if (document.getElementById('username').value === '') {
+        document.getElementById('username').className = 'form-control is-invalid'
+        document.getElementById('password').className = 'form-control'
+        document.getElementById('output').innerHTML = 'Please input your username'
+      } 
+      else if (document.getElementById('password').value === '') {
+        document.getElementById('username').className = 'form-control'
+        document.getElementById('password').className = 'form-control is-invalid'
+        document.getElementById('output').innerHTML = 'Please input your password'
+      } else {
+        // get username and password and send it via json
+        const username = document.getElementById('username').value
+        const password = document.getElementById('password').value
+        const hashedPassword = addingSomeSaltAndHash(password)
+        request.send(JSON.stringify({ usernameInput: username, passwordInput: hashedPassword }))
+        //wait for the server to respond back
+        request.addEventListener('load', receivedValue)
+      }
 }
 
 function receivedValue () {
@@ -41,13 +52,8 @@ function receivedValue () {
   // out put the value
   document.getElementById('output').innerHTML = msg
 
-  if (msg === 'Username and password are invalid.') {
-    document.getElementById('password').className = 'form-control is-invalid'
-    document.getElementById('username').className = 'form-control is-invalid'
-  } else if (msg === 'Please input a valid password') {
-    document.getElementById('username').className = 'form-control'
-    document.getElementById('password').className = 'form-control is-invalid'
-  } else if (msg === 'Please input a valid username') {
+
+  if (msg === 'Please input a valid username') {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
   } else if(msg === "User is now logged in" || msg === "Registration completed"){
@@ -65,4 +71,12 @@ function receivedValue () {
 function onError () {
   // Let's tell the user that something wrong happened.
   document.getElementById('output').innerHTML = 'Status: Error communicating with server.'
+}
+
+
+function addingSomeSaltAndHash(password)
+{
+  let saltPassword = password+"PleaseGiveGoodMark"//can add special characters but i want good marks please
+  const hash = CryptoJS.SHA256(saltPassword).toString()
+  return hash
 }
