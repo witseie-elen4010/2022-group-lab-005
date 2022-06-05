@@ -13,15 +13,15 @@ $('#invalidWord').hide()
 $("#currentNumPlayers").html($("#numPlayers").val())
 
 // Makes the customWord field visible if the mode is custom
-$('#rdoBtnCntr input:radio').on('click', () => {
-    if($('#standardRdo').is(':checked')) {
+$('#gameModeContainer input:radio').on('click', () => {
+    if($('#standard').is(':checked')) {
         $("#customWordField").fadeOut('fast')
-    } else if ($('#customRdo').is(':checked')) {
+    } else if ($('#custom').is(':checked')) {
         $("#customWordField").fadeIn('fast')
     } else {
         console.log('Something weird has happened. This should not be reached!')
     }
-});
+})
 
 // Dynamically changes the number of players displayed
 $("#numPlayers").on('change', function() {
@@ -75,7 +75,7 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
 
     let gameType
     
-    if (document.getElementById("standardRdo").checked === true) {
+    if (document.getElementById("standard").checked === true) {
         gameType = 'standard'
     } else {
         gameType = 'custom'
@@ -84,7 +84,7 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
     let modeChosen = 1
     
     // Checks if the custom word chosen is valid if the game mode is custom
-    if (document.getElementById("customRdo").checked) {
+    if (document.getElementById("custom").checked) {
         modeChosen = 2
 
         if (document.getElementById('customWord').value !== "") { 
@@ -92,14 +92,12 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
                 document.getElementById('feedbackText').innerHTML = 'Oi, words have to be 5 letters, so I think you should do that.'
                 $('#invalidWord').show()
                 document.getElementById('customWord').className = 'form-control is-invalid'
-                $("#customWord").focus() // This is a deprecated function. Is there any other way to do this?
                 return
             }
         } else {
             document.getElementById('feedbackText').innerHTML = `If you didn't want to pick a word, why did you pick custom... Standard is fun cause it's a random word.`
             $('#invalidWord').show()
             document.getElementById('customWord').className = 'form-control is-invalid'
-            $("#customWord").focus() // This is a deprecated function. Is there any other way to do this?
             return
         }
     }
