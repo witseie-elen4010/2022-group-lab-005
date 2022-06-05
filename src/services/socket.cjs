@@ -1,6 +1,7 @@
 'use strict'
 
 const { v4: uuidv4 } = require('uuid')
+const { getPlayerNames } = require('../services/lobby.cjs')
 
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 
@@ -54,6 +55,13 @@ module.exports = function (io) {
           if (parseInt(io.sockets.adapter.rooms.get(socket.data.roomID).size) === parseInt(socket.data.numPlayers)) {
             // The room is now full. Let's start the game.
             console.log(`All ${socket.data.numPlayers} players have joined ${socket.data.roomID}, starting the game.`)
+
+            // Before we start the game, let's query the DB and get a list of player names.
+            getPlayerNames(38).then(
+              (result) => {
+                console.log(result)
+              }
+            ).catch(console.error)
 
             // I think there's a better way to do this (only using one event) but I couldn't get anything to work
             // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room

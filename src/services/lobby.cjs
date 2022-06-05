@@ -23,4 +23,21 @@ async function createGame (input) {
   })
 }
 
+async function getPlayerNames(gameID) {
+  let sqlCode = `SELECT [dbo].Users.Username 
+                 FROM [dbo].[UserGame], [dbo].Users 
+                 WHERE GameID = ${gameID};`
+
+  return new Promise((resolve, reject) => {
+    get('default').then(
+      (pool) => pool.request().query(sqlCode).then(
+        (result) => {
+          resolve(result)
+        }
+      ).catch(reject)
+    ).catch(reject)
+  })
+}
+
 module.exports = { createGame }
+module.exports = { getPlayerNames }
