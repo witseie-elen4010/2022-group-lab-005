@@ -58,6 +58,16 @@ socket.on('update_game_list', (openGames) => {
     }
 })
 
+
+socket.on('get_game_id', (gameID) => {
+    console.log(gameID)
+    console.log(`UUID: ${gameID.substring(0, 36)} GameID: ${gameID.substring(36)}`)
+    sessionStorage.setItem('gameID', gameID)
+    window.location.href = `/game/play`  
+})
+
+
+/*
 // When the user clicks the create game button and the game is standard, the server is sent the details of the game. If it is happy, 
 // it will create an unique game ID that will be received here.
 socket.on('get_game_id_reg_game', (gameID) => {
@@ -72,19 +82,13 @@ socket.on('get_game_id_custom_game', (gameID) => {
     sessionStorage.setItem('gameID', gameID)
     sessionStorage.setItem('gameType', 'custom')
     window.location.href = `/game/play`  
-})
+})*/
 
 
 function joinRunningGame() {
     sessionStorage.setItem('gameID', this.id)
     window.location.href = `/game/play` 
 }
-
-
-socket.on('get_game_id', (gameID) => {
-    sessionStorage.setItem('gameID', gameID)
-    window.location.href = `/game/play`  
-})
 
 document.getElementById('createGameBtn').addEventListener('click', () => {
     const numPlayers = $("#numPlayers").val()

@@ -26,7 +26,6 @@ let currentLetterIndex = 0
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'D', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
 let playerNamesArr = []
-let isPlayerWordCreator = false
 
 /** ********* Socket.io events ***********/
 const socket = io({ autoConnect: false })
@@ -61,8 +60,6 @@ socket.on('game_can_start', (playerNames) => {
     // Also attach the event listener for the keydown event so the user can use their keyboard.
     // Also remove the loading icon.
     document.getElementById('spinner').style.display = 'none'
-
-    if (isPlayerWordCreator === false) {
       document.addEventListener('keydown', keyboardInputEvent)
       document.addEventListener('click', virtualKeyboardInputEvent)
       updateWordleTableText()
@@ -70,7 +67,7 @@ socket.on('game_can_start', (playerNames) => {
       updateKeyboard()
       createKeyboard()
       createOpponentBoards()
-    }
+
 
     gameStart = true
   }
@@ -91,7 +88,6 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
 // This will fire when the server sends the results of the word validation and testing to the client.
 // This basically contains the results of the game logic on the server.
 socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) => {
-  if (isPlayerWordCreator === false) {
     currentLetterIndex = 0
     letterArray = letterArr
     currentWordIndex = currWordIndex + 1 // Move the keyboard to the next row on the grid.
@@ -109,7 +105,7 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
 
     updateWordleTableColor()
     updateKeyboard()
-  }
+  
 })
 
 /** ********* General code ***********/
@@ -118,17 +114,20 @@ if (window.sessionStorage.getItem('gameID') === null) {
   // have navigated to this page without going through the lobby. We redirect them to it.
   window.location.href = `/lobby`
 }
-// This is used to identify the user. It will be replaced with the identity from the login system.
+
 const gameID = window.sessionStorage.getItem('gameID')
+
+/*
 if (window.sessionStorage.getItem('gameType') === 'custom') {
   isPlayerWordCreator = true
-}
+}*/
 // Last digit of gameID is the number of players!
 
 const userName = prompt('Please enter your username', 'Username')
+const playerID = prompt('Please enter your database userID', 'ID')
 
 // Try establish a connection with the server.
-socket.auth = { sessionInfo: gameID, playerName: userName }
+socket.auth = { sessionInfo: gameID, playerName: userName , playerID: playerID}
 socket.connect()
 
 // Updates the color currently displayed in this user's wordle table
