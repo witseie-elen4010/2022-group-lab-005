@@ -1,5 +1,6 @@
 'use strict'
 const { get } = require('./poolManagement.cjs')
+const { resolve } = require('path')
 
 async function LogIn (username, password) {
 
@@ -7,9 +8,14 @@ async function LogIn (username, password) {
   const sqlCode = `SELECT Password FROM Users WHERE Username = '${username}'`
   return new Promise((resolve, reject) => {
     //validate username input, password does not need to be validated due to base64 format from encryption
-    if (username === '') {
+    if (username === '' & password === '') {
+      resolve('Please input a username and password')
+    } else if (username === '') {
       resolve('Please input a username')
-    } 
+    } else if (password === '') {
+      resolve('Please input a password')
+    }
+
     if (/^[a-zA-Z0-9]+$/.test(username) === false) {
       resolve('Please input a valid username')
     } 
@@ -62,9 +68,7 @@ async function registerUser(username, password) {
         (result) => {
           const list = JSON.stringify(result.recordset[0])
           try {
-            if (list === undefined) { // If this is true, then the username does not exist.
-              //if username does not exist it will insert new into database
-              //this is the actual sql insert, it will insert the username and password onto the database
+            if (list === undefined) { // undefined list shows that username does not exist
               get('default').then(
                 (pool) => pool.request().query(sqlCode).then(
                   () => {
@@ -87,13 +91,4 @@ async function registerUser(username, password) {
   })
 }
 
-// function decryptMessage(encrypted){
-//   //get private key with env file
-//   const private_key = process.env.private_key
-//   const decrypt = new JSEncrypt()
-//   decrypt.setPrivateKey(private_key)
-//   //decrypt message with private key and return
-//   const decrypted = decrypt.decrypt(encrypted)
-//   return decrypted
-// }
 module.exports = {LogIn,registerUser}
