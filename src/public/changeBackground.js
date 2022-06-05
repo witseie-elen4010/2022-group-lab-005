@@ -3,6 +3,16 @@ const background = document.querySelector('html, .background')
 const pageBackground = sessionStorage.getItem('background')
 const forestButton = document.getElementById('forestButton')
 
+$(document).ready(function () {
+  checkUser(document.cookie).then(
+    (result) => {
+      if(result === false){
+        window.location.href = "/login"
+      }
+    }
+  ).catch()
+})
+
 // set background to user's current background setting
 if (pageBackground === 'Mountains') {
   background.style.setProperty('background-image', 'url("/src/public/Mountain.jpg")')

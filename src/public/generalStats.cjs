@@ -3,6 +3,16 @@
 const request = new XMLHttpRequest()
 window.onload = getStatistics()
 
+$(document).ready(function () {
+    checkUser(document.cookie).then(
+      (result) => {
+        if(result === false){
+          window.location.href = "/login"
+        }
+      }
+    ).catch()
+})
+
 // Gets statistics from the database
 function getStatistics(){
     request.open('GET', 'get/stats', true)

@@ -4,6 +4,15 @@ const socket = io('/rooms')
 const request = new XMLHttpRequest()
 // Try establish a connection with the server.
 socket.connect()
+$(document).ready(function () {
+    checkUser(document.cookie).then(
+      (result) => {
+        if(result === false){
+          window.location.href = "/login"
+        }
+      }
+    ).catch()
+})
 
 $("#customWordField").hide() // Standard is default so the custom word field is hidden
 $("#customWordField").append(`<div class="form-floating mb-3"><input type="text" class="form-control" id="customWord" placeholder="Custom word"><label for="floatingInput">Custom word</label><div id="invalidWord" class="invalid-feedback"><div id="feedbackText"></div></div></div>`)

@@ -1,5 +1,15 @@
 'use strict'
 
+$(document).ready(function () {
+  checkUser(document.cookie).then(
+    (result) => {
+      if(result === false){
+        window.location.href = "/login"
+      }
+    }
+  ).catch()
+})
+
 // when user selects the dark mode button send dark mode is true to server
 const darkModeButton = document.getElementById('darkButton')
 darkModeButton.addEventListener('click', function () {
