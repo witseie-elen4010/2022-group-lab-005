@@ -26,6 +26,7 @@ let currentLetterIndex = 0
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'D', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
 let playerNamesArr = []
+let isPlayerWordCreator = false
 
 /** ********* Socket.io events ***********/
 const socket = io({ autoConnect: false })
@@ -67,7 +68,6 @@ socket.on('game_can_start', (playerNames) => {
       updateKeyboard()
       createKeyboard()
       createOpponentBoards()
-
 
     gameStart = true
   }
