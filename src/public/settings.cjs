@@ -4,7 +4,8 @@
 const darkModeButton = document.getElementById('darkButton')
 darkModeButton.addEventListener('click', function () {
   const mode = 'true'
-  document.body.classList.toggle("dark-mode")
+  document.body.classList.remove("light-mode");
+  document.body.classList.add("dark-mode")
   sessionStorage.setItem("mode", mode);
   sendModeToServer(mode)
 }, false)
@@ -13,7 +14,8 @@ darkModeButton.addEventListener('click', function () {
 const lightModeButton = document.getElementById('lightButton')
 lightModeButton.addEventListener('click', function () {
   const mode = 'false'
-  document.body.classList.toggle("light-mode");
+  document.body.classList.remove("dark-mode");
+  document.body.classList.add("light-mode");
   sessionStorage.setItem("mode", mode);
   sendModeToServer(mode)
 }, false)

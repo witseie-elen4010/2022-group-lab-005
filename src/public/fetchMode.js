@@ -7,7 +7,9 @@ fetch('/user/api/DarkModeData') .then(response => {
     }
     return response.text()
   }).then(function (data) {
+
     // set dark mode setting to data from api
     const darkMode = data
     sessionStorage.setItem("mode", darkMode);
+    
   }).catch(error => document.write(`Fetch failed: ${error}`))
