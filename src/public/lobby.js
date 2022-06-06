@@ -4,7 +4,7 @@ const socket = io('/rooms')
 
 // Try establish a connection with the server.
 socket.connect()
-$(document).ready(function () {
+$(function () {
     checkUser(document.cookie).then(
       (result) => {
         if(result === false){

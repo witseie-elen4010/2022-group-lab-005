@@ -1,7 +1,7 @@
 'use strict'
 const request = new XMLHttpRequest()
 
-$(document).ready(function () {
+$(function () {
   checkUser(document.cookie).then(
     (result) => {
       if(result === false){
