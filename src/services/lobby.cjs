@@ -47,9 +47,11 @@ async function getGameInformation (gameID) {
 }
 
 async function getPlayerNames (gameID) {
-  const sqlCode = `SELECT [dbo].Users.Username 
-                 FROM [dbo].[UserGame], [dbo].Users 
-                 WHERE GameID = ${gameID};`
+  const sqlCode = `SELECT [Username]
+  FROM [dbo].[Users] AS usr
+  INNER JOIN [dbo].[UserGame] AS usrGame
+  ON  usrGame.UserID = usr.ID
+  WHERE GameID = ${gameID};`
 
   return new Promise((resolve, reject) => {
     get('default').then(
