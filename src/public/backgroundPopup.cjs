@@ -1,26 +1,6 @@
 'use strict'
-const background = document.querySelector('html, .background')
-const pageBackground = sessionStorage.getItem('background')
+const background = document.querySelector('body')
 const forestButton = document.getElementById('forestButton')
-
-$(function () {
-  checkUser(document.cookie).then(
-    (result) => {
-      if(result === false){
-        window.location.href = "/login"
-      }
-    }
-  ).catch()
-})
-
-// set background to user's current background setting
-if (pageBackground === 'Mountains') {
-  background.style.setProperty('background-image', 'url("/src/public/Mountain.jpg")')
-} else if (pageBackground === 'Forest') {
-  background.style.setProperty('background-image', 'url("/src/public/Forest.jpg")')
-} else if (pageBackground === 'Beach') {
-  background.style.setProperty('background-image', 'url("/src/public/Beach.jpg")')
-}
 
 // if button is pressed change background and send new background to server
 forestButton.addEventListener('click', function () {
@@ -45,7 +25,21 @@ mountainsButton.addEventListener('click', function () {
   sendBackgroundToServer(back)
 }, false)
 
-const backButton = document.getElementById('backButton')
-backButton.addEventListener('click', function () {
-  location.href = '/game/game_debug'
+// if button is pressed change background and send new background to server
+const noneButton = document.getElementById('noneButton')
+noneButton.addEventListener('click', function () {
+  background.style.removeProperty('background-image')
+  const back = 'None'
+  sendBackgroundToServer(back)
 }, false)
+
+
+let popup = document.getElementById("background_popup")
+
+function openBackgroundPopup(){
+  popup.classList.add("background-popup-visible")
+}
+
+function closeBackgroundPopup(){
+  popup.classList.remove("background-popup-visible")
+}

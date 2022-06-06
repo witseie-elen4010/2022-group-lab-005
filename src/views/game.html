@@ -9,9 +9,14 @@
   <link rel="stylesheet" href="/src/public/game.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script defer type="text/javascript" src="/src/public/utils.js"></script>
-  <script defer src="/src/public/fetchBackground.js"></script>
-  <link rel="stylesheet" href="/src/public/guess.css" />
+
+
   <script type="module" src="/src/public/game.js"></script>
+  <script defer src="/src/public/backgroundPopup.cjs"></script>
+
+  <script defer type="text/javascript" src="/src/public/sendBackgroundToServer.js"></script>
+  <script defer src="/src/public/fetchBackground.cjs"></script>
+  
 </head>
 
 <body>
@@ -23,8 +28,31 @@
     </div>
   </div>
 
-  <button type="button" onclick="location.href = '/game/changeBackground';" id="changeBackgroundButton">Change
-    Background</button>
+  <div class="change-background-button">
+  <button type="button" class="btn btn-primary " onclick = openBackgroundPopup() id="changeBackgroundButton">Change Background</button>
+  </div>
+  <div class = "container">
+      <div class = popup id = "background_popup">
+        <div class="forest">
+        <button type="button" class="btn btn-primary " id="forestButton">Forest</button>
+        </div>
+        <div class="sunny-beach">
+        <button type="button" class="btn btn-primary" id="sunBeachButton">Sunny Beach</button>
+        </div>
+        <div class="mountains">
+        <button type="button" class="btn btn-primary" id="mountainsButton">Mountains</button>
+        </div>
+        <div class="none">
+        <button type="button" class="btn btn-primary" id="noneButton">None</button>
+        </div>
+        <div class="back">
+        <button type="button" class="btn btn-primary"  onclick = "closeBackgroundPopup()"  id="option">Close</button>
+        </div>
+      </div>
+  </div>
+
+  <p id="status"></p>
+  <p id="msgFmServer"></p>
 
   <h1 id="winner"></h1>
 

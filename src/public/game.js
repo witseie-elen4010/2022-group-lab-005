@@ -1,7 +1,7 @@
 'use strict'
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 
-$(document).ready(function () {
+$(function () {
   checkUser(document.cookie).then(
     (result) => {
       if (result === false) {
