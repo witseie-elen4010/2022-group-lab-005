@@ -14,11 +14,10 @@ module.exports = function (io) {
 
   // This middleware will only fire if a connection is coming from the '/rooms' namespace.
   io.of('/rooms').use((socket, next) => {
-    console.log('A lobby client has connected')
+    console.log('A client has connected to the lobby')
 
-    // Attach a disconnect listener
     socket.on('disconnect', () => {
-      console.log('A lobby client has disconnected')
+      console.log('A client has disconnected from the lobby')
     })
 
     // Get the open games and send them back to the client.
@@ -31,10 +30,8 @@ module.exports = function (io) {
 
   // This middleware will only fire if a connection is coming from the default ('/') namespace.
   io.use((socket, next) => {
-    // When the a connection is attempted, the client sends an object that contains the player's name and a string called sessionInfo. This string is of the format:
-    // x....xy where all the xs form the roomID and y is the number of players that are going to be in the game.
+    // When the a connection is attempted, the client sends an object that contains information about that specific game they want to join.
     getGameInfo(socket.handshake.auth.sessionInfo.substring(36, socket.handshake.auth.sessionInfo.length - 1)).then((queryResult) => {
-      // We get the information about the game that is stored in the db.
       return queryResult
     }).then((resultFromQuery) => {
       socket.data.databaseID = parseInt(socket.handshake.auth.sessionInfo.substring(36, socket.handshake.auth.sessionInfo.length - 1))
@@ -47,35 +44,27 @@ module.exports = function (io) {
       // WILL FIX THIS!
       const playerName = socket.handshake.auth.playerName
 
-      // We extract the number of players from the sessionInfo string.
-      // const numPlayers = validateNumPlayers(socket.handshake.auth.sessionInfo.substring(socket.handshake.auth.sessionInfo.length - 1))
-
       // We add _game_ and numPlayers to the gameID so that we can determine if the room (socket.io) (which has a identity of gameID) is a game or if it is some other room.
       const gameID = `${socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length)}_game_${numPlayers.toString()}`
-      // const gameID = `${socket.handshake.auth.sessionInfo.substring(0, 36)}_game`
 
       if (numPlayers !== -1 && gameID.length !== 0 && playerName.length !== 0) {
         if (!isRoomEmpty(io, gameID)) {
-          // This socket is not the first player to join the room. Let's check that the room isn't full
           if (numPlayers > parseInt(io.sockets.adapter.rooms.get(gameID).size)) {
             // The room isn't full yet so the game hasn't started.
             addPlayerToRoom(socket, gameID, playerName, numPlayers, io).then((result) => {
-              // Check if the room is now full. If it is, start the game. Otherwise, tell the socket that just joined to wait.
               if (parseInt(io.sockets.adapter.rooms.get(socket.data.roomID).size) === parseInt(socket.data.numPlayers)) {
                 // The room is now full. Let's start the game.
                 console.log(`All ${socket.data.numPlayers} players have joined ${socket.data.roomID}, starting the game.`)
 
                 // Before we start the game, let's query the DB and get a list of player names.
-                getPlayerNames(socket.data.databaseID/* 38 */).then((result) => {
+                getPlayerNames(socket.data.databaseID).then((result) => {
                   // I think there's a better way to do this (only using one event) but I couldn't get anything to work
                   // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room
                   // except to the sender. The second line sends the 'game_can_start' event to the sender.
                   socket.to(socket.data.roomID).emit('game_can_start', result.recordset)
                   socket.emit('game_can_start', result.recordset)
-                }
-                ).catch(console.error)
+                }).catch(console.error)
               } else {
-                // The room is not full yet so we tell the socket that just joined to wait.
                 socket.emit('waiting_for_players')
               }
 
@@ -86,7 +75,6 @@ module.exports = function (io) {
               next()
             })
           } else {
-            // The room is full and the game is running
             return next(new Error('game_already_running'))
           }
         } else {
@@ -247,13 +235,13 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
         socket.data.playerNum = parseInt(io.sockets.adapter.rooms.get(gameID).size) + 1
       }
 
-      // We add a 'playerName' attribute *to* the socket object so we can
-      // use that name later on.
+      // Add these attributes to the socket.data field so we can use them
+      // later on.
       socket.data.playerName = playerName
       socket.data.roomID = gameID
       socket.data.numPlayers = numPlayers
 
-      // Add the player to the room specified by gameID.
+      // Add the player to the room
       socket.join(socket.data.roomID)
       console.log(`${playerName} has joined ${gameID}`)
 
@@ -281,6 +269,7 @@ function getOpenGames (io) {
       if (isRoomEmpty(io, key)) {
         // The room is empty
         // idk what to do here. This code shouldn't be reachable tho.
+        console.log('This should have run!')
       } else {
         const currentPlayerNum = parseInt(io.sockets.adapter.rooms.get(key).size)
 
@@ -301,7 +290,7 @@ async function getGameInfo (gameID) {
     getGameInformation(gameID).then((queryResult) => {
       const resultsObj = JSON.parse(JSON.stringify(queryResult.recordset))
       resolve(resultsObj[0])
-    })
+    }).catch(reject)
   })
 }
 
@@ -319,6 +308,6 @@ async function insertNewGameIntoDB (numPlayers, modeChosen, customWord) {
     createGame(gameData).then((queryResult) => {
       const resultsObj = JSON.parse(JSON.stringify(queryResult.recordset))
       resolve(resultsObj[0])
-    })
+    }).catch(reject)
   })
 }

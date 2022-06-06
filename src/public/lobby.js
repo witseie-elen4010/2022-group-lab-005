@@ -84,14 +84,6 @@ function joinRunningGame () {
 document.getElementById('createGameBtn').addEventListener('click', () => {
   const numPlayers = $('#numPlayers').val()
 
-  let gameType
-
-  if (document.getElementById('standard').checked === true) {
-    gameType = 'standard'
-  } else {
-    gameType = 'custom'
-  }
-
   let modeChosen = 1
 
   // Checks if the custom word chosen is valid if the game mode is custom
