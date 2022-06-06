@@ -1,5 +1,18 @@
 'use strict'
 
+
+$(document).ready(function () {
+  //const fake = createFakeUser()
+  //document.cookie = fake
+  checkUser(document.cookie).then(
+    (result) => {
+      if(result === false){
+        window.location.href = "/login"
+      }
+    }
+  ).catch()
+})
+
 function getMode () {
   request.open('GET', '/user/api/DarkModeData', true)
   request.addEventListener('load', setMode)

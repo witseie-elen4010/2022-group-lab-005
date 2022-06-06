@@ -1,14 +1,25 @@
 'use strict'
 const request = new XMLHttpRequest()
-window.onload = function () {
-  // getFriends()
-  // getPendingFriends() //i think this got something to do with the load,
-  // when this is used tog ether the output becomes the same for friend list and pending friend list
-  document.getElementById('addButton').addEventListener('click', function (evt) {
-    evt.preventDefault()
-    addFriend()
-  })
-}
+
+$(document).ready(function () {
+  checkUser(document.cookie).then(
+    (result) => {
+      if(result === false){
+        window.location.href = "/login"
+      }
+    }
+  ).catch()
+})
+//Window.onload will not work with the jquery from the user check, this can be added after the user check with jquery tho
+// window.onload = function () {
+//   // getFriends()
+//   // getPendingFriends() //i think this got something to do with the load,
+//   // when this is used tog ether the output becomes the same for friend list and pending friend list
+//   document.getElementById('addButton').addEventListener('click', function (evt) {
+//     evt.preventDefault()
+//     addFriend()
+//   })
+// }
 
 // Display friends the logged in user have
 function getFriends () {
