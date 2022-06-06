@@ -4,8 +4,8 @@ import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 $(document).ready(function () {
   checkUser(document.cookie).then(
     (result) => {
-      if(result === false){
-        window.location.href = "/login"
+      if (result === false) {
+        window.location.href = '/login'
       }
     }
   ).catch()
@@ -36,6 +36,7 @@ let currentLetterIndex = 0
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'D', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
 const playerNamesArr = []
+let thisPlayerNumber = -1
 
 /** ********* Socket.io events ***********/
 const socket = io({ autoConnect: false })
@@ -114,6 +115,10 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
 
   updateWordleTableColor()
   updateKeyboard()
+})
+
+socket.on('get_number', (num) => {
+  thisPlayerNumber = num
 })
 
 /** ********* General code ***********/
@@ -258,16 +263,23 @@ function updateKeyboard () {
 }
 
 function createOpponentBoards () {
-  const numPlayers = parseInt(gameID[gameID.length - 1])
-  for (let i = 1; i <= numPlayers; i++) {
-    const opponent = document.getElementById(`opponent${i}`)
-    const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
-    opponentNameHeading.innerHTML = 'Opponent ' + i
-    updateOpponentColors(colorArray, i)
-  }
-  for (let i = numPlayers; i < 6; i++) {
-    const opponent = document.getElementById(`opponent${i}`)
-    opponent.style.display = 'none'
+  console.log(thisPlayerNumber)
+  if (thisPlayerNumber !== -1) {
+    const numPlayers = parseInt(gameID[gameID.length - 1])
+    for (let i = 1; i <= numPlayers; i++) {
+      if (i !== thisPlayerNumber) {
+        const opponent = document.getElementById(`opponent${i}`)
+        const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+        opponentNameHeading.innerHTML = 'Opponent ' + i
+        updateOpponentColors(colorArray, i)
+      }
+    }
+    for (let i = numPlayers; i < 6; i++) {
+      if (i !== thisPlayerNumber) {
+        const opponent = document.getElementById(`opponent${i}`)
+        opponent.style.display = 'none'
+      }
+    }
   }
 }
 
