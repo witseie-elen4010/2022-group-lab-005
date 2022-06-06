@@ -21,26 +21,25 @@ window.onload = function () {
   })
 }
 
-function updateAndSendFormControl(){
-      //check if user have inputed anything
-      if (document.getElementById('username').value === '') {
-        document.getElementById('username').className = 'form-control is-invalid'
-        document.getElementById('password').className = 'form-control'
-        document.getElementById('output').innerHTML = 'Please input your username'
-      } 
-      else if (document.getElementById('password').value === '') {
-        document.getElementById('username').className = 'form-control'
-        document.getElementById('password').className = 'form-control is-invalid'
-        document.getElementById('output').innerHTML = 'Please input your password'
-      } else {
-        // get username and password and send it via json
-        const username = document.getElementById('username').value
-        const password = document.getElementById('password').value
-        const hashedPassword = addingSomeSaltAndHash(password)
-        request.send(JSON.stringify({ usernameInput: username, passwordInput: hashedPassword }))
-        //wait for the server to respond back
-        request.addEventListener('load', receivedValue)
-      }
+function updateAndSendFormControl () {
+  // check if user have inputed anything
+  if (document.getElementById('username').value === '') {
+    document.getElementById('username').className = 'form-control is-invalid'
+    document.getElementById('password').className = 'form-control'
+    document.getElementById('output').innerHTML = 'Please input your username'
+  } else if (document.getElementById('password').value === '') {
+    document.getElementById('username').className = 'form-control'
+    document.getElementById('password').className = 'form-control is-invalid'
+    document.getElementById('output').innerHTML = 'Please input your password'
+  } else {
+    // get username and password and send it via json
+    const username = document.getElementById('username').value
+    const password = document.getElementById('password').value
+    const hashedPassword = addingSomeSaltAndHash(password)
+    request.send(JSON.stringify({ usernameInput: username, passwordInput: hashedPassword }))
+    // wait for the server to respond back
+    request.addEventListener('load', receivedValue)
+  }
 }
 
 function receivedValue () {
@@ -52,19 +51,18 @@ function receivedValue () {
   // out put the value
   document.getElementById('output').innerHTML = msg
 
-
   if (msg === 'Please input a valid username') {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
-  } else if(msg === "User is now logged in" || msg === "Registration completed"){
-    //the code below is to set a cookie value, the only issue with this cookie is that it will 
-    //store a new cookie everytime the user logs in or registers, until the browser is closed
+  } else if (msg === 'User is now logged in' || msg === 'Registration completed') {
+    // the code below is to set a cookie value, the only issue with this cookie is that it will
+    // store a new cookie everytime the user logs in or registers, until the browser is closed
     const username = document.getElementById('username').value
     document.cookie = username
     // Let's reset everything
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control'
-    window.location.href = "/loginRedirect"
+    window.location.href = '/loginRedirect'
   }
 }
 
@@ -73,10 +71,8 @@ function onError () {
   document.getElementById('output').innerHTML = 'Status: Error communicating with server.'
 }
 
-
-function addingSomeSaltAndHash(password)
-{
-  let saltPassword = password+"PleaseGiveGoodMark"//can add special characters but i want good marks please
+function addingSomeSaltAndHash (password) {
+  const saltPassword = password + 'PleaseGiveGoodMark'// can add special characters but i want good marks please
   const hash = CryptoJS.SHA256(saltPassword).toString()
   return hash
 }

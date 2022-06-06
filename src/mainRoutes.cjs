@@ -3,7 +3,7 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const express = require('express')
 
-const {LogIn,registerUser} = require('./services/loginDb.cjs')
+const { LogIn, registerUser } = require('./services/loginDb.cjs')
 const gameRouter = require('./routes/gameRoutes.cjs')
 const lobbyRouter = require('./routes/lobbyRoutes.cjs')
 const userRouter = require('./routes/userRoutes.cjs')
@@ -58,6 +58,5 @@ mainRouter.post('/register', async function (req, res) {
     res.send({ loggedInOrNot: result })
   })
 })
-
 
 module.exports = mainRouter
