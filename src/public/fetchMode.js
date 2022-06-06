@@ -1,7 +1,7 @@
 'use strict'
 
 
-$(document).ready(function () {
+$(function () {
   //const fake = createFakeUser()
   //document.cookie = fake
   checkUser(document.cookie).then(

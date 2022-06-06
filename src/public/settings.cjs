@@ -1,6 +1,6 @@
 'use strict'
 
-$(document).ready(function () {
+$(function () {
   checkUser(document.cookie).then(
     (result) => {
       if(result === false){
