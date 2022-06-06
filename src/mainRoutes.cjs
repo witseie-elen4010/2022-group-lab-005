@@ -60,7 +60,6 @@ mainRouter.post('/register', async function (req, res) {
 })
 
 mainRouter.post('/get/user', function(req, res){
-  console.log(req.body.user)
   getUser(req.body.user).then(
     (result) => {
         res.send(result)

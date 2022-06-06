@@ -5,18 +5,20 @@
     <title>Friends</title>
     <meta charset="utf-8" />
     <script defer type="text/javascript" src="/src/public/friends.cjs"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script defer type="text/javascript" src="/src/public/utils.js"></script>
 </head>
 
 <body>
     <h1>Friends List</h1>
     <p id="Friend list"></p>
-        <form>
-            <h3 class="h3 mb-3 fw-normal">Add a friend</h3>
-            <div class="form-floating">
-                <input id="Friend" type="text" class="form-control" id="floatingInput" placeholder="friend's username">
-                <button class="w-100 btn btn-lg btn-primary" id="addButton" type="submit">Search</button>
-            </div>
-        </form>
+    <form>
+        <h3 class="h3 mb-3 fw-normal">Add a friend</h3>
+        <div class="form-floating">
+            <input id="Friend" type="text" class="form-control" id="floatingInput" placeholder="friend's username">
+            <button class="w-100 btn btn-lg btn-primary" id="addButton" type="submit">Search</button>
+        </div>
+    </form>
     <p id="output"></p>
     <h1>Pending Friend Request</h1>
     <p id="pending"></p>

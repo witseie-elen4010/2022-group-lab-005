@@ -56,7 +56,7 @@ function createFakeUser() {
     console.log("Creating FakeUser")
     let fakeUser = "FakerUser"
     fakeUser = 'username=' + "FakerUser"
-    console.log(fakeUser)
+    console.log(fakeUser) // User for testing so the console.log stays
     return fakeUser
 }
 
