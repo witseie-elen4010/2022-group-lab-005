@@ -4,61 +4,78 @@
   <title>Hazard a Guess | Lobby</title>
   <meta charset="utf-8" />
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
-  <link rel="stylesheet" href="/css/bootstrap.min.css" />
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
   <script type="module" src="/src/public/lobby.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script defer type="text/javascript" src="/src/public/utils.js"></script>
 </head>
 
 <body>
-  <h1>Welcome to Hazard a Guess Lobby!</h1>
+  <div class = "mx-5 my-5">
+    <h1 style="text-align:center">Welcome to Hazard a Guess Lobby!</h1>
+  </div>
+  <div class = "mx-5 my-5  px-2 py-2 border border-primary border-3 rounded-3 bg-body" >
+    <h2>Join an existing game</h2>
 
-  <h1>Join an existing game</h1>
+    <div class="table-responsive">
+      <table class="table table-hover" id="gameInfo">
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Available slots</th>
+            <th scope="col">Game type</th>
+            <th scope="col">Join?</th>
+          </tr>
+        </thead>
 
-  <div class="table-responsive">
-    <table class="table table-hover" id="gameInfo">
-      <thead>
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Available slots</th>
-          <th scope="col">Game type</th>
-          <th scope="col">Join?</th>
-        </tr>
-      </thead>
-      <tbody id="gameInfoTableBody">
-      </tbody>
-    </table>
+        <tbody id="gameInfoTableBody">
+        </tbody>
+      </table>
+    </div>
   </div>
 
-  <h1>Create a new game</h1>
-  <h2>Choose a game mode:</h2>
+  <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-body">
+    <h2>Create a new game</h2>
 
-  <div class="form-group border border-primary border-1 w-50 mx-auto d-grid gap-3">
-    <div class="form-control" id="gameModeContainer">
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="gameMode" id="standard" value="std" checked>
-        <label class="form-check-label" for="standard">
-          Standard
-        </label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="radio" name="gameMode" id="custom" value="cstm">
-        <label class="form-check-label" for="custom">
-          Custom
-        </label>
-      </div>
-      <div id="customWordField">
-      </div>
-    </div>
+    <div class="form-group">
+      <div class = "d-flex flex-wrap">
+        <div style="min-width:50%;">
+          <h4>Choose a game mode:</h4>
 
-    <div class="input-group form-control col-1">
-      <label for="customRange2" class="form-label">
-        Number of players
-      </label>
-      <input type="range" class="form-range" min="2" max="6" step="1" id="numPlayers">
-      <p>Number of players: <span id="currentNumPlayers"></span></p>
+          <div class="form-control my-2 border-0 flex-fill" id="gameModeContainer">
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gameMode" id="standard" value="std" checked>
+              <label class="form-check-label" for="standard">
+                Standard
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="gameMode" id="custom" value="cstm">
+              <label class="form-check-label" for="custom">
+                Custom
+              </label>
+            </div>
+            <div id="customWordField">
+            </div>
+          </div>
+        </div>
+        <div class = "flex-fill">
+          <div class="input-group form-control border-0 my-2 col-1">
+            <label for="customRange2" class="form-label">
+              <h4>
+                How many players:
+              </h4>
+            </label>
+            <input type="range" class="form-range" min="2" max="7" step="1" id="numPlayers">
+            <p>Number of players: <span id="currentNumPlayers"></span></p>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary col-4" id="createGameBtn">Create game</button>
     </div>
-    <button class="btn btn-primary col-4" id="createGameBtn">Create game</button>
   </div>
 </body>
 
