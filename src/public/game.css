@@ -6,6 +6,7 @@
   align-content: center;
   flex-wrap: nowrap;
   height: 100vh;
+  background-color: transparent;
 }
 #playerDiv{
   order: 2;
