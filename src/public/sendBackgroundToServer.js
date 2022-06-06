@@ -17,7 +17,7 @@ function sendBackgroundToServer (background) {
   request.addEventListener('load', dataReceived)
 
   const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: Sent background to server'
+  //statusTag.innerHTML = 'Status: Sent background to server'
 }
 
 function dataReceived () {
@@ -27,13 +27,13 @@ function dataReceived () {
   const msg = response.message
 
   const msgFmServer = document.getElementById('msgFmServer')
-  msgFmServer.innerHTML = msg
+ // msgFmServer.innerHTML = msg
 
   const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: background is being logged.'
+  //statusTag.innerHTML = 'Status: background is being logged.'
 }
 
 function onError () {
   const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: Error communicating with server.'
+  //statusTag.innerHTML = 'Status: Error communicating with server.'
 }
