@@ -30,4 +30,4 @@ jobs:
         run: |
           npm install
           npm run build --if-present
-          npm test -- socket.test.js
+        #  npm test -- socket.test.js
