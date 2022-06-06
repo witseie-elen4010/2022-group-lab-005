@@ -34,15 +34,17 @@ module.exports = function (io) {
     getGameInfo(socket.handshake.auth.sessionInfo.substring(36, socket.handshake.auth.sessionInfo.length - 1)).then((queryResult) => {
       return queryResult
     }).then((resultFromQuery) => {
+      // ID of the game in the database table.
       socket.data.databaseID = parseInt(socket.handshake.auth.sessionInfo.substring(36, socket.handshake.auth.sessionInfo.length - 1))
-      socket.data.wordToGuess = resultFromQuery.WordToGuess
-      console.log(socket.data.wordToGuess)
-      socket.data.playerID = socket.handshake.auth.playerID
+      socket.data.playerID = socket.handshake.auth.playerID // This comes from the client, we need to change this. Its the ID of the player in the users database table.
+      const playerName = socket.handshake.auth.playerName // This comes from the client, we need to change this.
 
+      socket.data.wordToGuess = resultFromQuery.WordToGuess
       const numPlayers = resultFromQuery.NumPlayers
 
+      console.log(socket.data.wordToGuess)
+
       // WILL FIX THIS!
-      const playerName = socket.handshake.auth.playerName
 
       // We add _game_ and numPlayers to the gameID so that we can determine if the room (socket.io) (which has a identity of gameID) is a game or if it is some other room.
       const gameID = `${socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length)}_game_${numPlayers.toString()}`
