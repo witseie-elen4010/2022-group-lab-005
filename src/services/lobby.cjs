@@ -50,7 +50,7 @@ async function getPlayerNames (gameID) {
   const sqlCode = `SELECT [Username]
   FROM [dbo].[Users] AS usr
   INNER JOIN [dbo].[UserGame] AS usrGame
-  ON  usrGame.UserID = usr.ID
+  ON  usrGame.Username = usr.Username
   WHERE GameID = ${gameID};`
 
   return new Promise((resolve, reject) => {
@@ -64,9 +64,9 @@ async function getPlayerNames (gameID) {
   })
 }
 
-async function addPlayerToGame (gameID, userID) {
-  const sqlCode = `INSERT INTO [dbo].[UserGame] (UserID, GameID)
-                 SELECT '${userID}', '${gameID}';`
+async function addPlayerToGame (gameID, username) {
+  const sqlCode = `INSERT INTO [dbo].[UserGame] (Username, GameID)
+                 SELECT '${username}', '${gameID}';`
 
   return new Promise((resolve, reject) => {
     get('default').then(
