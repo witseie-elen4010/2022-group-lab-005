@@ -3,22 +3,20 @@
 const request = new XMLHttpRequest()
 request.addEventListener('error', onError)
 
-function sendModeToServer (darkModeBool) {
+function sendModeToServer(darkModeBool) {
+
   const darkMode = darkModeBool
   request.open('POST', '/user/changeMode', true)
 
   // send request to server
   request.setRequestHeader('Content-type', 'application/json')
-
-  request.send(JSON.stringify({ darkMode }))
-
+  const username = getFromCookie('username', document.cookie)
+  request.send(JSON.stringify({ usernameInput: username, darkModeInput: darkMode}))
   request.addEventListener('load', dataReceived)
 
-  const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: Sent mode to server'
 }
 
-function dataReceived () {
+function dataReceived() {
   // Let's parse the data we just received.
   const response = JSON.parse(this.responseText)
 
@@ -31,7 +29,7 @@ function dataReceived () {
   statusTag.innerHTML = 'Status: mode is being logged.'
 }
 
-function onError () {
+function onError() {
   const statusTag = document.getElementById('status')
   statusTag.innerHTML = 'Status: Error communicating with server.'
 }
