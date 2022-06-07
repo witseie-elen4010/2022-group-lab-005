@@ -73,6 +73,18 @@ module.exports = function (io) {
 
               // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
               next()
+            }).catch((err) => {
+              if (err.number === 2627) {
+                // A player that was in the game, disconnected and has now tried to reconnect.
+                // This violates the primary key constraint in the UserGame table.
+                // We end the game.
+                console.log('User cannot rejoin game')
+              } else {
+                console.log(err.message)
+              }
+
+              // Ending the game for the user.
+              socket.disconnect()
             })
           } else {
             return next(new Error('game_already_running'))
@@ -94,6 +106,18 @@ module.exports = function (io) {
 
             // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
             next()
+          }).catch((err) => {
+            if (err.number === 2627) {
+              // A player that was in the game, disconnected and has now tried to reconnect.
+              // This violates the primary key constraint in the UserGame table.
+              // We end the game.
+              console.log('User cannot rejoin game')
+            } else {
+              console.log(err.message)
+            }
+
+            // Ending the game for the user.
+            socket.disconnect()
           })
         }
       } else {
@@ -260,7 +284,9 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
       })
 
       resolve(socket)
-    }).catch(reject)
+    }).catch((err) => {
+      reject(err)
+    })
   })
 }
 
