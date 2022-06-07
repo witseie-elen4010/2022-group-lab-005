@@ -59,11 +59,17 @@ module.exports = function (io) {
 
                 // Before we start the game, let's query the DB and get a list of player names.
                 getPlayerNames(socket.data.databaseID).then((result) => {
-                  // I think there's a better way to do this (only using one event) but I couldn't get anything to work
-                  // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room
-                  // except to the sender. The second line sends the 'game_can_start' event to the sender.
-                  socket.to(socket.data.roomID).emit('game_can_start', result.recordset)
-                  socket.emit('game_can_start', result.recordset)
+                  io.in(socket.data.roomID).fetchSockets().then((result) => {
+                    for (let i = 0; i < result.length; i++) {
+                      io.to(result[i].id).emit('get_number', result[i].data.playerNum)
+                    }
+                  }).then(() => {
+                    // I think there's a better way to do this (only using one event) but I couldn't get anything to work
+                    // other than this. This first line broadcasts the 'game_can_start' event to all the sockets in the room
+                    // except to the sender. The second line sends the 'game_can_start' event to the sender.
+                    socket.to(socket.data.roomID).emit('game_can_start', result.recordset)
+                    socket.emit('game_can_start', result.recordset)
+                  })
                 }).catch(console.error)
               } else {
                 socket.emit('waiting_for_players')
@@ -194,7 +200,7 @@ function testWord (letterArray, currentWordIndex, colorArray, currentWordCheck, 
  */
 function updateAllLettersColorsArray (color, letter, allLettersColorsArray) {
   for (let i = 0; i < allLettersArray.length; i++) {
-    if (allLettersArray[i] === letter) {
+    if (allLettersArray[i].toUpperCase() === letter.toUpperCase()) {
       switch (color) {
         case 'i':
           if (allLettersColorsArray[i] !== 'c') {
@@ -212,7 +218,6 @@ function updateAllLettersColorsArray (color, letter, allLettersColorsArray) {
       }
     }
   }
-
   return allLettersColorsArray
 }
 

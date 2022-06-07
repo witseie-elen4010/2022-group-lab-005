@@ -34,8 +34,9 @@ let currentWordCheck = ['X', 'X', 'X', 'X', 'X']
 let currentWordIndex = 0
 let currentLetterIndex = 0
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
-let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'D', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
+let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
 const playerNamesArr = []
+let thisPlayerNumber = -1
 
 /** ********* Socket.io events ***********/
 const socket = io({ autoConnect: false })
@@ -74,8 +75,8 @@ socket.on('game_can_start', (playerNames) => {
     document.addEventListener('click', virtualKeyboardInputEvent)
     updateWordleTableText()
     updateWordleTableColor()
-    updateKeyboard()
     createKeyboard()
+    updateKeyboard()
     createOpponentBoards()
 
     gameStart = true
@@ -114,6 +115,10 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
 
   updateWordleTableColor()
   updateKeyboard()
+})
+
+socket.on('get_number', (num) => {
+  thisPlayerNumber = num
 })
 
 /** ********* General code ***********/
@@ -257,26 +262,38 @@ function updateKeyboard () {
 }
 
 function createOpponentBoards () {
-  const numPlayers = parseInt(gameID[gameID.length - 1])
-  for (let i = 1; i <= numPlayers; i++) {
-    const opponent = document.getElementById(`opponent${i}`)
-    const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
-    opponentNameHeading.innerHTML = 'Opponent ' + i
-    updateOpponentColors(colorArray, i)
-  }
-  for (let i = numPlayers; i < 6; i++) {
-    const opponent = document.getElementById(`opponent${i}`)
-    opponent.style.display = 'none'
+  console.log(thisPlayerNumber)
+  if (thisPlayerNumber !== -1) {
+    const numPlayers = parseInt(gameID[gameID.length - 1])
+    for (let i = 1; i <= numPlayers; i++) {
+      if (i !== thisPlayerNumber) {
+        const opponent = document.getElementById(`opponent${i}`)
+        const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+        opponentNameHeading.innerHTML = 'Opponent ' + i
+        updateOpponentColors(colorArray, i)
+      }
+    }
+    for (let i = numPlayers; i < 6; i++) {
+      if (i !== thisPlayerNumber) {
+        const opponent = document.getElementById(`opponent${i}`)
+        opponent.style.display = 'none'
+      }
+    }
   }
 }
 
 function keyboardInputEvent (event) {
+  document.getElementById('gameInfoText').innerHTML = ''
   if (event.key === 'Backspace') {
     if (currentLetterIndex > 0) {
       currentLetterIndex = currentLetterIndex - 1
     }
     letterArray[currentWordIndex][currentLetterIndex] = ''
     updateWordleTableText()
+  } else if (event.key === 'Enter') {
+    if (currentLetterIndex < 5) {
+      document.getElementById('gameInfoText').innerHTML = 'Not enough letters!'
+    }
   } else {
     for (let i = 0; i < allLettersArray.length; i++) {
       if (event.key.toUpperCase() === allLettersArray[i]) {
@@ -289,6 +306,7 @@ function keyboardInputEvent (event) {
 }
 
 function virtualKeyboardInputEvent (event) {
+  document.getElementById('gameInfoText').innerHTML = ''
   const keys = document.getElementsByClassName('key')
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
@@ -302,7 +320,7 @@ function virtualKeyboardInputEvent (event) {
         updateWordleTableText()
       } else if (keyText === 'ENTER') {
         if (currentLetterIndex < 5) {
-          console.log('NOT ENOUGH LETTERS!')
+          document.getElementById('gameInfoText').innerHTML = 'Not enough letters!'
         }
       } else {
         for (let i = 0; i < allLettersArray.length; i++) {
