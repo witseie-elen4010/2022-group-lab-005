@@ -9,7 +9,7 @@ const { getUserFriends, getUserPendingFriends, addFriend } = require('../service
 
 const userRouter = express.Router()
 
-userRouter.get('/api/DarkModeData', async function (req, res) {
+userRouter.post('/api/DarkModeData', async function (req, res) {
   const username = req.body.usernameInput
   getMode(username).then(
     (result) => {
@@ -46,6 +46,7 @@ userRouter.get('/settings', function (req, res) { // works
 userRouter.post('/changeMode', jsonParser, async function (req, res) { // ?
   const username = req.body.usernameInput
   const darkMode = req.body.darkModeInput
+
   console.log(`Server received: ${darkMode}`)
 
   changeMode(darkMode, username).then(
@@ -53,7 +54,6 @@ userRouter.post('/changeMode', jsonParser, async function (req, res) { // ?
       res.send(JSON.stringify({ message: `${darkMode} has been saved to the database` }))
     }
   ).catch(console.error)
-  
 })
 
 userRouter.get('/friends', function (req, res) {
