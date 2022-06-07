@@ -1,25 +1,32 @@
 'use strict'
 
+const request = new XMLHttpRequest()
 
 $(function () {
   //const fake = createFakeUser()
   //document.cookie = fake
   checkUser(document.cookie).then(
     (result) => {
-      if(result === false){
+      if (result === false) {
         window.location.href = "/login"
       }
     }
   ).catch()
 })
 
-function getMode () {
-  request.open('GET', '/user/api/DarkModeData', true)
+getMode()
+function getMode() {
+  request.open('POST', '/user/api/DarkModeData', true)
+  request.setRequestHeader('Content-type', 'application/json')
+  const username = getFromCookie('username', document.cookie)
+  request.send(JSON.stringify({ usernameInput: username }))
   request.addEventListener('load', setMode)
-  request.send()
 }
 
-function setMode () {
+function setMode() {
   const response = JSON.parse(this.responseText)
-  sessionStorage.setItem('mode', response)
+  const darkMode = response.recordset[0].isDarkmode
+
+  //  set current current scheme
+  sessionStorage.setItem('mode', darkMode)
 }

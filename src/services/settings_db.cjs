@@ -2,16 +2,14 @@
 const { get } = require('./poolManagement.cjs')
 
 module.exports = {
-  getMode: async function getMode (user) {
-    const pool = await get('default')
-
+  getMode: async function getMode (username) {
     // Get dark mode setting for specific user
-    const modeRequest = 'SELECT DarkMode FROM [dbo].[UserSettings] WHERE ID = \'1\''
+    const modeRequest = `SELECT isDarkmode FROM Settings WHERE Username = '${username}'`
     return new Promise((resolve, reject) => {
       get('default').then(
         (pool) => pool.request().query(modeRequest).then(
           (result) => {
-            resolve(result.recordset[0].DarkMode)
+            resolve(result)
           }
         ).catch(reject)
       ).catch(reject)
@@ -19,9 +17,9 @@ module.exports = {
   },
 
   // This should go in its own file, not in testDB which is for testing the DB and pool.
-  changeMode: async function changeMode (DarkMode) {
+  changeMode: async function changeMode (DarkMode, username) {
     // update users table if dark mode has changed
-    const sqlCode = `UPDATE [dbo].[UserSettings] SET DarkMode = '${DarkMode}' WHERE ID = '1'`
+    const sqlCode = `UPDATE Settings SET isDarkmode = '${DarkMode}' WHERE Username = '${username}'`
 
     console.log(sqlCode)
     get('default').then(
