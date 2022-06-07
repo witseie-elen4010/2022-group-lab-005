@@ -2,26 +2,49 @@
 <html lang="en">
 
 <head>
-  <title>GAME</title>
+  <title>Hazard a Guess | Game</title>
   <meta charset="utf-8" />
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
   <link rel="stylesheet" href="/src/public/game.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script defer type="text/javascript" src="/src/public/utils.js"></script>
 
-
   <script type="module" src="/src/public/game.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+
   <!--<script defer src="/src/public/backgroundPopup.cjs"></script>
 
   <script defer type="text/javascript" src="/src/public/sendBackgroundToServer.js"></script>
   <script defer src="/src/public/fetchBackground.cjs"></script>-->
-  
+
 </head>
 
 <body>
+
+  <!-- Modal -->
+  <div class="modal fade" id="gameoverModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Game over</h5>
+        </div>
+        <div class="modal-body">
+          <p id="winText"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="modalCloseButton" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 
   <div id="spinner" style="display: none;" class="unselectable">
     <p>Waiting for other players...</p>
@@ -56,11 +79,10 @@
   <p id="status"></p>
   <p id="msgFmServer"></p>-->
 
-  <h1 id="winner"></h1>
-
-  <div id = gridContainer>
-    <div id = "playerDiv" class="unselectable">
-      <div class="wordleDiv" >
+  <div id=gridContainer>
+    <div id="playerDiv" class="unselectable">
+      <h2 id = "playerName"></h2>
+      <div class="wordleDiv">
         <div class="wordleRow">
           <div class="block"></div>
           <div class="block"></div>
@@ -107,13 +129,38 @@
 
       <div id="keyboardDiv" class="unselectable">
         <div class="keyboardRow">
-          <div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
         </div>
         <div class="keyboardRow">
-          <div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
         </div>
         <div class="keyboardRow">
-          <div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div><div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
+          <div class="key"></div>
         </div>
         <div id="gameInfoText"></div>
 
@@ -122,7 +169,7 @@
 
 
     <div id="opponentsDivLeft" class="unselectable">
-      <div id="opponent1" class = wordleDiv>
+      <div id="opponent1" class=wordleDiv>
         <h2></h2>
         <div class="wordleRow">
           <div class="block"></div>
@@ -167,7 +214,7 @@
           <div class="block"></div>
         </div>
       </div>
-      <div id="opponent2" class = wordleDiv>
+      <div id="opponent2" class=wordleDiv>
         <h2></h2>
         <div class="wordleRow">
           <div class="block"></div>
@@ -212,7 +259,7 @@
           <div class="block"></div>
         </div>
       </div>
-      <div id="opponent3" class = wordleDiv>
+      <div id="opponent3" class=wordleDiv>
         <h2></h2>
         <div class="wordleRow">
           <div class="block"></div>
@@ -260,7 +307,7 @@
     </div>
 
     <div id="opponentsDivRight" class="unselectable">
-      <div id="opponent4" class = wordleDiv>
+      <div id="opponent4" class=wordleDiv>
         <h2></h2>
         <div class="wordleRow">
           <div class="block"></div>
@@ -305,7 +352,7 @@
           <div class="block"></div>
         </div>
       </div>
-      <div id="opponent5" class = wordleDiv>
+      <div id="opponent5" class=wordleDiv>
         <h2></h2>
         <div class="wordleRow">
           <div class="block"></div>
@@ -350,7 +397,7 @@
           <div class="block"></div>
         </div>
       </div>
-      <div id="opponent6" class = wordleDiv>
+      <div id="opponent6" class=wordleDiv>
         <h2></h2>
         <div class="wordleRow">
           <div class="block"></div>
