@@ -4,8 +4,8 @@ import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 $(function () {
   checkUser(document.cookie).then(
     (result) => {
-      if(result === false){
-        window.location.href = "/login"
+      if (result === false) {
+        window.location.href = '/login'
       }
     }
   ).catch()
@@ -131,11 +131,10 @@ if (window.sessionStorage.getItem('gameType') === 'custom') {
 } */
 // Last digit of gameID is the number of players!
 
-const userName = prompt('Please enter your username', 'Username')
-const playerID = prompt('Please enter your database userID', 'ID')
+const userName = getFromCookie('username', document.cookie)
 
 // Try establish a connection with the server.
-socket.auth = { sessionInfo: gameID, playerName: userName, playerID }
+socket.auth = { sessionInfo: gameID, playerName: userName }
 socket.connect()
 
 // Updates the color currently displayed in this user's wordle table
