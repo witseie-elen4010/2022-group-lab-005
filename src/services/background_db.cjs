@@ -2,23 +2,22 @@
 const { get } = require('./poolManagement.cjs')
 
 module.exports = {
-  getBackground: async function getBackground (id) {
-    
+  getBackground: async function getBackground (username) {
     // send query to database
-    const modeRequest = `SELECT Background FROM [dbo].[UserSettings] WHERE ID = '1';` 
+    const modeRequest = `SELECT Background FROM Settings WHERE Username = '${username}';` 
     return new Promise((resolve, reject) => {
       get('default').then(
         (pool) => pool.request().query(modeRequest).then(
           (result) => {
-            resolve(result.recordset[0].Background)
+            resolve(result)
           }
         ).catch(reject)
       ).catch(reject)
     })
   },
 
-  changeBackground: async function changeBackground (Background, ID) {
-    const sqlCode = `UPDATE [dbo].[UserSettings] SET Background  = '${Background}' WHERE ID = '1';`
+  changeBackground: async function changeBackground (Background, username) {
+    const sqlCode = `UPDATE Settings SET Background  = '${Background}' WHERE Username = '${username}';`
     return new Promise((resolve, reject) => {
       console.log(sqlCode)
       get('default').then(

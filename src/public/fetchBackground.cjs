@@ -4,13 +4,17 @@ const new_request = new XMLHttpRequest()
 window.onload = getBackground()
 
 function getBackground() {
-  new_request.open('GET', '/game/api/BackgroundData', true)
+  new_request.open('POST', '/game/api/BackgroundData', true)
+  new_request.setRequestHeader('Content-type', 'application/json')
+  const username = getFromCookie('username', document.cookie)
+  new_request.send(JSON.stringify({ usernameInput: username }))
   new_request.addEventListener('load', setBackground)
-  new_request.send()
 }
 
 function setBackground() {
-  const new_response = this.responseText
+  const response = JSON.parse(this.responseText)
+  const new_response = response.recordset[0].Background
+  console.log(new_response)
   const background = document.querySelector('body')
 
   if (new_response === 'Mountains') {
