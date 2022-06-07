@@ -89,7 +89,10 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
     // Disable the keyboard.
     document.removeEventListener('keydown', keyboardInputEvent)
     document.removeEventListener('click', virtualKeyboardInputEvent)
-    document.getElementById('winner').innerHTML = `${playerName} won the game!`
+
+    document.getElementById('winText').innerHTML = `${playerName} won the game!`
+    $('#gameoverModal').modal('show')
+
     socket.emit('game_over')
   }
 
@@ -113,7 +116,10 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
     // Disable the keyboard.
     document.removeEventListener('keydown', keyboardInputEvent)
     document.removeEventListener('click', virtualKeyboardInputEvent)
-    document.getElementById('winner').innerHTML = 'You won the game!'
+
+    document.getElementById('winText').innerHTML = '🎉 You won the game! 🎉'
+    $('#gameoverModal').modal('show')
+
     socket.emit('game_over')
   }
 
@@ -146,6 +152,12 @@ const userName = getFromCookie('username', document.cookie)
 socket.auth = { sessionInfo: gameID, playerName: userName }
 socket.connect()
 
+// Add event listener to the modal close button so the player is sent back to the lobby
+document.getElementById('modalCloseButton').addEventListener('click', () => {
+  // First, lets remove the gameID from the session storage.
+  sessionStorage.removeItem('gameID')
+  window.location.href = '/lobby'
+})
 // Updates the color currently displayed in this user's wordle table
 function updateWordleTableColor () {
   const wordlePlayer = document.getElementById('playerDiv')
