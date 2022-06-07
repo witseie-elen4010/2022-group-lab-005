@@ -16,7 +16,20 @@ async function getUserFriends (username) {
 }
 
 async function getUserPendingFriends (username) {
-  const sqlCode = "SELECT Invitee FROM [dbo].[Friends] WHERE (Inviter = '" + username + "'OR Invitee = '" + username + "') AND Status = 'pending';"
+  const sqlCode = "SELECT Invitee FROM [dbo].[Friends] WHERE Inviter = '" + username + "' AND Status = 'pending';"
+  return new Promise((resolve, reject) => {
+    get('default').then(
+      (pool) => pool.request().query(sqlCode).then(
+        (result) => {
+          resolve(result)
+        }
+      ).catch(reject)
+    ).catch(reject)
+  })
+}
+
+async function getUserFriendRequests (username) {
+  const sqlCode = "SELECT Inviter FROM [dbo].[Friends] WHERE Invitee = '" + username + "' AND Status = 'pending';"
   return new Promise((resolve, reject) => {
     get('default').then(
       (pool) => pool.request().query(sqlCode).then(
@@ -63,5 +76,6 @@ async function addFriend (username, friend) {
 module.exports = {
   getUserFriends,
   getUserPendingFriends,
+  getUserFriendRequests,
   addFriend
 }

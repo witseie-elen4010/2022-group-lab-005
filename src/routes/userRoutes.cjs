@@ -5,7 +5,7 @@ const jsonParser = bodyParser.json()
 const { getMode, changeMode } = require('../services/settings_db.cjs')
 const { getBackground } = require('../services/background_db.cjs')
 const { getUserGames, getUserStats } = require('../services/matchHistory.cjs')
-const { getUserFriends, getUserPendingFriends, addFriend } = require('../services/friendsDb.cjs')
+const { getUserFriends, getUserPendingFriends, getUserFriendRequests, addFriend } = require('../services/friendsDb.cjs')
 
 const userRouter = express.Router()
 
@@ -67,6 +67,13 @@ userRouter.post('/post/pending', function (req, res) {
       res.send(result)
     }
   ).catch(console.error)
+})
+
+userRouter.post('/post/friendRequest', function (req, res) {
+  const username = req.body.usernameInput
+  getUserFriendRequests(username).then((result) => {
+    res.send(result)
+  })
 })
 
 userRouter.post('/post/addFriend', function (req, res) {
