@@ -34,18 +34,19 @@ module.exports = function (io) {
     getGameInfo(socket.handshake.auth.sessionInfo.substring(36, socket.handshake.auth.sessionInfo.length - 1)).then((queryResult) => {
       return queryResult
     }).then((resultFromQuery) => {
+      // This is the ID of the game in the database.
       socket.data.databaseID = parseInt(socket.handshake.auth.sessionInfo.substring(36, socket.handshake.auth.sessionInfo.length - 1))
-      socket.data.wordToGuess = resultFromQuery.WordToGuess
-      console.log(socket.data.wordToGuess)
-      socket.data.playerID = socket.handshake.auth.playerID
+      const playerName = socket.handshake.auth.playerName
+
+      // socket.data.playerID = socket.handshake.auth.playerID
 
       const numPlayers = resultFromQuery.NumPlayers
-
-      // WILL FIX THIS!
-      const playerName = socket.handshake.auth.playerName
+      socket.data.wordToGuess = resultFromQuery.WordToGuess
 
       // We add _game_ and numPlayers to the gameID so that we can determine if the room (socket.io) (which has a identity of gameID) is a game or if it is some other room.
       const gameID = `${socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length)}_game_${numPlayers.toString()}`
+
+      console.log(socket.data.wordToGuess)
 
       if (numPlayers !== -1 && gameID.length !== 0 && playerName.length !== 0) {
         if (!isRoomEmpty(io, gameID)) {
@@ -226,9 +227,10 @@ function isRoomEmpty (io, gameID) {
 
 // Adds a player to the specified room and returns the socket object.
 // Adds a disconnect listener to the socket.
+// Updates the database so that the player is included in the game.
 async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
   return new Promise((resolve, reject) => {
-    addPlayerToGame(socket.data.databaseID, socket.data.playerID).then(() => {
+    addPlayerToGame(socket.data.databaseID, playerName).then(() => {
       if (isRoomEmpty(io, gameID)) {
         socket.data.playerNum = 1
       } else {
@@ -269,7 +271,7 @@ function getOpenGames (io) {
       if (isRoomEmpty(io, key)) {
         // The room is empty
         // idk what to do here. This code shouldn't be reachable tho.
-        console.log('This should have run!')
+        console.log('This should not have run!')
       } else {
         const currentPlayerNum = parseInt(io.sockets.adapter.rooms.get(key).size)
 
