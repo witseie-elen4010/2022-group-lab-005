@@ -45,8 +45,10 @@ async function LogIn (username, password) {
 
 async function registerUser (username, password) {
   const sqlCodeCheckUserExist = `SELECT Password FROM Users WHERE Username = '${username}'`
-  const sqlCode = `INSERT INTO Users (Username, Password, SettingID)
-  VALUES ('${username}','${password}','1');`// default dark mode off
+  const sqlCode = `INSERT INTO Users (Username, Password)
+  VALUES ('${username}','${password}');
+  INSERT INTO Settings (Username, Background, isDarkmode)
+  VALUES ('${username}', 'None', 'false');`
   return new Promise((resolve, reject) => {
     if (username === '' & password === '') {
       resolve('Please input a username and password')
