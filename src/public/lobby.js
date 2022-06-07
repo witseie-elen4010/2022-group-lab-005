@@ -2,8 +2,6 @@
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
 const socket = io('/rooms')
 
-// Try establish a connection with the server.
-socket.connect()
 $(function () {
   checkUser(document.cookie).then(
     (result) => {
@@ -13,6 +11,12 @@ $(function () {
     }
   ).catch()
 })
+
+// Try establish a connection with the server.
+socket.connect()
+
+// First, lets remove any previous gameIDs from the session storage.
+sessionStorage.removeItem('gameID')
 
 // Hide the custom word field for now since the standard radio button is selected by default.
 $('#customWordField').hide()
