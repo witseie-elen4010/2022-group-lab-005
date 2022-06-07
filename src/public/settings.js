@@ -1,10 +1,12 @@
 'use strict'
 
+const { checkUser } = require('./utils')
+
 $(function () {
   checkUser(document.cookie).then(
     (result) => {
-      if(result === false){
-        window.location.href = "/login"
+      if (result === false) {
+        window.location.href = '/login'
       }
     }
   ).catch()

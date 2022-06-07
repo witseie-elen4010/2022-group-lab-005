@@ -1,17 +1,18 @@
 'use strict'
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js'
+import { checkUser } from './utils'
 const socket = io('/rooms')
 
 // Try establish a connection with the server.
 socket.connect()
 $(function () {
-    checkUser(document.cookie).then(
-      (result) => {
-        if(result === false){
-          window.location.href = "/login"
-        }
+  checkUser(document.cookie).then(
+    (result) => {
+      if (result === false) {
+        window.location.href = '/login'
       }
-    ).catch()
+    }
+  ).catch()
 })
 
 // Hide the custom word field for now since the standard radio button is selected by default.

@@ -1,13 +1,14 @@
 'use strict'
 
+const { checkUser } = require('./utils')
 
 $(function () {
-  //const fake = createFakeUser()
-  //document.cookie = fake
+  // const fake = createFakeUser()
+  // document.cookie = fake
   checkUser(document.cookie).then(
     (result) => {
-      if(result === false){
-        window.location.href = "/login"
+      if (result === false) {
+        window.location.href = '/login'
       }
     }
   ).catch()
