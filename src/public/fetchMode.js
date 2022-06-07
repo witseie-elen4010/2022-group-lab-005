@@ -15,7 +15,6 @@ $(function () {
 })
 getMode()
 function getMode() {
-
   request.open('GET', '/user/api/DarkModeData', true)
   request.setRequestHeader('Content-type', 'application/json')
   const username = getFromCookie('username', document.cookie)
@@ -25,17 +24,11 @@ function getMode() {
 
 function setMode() {
   const response = JSON.parse(this.responseText)
-  console.log(response)
 
-  const darkMode = response
 
+  const darkMode = response.recordset[0].isDarkmode
+  console.log(darkMode)
   //  set current current scheme
-  if (darkMode === 'true') {
-    document.body.classList.remove('light-mode')
-    document.body.classList.add('dark-mode')
-  } else {
-    document.body.classList.remove('dark-mode')
-    document.body.classList.add('light-mode')
-  }
-  //sessionStorage.setItem('mode', response)
+
+  sessionStorage.setItem('mode', darkMode)
 }

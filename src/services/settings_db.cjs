@@ -4,12 +4,12 @@ const { get } = require('./poolManagement.cjs')
 module.exports = {
   getMode: async function getMode (username) {
     // Get dark mode setting for specific user
-    const modeRequest = `SELECT isDarkmode FROM Settings WHERE Username = '${username}'`
+    const modeRequest = `SELECT isDarkmode FROM Settings WHERE Username = 'robyn'`
     return new Promise((resolve, reject) => {
       get('default').then(
         (pool) => pool.request().query(modeRequest).then(
           (result) => {
-            resolve(result.recordset[0].DarkMode)
+            resolve(result)
           }
         ).catch(reject)
       ).catch(reject)
