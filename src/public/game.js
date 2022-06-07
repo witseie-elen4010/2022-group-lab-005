@@ -98,7 +98,6 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
 // This will fire when the server sends the results of the word validation and testing to the client.
 // This basically contains the results of the game logic on the server.
 socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) => {
-  console.log('Update_player_screen')
   currentLetterIndex = 0
   letterArray = letterArr
   currentWordIndex = currWordIndex + 1 // Move the keyboard to the next row on the grid.
@@ -231,7 +230,6 @@ function createKeyboard () {
 
 // Updates the on-screen keyboard's colors
 function updateKeyboard () {
-  console.log(allLettersColorsArray)
   const keyboardDiv = document.getElementById('keyboardDiv')
   const keyboardRows = keyboardDiv.getElementsByClassName('keyboardRow')
   let count = 0
@@ -256,7 +254,6 @@ function updateKeyboard () {
         case 'c':
         case 'C':
           keys[j].style.backgroundColor = 'green'
-          console.log('Green')
           break
       }
       count = count + 1
