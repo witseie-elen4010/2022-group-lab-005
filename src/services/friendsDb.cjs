@@ -3,7 +3,7 @@ const { get } = require('./poolManagement.cjs')
 
 async function getUserFriends (username) {
   // Returns all guesses made in games the user won
-  const sqlCode = "SELECT Friend FROM [dbo].[Friends] WHERE (Username = '" + username + "'OR Friend = '" + username + "') AND FriendStatus = 'isFriend';"
+  const sqlCode = "SELECT Invitee FROM [dbo].[Friends] WHERE (Inviter = '" + username + "'OR Invitee = '" + username + "') AND Status = 'isFriend';"
   return new Promise((resolve, reject) => {
     get('default').then(
       (pool) => pool.request().query(sqlCode).then(
@@ -16,8 +16,7 @@ async function getUserFriends (username) {
 }
 
 async function getUserPendingFriends (username) {
-  // Returns all guesses made in games the user won
-  const sqlCode = "SELECT Friend FROM [dbo].[Friends] WHERE (Username = '" + username + "'OR Friend = '" + username + "') AND FriendStatus = 'pending';"
+  const sqlCode = "SELECT Invitee FROM [dbo].[Friends] WHERE (Inviter = '" + username + "'OR Invitee = '" + username + "') AND Status = 'pending';"
   return new Promise((resolve, reject) => {
     get('default').then(
       (pool) => pool.request().query(sqlCode).then(
@@ -30,9 +29,8 @@ async function getUserPendingFriends (username) {
 }
 
 async function addFriend (username, friend) {
-  const sqlCodeCheckFriendExist = `SELECT FriendStatus FROM [dbo].[Friends] WHERE (Username = '${username}' AND Friend = '${friend}') OR (Username = '${friend}' AND Friend = '${username}');`
-
-  const sqlCode = `INSERT INTO [dbo].[Friends] (Username, Friend, FriendStatus)
+  const sqlCodeCheckFriendExist = `SELECT Status FROM [dbo].[Friends] WHERE (Inviter = '${username}' AND Invitee = '${friend}') OR (Inviter = '${friend}' AND Invitee = '${username}');`
+  const sqlCode = `INSERT INTO [dbo].[Friends] (Inviter, Invitee, Status)
   VALUES ('${username}','${friend}','pending');`
   return new Promise((resolve, reject) => {
     get('default').then(

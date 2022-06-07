@@ -4,28 +4,29 @@ const request = new XMLHttpRequest()
 $(function () {
   checkUser(document.cookie).then(
     (result) => {
-      if(result === false){
-        window.location.href = "/login"
+      if (result === false) {
+        window.location.href = '/login'
       }
     }
   ).catch()
 })
-//Window.onload will not work with the jquery from the user check, this can be added after the user check with jquery tho
-// window.onload = function () {
-//   // getFriends()
-//   // getPendingFriends() //i think this got something to do with the load,
-//   // when this is used tog ether the output becomes the same for friend list and pending friend list
-//   document.getElementById('addButton').addEventListener('click', function (evt) {
-//     evt.preventDefault()
-//     addFriend()
-//   })
-// }
+// Window.onload will not work with the jquery from the user check, this can be added after the user check with jquery tho
+window.onload = function () {
+  // getFriends()
+  const username = getFromCookie('username', document.cookie)
+  getPendingFriends(username) // i think this got something to do with the load,
+
+  // when this is used tog ether the output becomes the same for friend list and pending friend list
+  document.getElementById('addButton').addEventListener('click', function (evt) {
+    evt.preventDefault()
+    addFriend(username)
+  })
+}
 
 // Display friends the logged in user have
-function getFriends () {
+function getFriends (username) {
   request.open('POST', 'post/friends', true)
   request.setRequestHeader('Content-type', 'application/json')
-  const username = document.cookie
   request.send(JSON.stringify({ usernameInput: username }))
   request.addEventListener('load', recieveFriends)
 }
@@ -36,7 +37,7 @@ function recieveFriends () {
   const response = JSON.parse(this.responseText)
   for (let i = 0; i < response.recordset.length; i++) {
     const response = JSON.parse(this.responseText)
-    temp += response.recordset[i].Friend + '<br>'
+    temp += response.recordset[i].Invitee + '<br>'
   }
 
   const friendList = document.getElementById('Friend list')
@@ -44,10 +45,9 @@ function recieveFriends () {
   friendList.innerHTML = temp
 }
 
-function getPendingFriends () {
+function getPendingFriends (username) {
   request.open('POST', 'post/pending', true)
   request.setRequestHeader('Content-type', 'application/json')
-  const username = document.cookie
   request.send(JSON.stringify({ usernameInput: username }))
   request.addEventListener('load', recievePendingFriends)
 }
@@ -57,18 +57,16 @@ function recievePendingFriends () {
   const response = JSON.parse(this.responseText)
   for (let i = 0; i < response.recordset.length; i++) {
     const response = JSON.parse(this.responseText)
-    temp += response.recordset[i].Friend + '<br>'
+    temp += response.recordset[i].Invitee + '<br>'
   }
 
   const friendPending = document.getElementById('pending')
-
   friendPending.innerHTML = temp
 }
 
-function addFriend () {
+function addFriend (username) {
   request.open('POST', 'post/addFriend', true)
   request.setRequestHeader('Content-type', 'application/json')
-  const username = document.cookie
   const friend = document.getElementById('Friend').value
   request.send(JSON.stringify({ usernameInput: username, friendInput: friend }))
   request.addEventListener('load', recieveAddedFriends)
@@ -76,7 +74,9 @@ function addFriend () {
 
 function recieveAddedFriends () {
   const response = JSON.parse(this.responseText)
-  const msg = response.addedOrNot
+  const msg = response.Status
   const addFriendResult = document.getElementById('output')
+  alert(msg)
   addFriendResult.innerHTML = msg
+  document.location.reload()
 }

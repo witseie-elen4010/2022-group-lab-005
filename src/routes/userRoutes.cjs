@@ -73,7 +73,7 @@ userRouter.post('/post/addFriend', function (req, res) {
   const username = req.body.usernameInput
   const friend = req.body.friendInput
   addFriend(username, friend).then((result) => {
-    res.send({ addedOrNot: result })
+    res.send({ Status: result })
   })
 })
 module.exports = userRouter
