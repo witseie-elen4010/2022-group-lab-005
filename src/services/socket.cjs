@@ -200,7 +200,7 @@ function testWord (letterArray, currentWordIndex, colorArray, currentWordCheck, 
  */
 function updateAllLettersColorsArray (color, letter, allLettersColorsArray) {
   for (let i = 0; i < allLettersArray.length; i++) {
-    if (allLettersArray[i] === letter) {
+    if (allLettersArray[i].toUpperCase() === letter.toUpperCase()) {
       switch (color) {
         case 'i':
           if (allLettersColorsArray[i] !== 'c') {
@@ -218,7 +218,6 @@ function updateAllLettersColorsArray (color, letter, allLettersColorsArray) {
       }
     }
   }
-
   return allLettersColorsArray
 }
 
