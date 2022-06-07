@@ -37,11 +37,10 @@ module.exports = function (io) {
       // This is the ID of the game in the database.
       socket.data.databaseID = parseInt(socket.handshake.auth.sessionInfo.substring(36, socket.handshake.auth.sessionInfo.length - 1))
       const playerName = socket.handshake.auth.playerName
-
-      // socket.data.playerID = socket.handshake.auth.playerID
-
       const numPlayers = resultFromQuery.NumPlayers
       socket.data.wordToGuess = resultFromQuery.WordToGuess
+      socket.data.gameType = resultFromQuery.GameType
+      socket.data.canGuess = true
 
       // We add _game_ and numPlayers to the gameID so that we can determine if the room (socket.io) (which has a identity of gameID) is a game or if it is some other room.
       const gameID = `${socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length)}_game_${numPlayers.toString()}`
@@ -80,6 +79,12 @@ module.exports = function (io) {
           }
         } else {
           // This socket is the first player to join the room.
+          if (socket.data.gameType === 2) {
+            // This player is the player that chose the custom word.
+            // They aren't allowed to make guesses
+            socket.data.canGuess = false
+          }
+
           addPlayerToRoom(socket, gameID, playerName, numPlayers, io).then((result) => {
             socket = result
             socket.emit('waiting_for_players')
@@ -120,11 +125,13 @@ module.exports = function (io) {
   // This listener will fire for a connection that comes from the default ('/') namespace.
   io.on('connection', (socket) => {
     socket.on('send_guess', function (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray) {
-      const currentWordArray = socket.data.wordToGuess.split('')
-      const [letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin] = testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray)
+      if (socket.data.canGuess === true) {
+        const currentWordArray = socket.data.wordToGuess.split('')
+        const [letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin] = testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray)
 
-      socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
-      socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
+        socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
+        socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
+      }
     })
 
     socket.on('game_over', () => {
