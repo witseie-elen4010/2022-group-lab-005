@@ -125,38 +125,38 @@ h2{
 .forest{
   position:fixed;
   left: 80%;
-  top: 10%;
+  top: 20%;
 }
 
 .sunny-beach{
   position:fixed;
   left: 80%;
-  top: 15%;
+  top: 25%;
 }
 
 .mountains{
   position:fixed;
   left: 80%;
-  top: 20%;
+  top: 30%;
 }
 
 .none{
   position:fixed;
   left: 80%;
-  top: 25%;
+  top: 35%;
 }
 
 .back{
   position:fixed;
   left: 80%;
-  top: 30%;
+  top: 40%;
 }
 
 .change-background-button{
   color: black;
   position:fixed;
   left: 80%;
-  top: 5%;
+  top: 15%;
 }
 
 
