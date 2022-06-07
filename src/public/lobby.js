@@ -118,7 +118,6 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
   socket.emit('create_game', numPlayers, modeChosen, document.getElementById('customWord').value)
   /*
     // Creates the game in the database
-    console.log("HELLO about to send")
     request.open('POST', '/lobby/create', true)
     request.setRequestHeader('Content-type', 'application/json')
     request.send(JSON.stringify({ numPlayers: $("#numPlayers").val() , customWord: document.getElementById('customWord').value, gameMode: modeChosen}))

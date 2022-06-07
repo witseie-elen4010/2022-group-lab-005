@@ -27,8 +27,8 @@ userRouter.get('/get/games', function (req, res) {
 })
 
 userRouter.get('/get/stats', function (req, res) {
-  // const username = req.query.user
-  getUserStats(1).then( // will use username once db is setup again
+  const username = req.query.user
+  getUserStats(username).then(
     (result) => {
       res.send(result)
     }
