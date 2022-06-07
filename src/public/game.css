@@ -1,3 +1,4 @@
+
 #gridContainer{
   display:flex;
   flex-direction: row;
@@ -5,8 +6,7 @@
   align-items: stretch;
   align-content: center;
   flex-wrap: nowrap;
-  height: 100vh;
-  background-color: transparent;
+  background-color: transparent !important;
 }
 #playerDiv{
   order: 2;
@@ -55,9 +55,9 @@
   flex-grow: 1;
   margin: 5px;
   border-radius: 10%;
-  min-height: 4vw;
+  min-height: 3vw;
   text-align: center;
-  max-width: 4vw;
+  max-width: 3vw;
 }
 
 h2{
@@ -65,7 +65,7 @@ h2{
 }
 
 #keyboardDiv {
-  padding-top: 10%;
+  padding-top: 5%;
   display: block;
   width: 80%;
   text-align: center;
@@ -85,14 +85,6 @@ h2{
   cursor: pointer;
   min-height: 3vw;
   text-align: center;
-}
-
-@media only screen and (max-width: 1200px) {
-
-}
-
-@media only screen and (max-width: 100px) {
-
 }
 
 .unselectable {
