@@ -78,7 +78,7 @@ socket.on('game_can_start', (playerNames) => {
     createKeyboard()
     updateKeyboard()
     createOpponentBoards()
-
+    console.log(playerNames)
     gameStart = true
   }
 })
@@ -94,6 +94,10 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
     $('#gameoverModal').modal('show')
 
     socket.emit('game_over')
+  }
+
+  if (playerNum > thisPlayerNumber) {
+    playerNum = playerNum - 1
   }
   updateOpponentColors(colorArr, playerNum, playerName)
 })
@@ -191,8 +195,6 @@ function updateWordleColors (wordleRows, colorArray) {
 function updateOpponentColors (arrayOfColors, playerNum, playerName) {
   const wordleGrid = document.getElementById(`opponent${playerNum}`)
 
-  // NICK TO LOOK HERE - this updates every time the player submits a word - should update all of them only once when the game starts
-  // Although.. maybe a good thing because when people reconnect it updates
   if (playerName) {
     const name = wordleGrid.getElementsByTagName('h2')[0]
     name.innerHTML = playerName
@@ -274,23 +276,22 @@ function updateKeyboard () {
 }
 
 function createOpponentBoards () {
-  console.log(thisPlayerNumber)
   if (thisPlayerNumber !== -1) {
     const numPlayers = parseInt(gameID[gameID.length - 1])
+    console.log(numPlayers)
+    let count = 1
     for (let i = 1; i <= numPlayers; i++) {
       if (i !== thisPlayerNumber) {
-        const opponent = document.getElementById(`opponent${i}`)
+        const opponent = document.getElementById(`opponent${count}`)
         const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
-        opponentNameHeading.innerHTML = 'Opponent ' + i
-        updateOpponentColors(colorArray, i)
+        opponentNameHeading.innerHTML = 'Opponent ' + count
+        updateOpponentColors(colorArray, count)
+        count = count + 1
       }
     }
-    for (let i = numPlayers; i < 6; i++) {
-      if (i !== thisPlayerNumber) {
-        const opponent = document.getElementById(`opponent${i}`)
-        opponent.style.display = 'none'
-      }
-    }
+    document.getElementById('playerName').innerHTML = 'Your board'
+  } else {
+    console.log('Player number error!')
   }
 }
 
