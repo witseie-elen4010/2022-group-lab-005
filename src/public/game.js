@@ -276,7 +276,6 @@ function updateKeyboard () {
 }
 
 function createOpponentBoards () {
-  console.log(thisPlayerNumber)
   if (thisPlayerNumber !== -1) {
     const numPlayers = parseInt(gameID[gameID.length - 1])
     console.log(numPlayers)
@@ -290,13 +289,7 @@ function createOpponentBoards () {
         count = count + 1
       }
     }
-
-    // for (let i = numPlayers; i < 6; i++) {
-    //   if (i !== thisPlayerNumber) {
-    //     const opponent = document.getElementById(`opponent${i}`)
-    //     opponent.style.display = 'none'
-    //   }
-    // }
+    document.getElementById('playerName').innerHTML = 'Your board'
   } else {
     console.log('Player number error!')
   }
