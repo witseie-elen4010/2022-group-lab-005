@@ -286,12 +286,17 @@ function createOpponentBoards () {
 }
 
 function keyboardInputEvent (event) {
+  document.getElementById('gameInfoText').innerHTML = ''
   if (event.key === 'Backspace') {
     if (currentLetterIndex > 0) {
       currentLetterIndex = currentLetterIndex - 1
     }
     letterArray[currentWordIndex][currentLetterIndex] = ''
     updateWordleTableText()
+  } else if (event.key === 'Enter') {
+    if (currentLetterIndex < 5) {
+      document.getElementById('gameInfoText').innerHTML = 'Not enough letters!'
+    }
   } else {
     for (let i = 0; i < allLettersArray.length; i++) {
       if (event.key.toUpperCase() === allLettersArray[i]) {
@@ -304,6 +309,7 @@ function keyboardInputEvent (event) {
 }
 
 function virtualKeyboardInputEvent (event) {
+  document.getElementById('gameInfoText').innerHTML = ''
   const keys = document.getElementsByClassName('key')
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]
@@ -317,7 +323,7 @@ function virtualKeyboardInputEvent (event) {
         updateWordleTableText()
       } else if (keyText === 'ENTER') {
         if (currentLetterIndex < 5) {
-          console.log('NOT ENOUGH LETTERS!')
+          document.getElementById('gameInfoText').innerHTML = 'Not enough letters!'
         }
       } else {
         for (let i = 0; i < allLettersArray.length; i++) {
