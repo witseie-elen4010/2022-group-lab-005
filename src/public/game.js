@@ -97,9 +97,16 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
     socket.emit('game_over')
   }
 
+  // if (gameType === '1' || gameType === 1) { // Standard game
   if (playerNum > thisPlayerNumber) {
     playerNum = playerNum - 1
   }
+  if ((gameType === '2' || gameType === 2) && customOwner === false) { // Custom game
+    playerNum = playerNum - 1
+  } else {
+    console.log('Error: Should not get to this point.')
+  }
+
   updateOpponentColors(colorArr, playerNum, playerName)
 })
 
@@ -288,17 +295,46 @@ function updateKeyboard () {
 }
 
 function createOpponentBoards () {
+  console.log(thisPlayerNumber)
   if (thisPlayerNumber !== -1) {
     const numPlayers = parseInt(gameID[gameID.length - 1])
-    console.log(numPlayers)
-    let count = 1
-    for (let i = 1; i <= numPlayers; i++) {
-      if (i !== thisPlayerNumber) {
-        const opponent = document.getElementById(`opponent${count}`)
-        const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
-        opponentNameHeading.innerHTML = 'Opponent ' + count
-        updateOpponentColors(colorArray, count)
-        count = count + 1
+
+    if (gameType === '1' || gameType === 1) { // Standard game
+      let count = 1
+      for (let i = 1; i <= numPlayers; i++) {
+        if (i !== thisPlayerNumber) {
+          const opponent = document.getElementById(`opponent${count}`)
+          const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+          opponentNameHeading.innerHTML = 'Opponent ' + count
+          updateOpponentColors(colorArray, count)
+          count = count + 1
+        }
+      }
+    } else if (gameType === '2' || gameType === 2) { // Custom game
+      if (customOwner === true) {
+        console.log('Custom owner')
+        let count = 1
+        for (let i = 1; i <= numPlayers; i++) {
+          if (i !== thisPlayerNumber) {
+            const opponent = document.getElementById(`opponent${count}`)
+            const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+            opponentNameHeading.innerHTML = 'Opponent ' + count
+            updateOpponentColors(colorArray, count)
+            count = count + 1
+          }
+        }
+      } else {
+        console.log('Not custom owner')
+        let count = 1
+        for (let i = 2; i <= numPlayers; i++) {
+          if (i !== thisPlayerNumber) {
+            const opponent = document.getElementById(`opponent${count}`)
+            const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+            opponentNameHeading.innerHTML = 'Opponent ' + count
+            updateOpponentColors(colorArray, count)
+            count = count + 1
+          }
+        }
       }
     }
   } else {
