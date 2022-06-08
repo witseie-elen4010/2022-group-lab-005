@@ -1,7 +1,7 @@
 'use strict'
 
 const { v4: uuidv4 } = require('uuid')
-const { createGame, getGameInformation, getPlayerNames, addPlayerToGame, logPlayersGuess, logWinningPlayer } = require('../services/lobby.cjs')
+const { createGame, getGameInformation, getPlayerNames, addPlayerToGame, removePlayerFromGame, logPlayersGuess, logWinningPlayer } = require('../services/lobby.cjs')
 
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 
@@ -302,8 +302,12 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
       socket.on('disconnect', () => {
         console.log(`${socket.data.playerName} has disconnected`)
 
-        if (socket.data.hasProperty('isGameRunning') === true) {
-          
+        if (socket.data.isGameRunning === undefined) {
+          // This socket joined before the game starts so we can remove them
+          // from the db if they leave before the game begins.
+          removePlayerFromGame(socket.data.databaseID, socket.data.playerName).catch((err) => {
+            console.log(err.message)
+          })
         }
       })
 
