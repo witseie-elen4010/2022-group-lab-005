@@ -14,7 +14,7 @@ $(function () {
                         $.get('/user/get/games', {user: username}).done(
                             function (out) {
                                 for(let i = 0; i < out.recordset.length; i++){
-                                    appendMatch(out.recordset[i].WordToGuess, out.recordset[i].GameType, out.recordset[i].NumPlayers, out.recordset[i].WhoWon)
+                                    appendMatch(out.recordset[i].WordToGuess, out.recordset[i].GameType, out.recordset[i].NumPlayers, out.recordset[i].WhoWon, out.recordset[i].ID)
                                 }
                             }
                         )
@@ -37,7 +37,7 @@ function recieveStats(response){
     displayedStats.innerHTML = statistics
 }
 
-const appendMatch = (WordToGuess, GameType, NumPlayers, WhoWon) => {
+const appendMatch = (WordToGuess, GameType, NumPlayers, WhoWon, gameID) => {
     const matchTable = document.querySelector('.matchTable') // Find the table we created
     let matchTableBodyRow = document.createElement('tr') // Create the current table row
     matchTableBodyRow.className = 'matchTableBodyRow'
@@ -54,6 +54,15 @@ const appendMatch = (WordToGuess, GameType, NumPlayers, WhoWon) => {
     let winner = document.createElement('td')
     winner.innerText = WhoWon
     winner.style.textAlign = "centre"
-    matchTableBodyRow.append(MatchType, word, numberPlayers, winner) // Append all 4 cells to the table row
+    let toMatchButton = document.createElement('button')
+    let toMatch = document.createElement('td')
+    toMatchButton.className = "btn_match"
+    toMatchButton.innerText = "View Match"
+    toMatchButton.onclick = function () {
+        window.location.href='/user/match/?gameID='+gameID
+    }
+    toMatch.append(toMatchButton)
+    toMatchButton.className = 'btn_match'
+    matchTableBodyRow.append(MatchType, word, numberPlayers, winner, toMatch) // Append all 4 cells to the table row
     matchTable.append(matchTableBodyRow) // Append the current row to the guess table body
 }

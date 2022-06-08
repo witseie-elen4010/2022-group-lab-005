@@ -8,7 +8,11 @@ $(function () {
             }
             else {
                 let username = getFromCookie('username', document.cookie)
-                $.get('/user/get/match', {user:username}).done(
+                const params = new Proxy(new URLSearchParams(window.location.search), {
+                    get: (searchParams, prop) => searchParams.get(prop),
+                })
+                let gameID = params.gameID
+                $.get('/user/get/match', {user:username, game: gameID}).done(
                     // Recieves the user's match
                     function (response) {
                         for(let i = 0; i < response.recordset.length; i++){

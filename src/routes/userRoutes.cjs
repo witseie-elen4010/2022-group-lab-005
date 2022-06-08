@@ -46,7 +46,8 @@ userRouter.get('/get/stats', function (req, res) {
 
 userRouter.get('/get/match', function (req,res) {
   const username = req.query.user
-  getUserGuesses(1,'winner').then(
+  const game = req.query.game
+  getUserGuesses(game,username).then(
     (result) => {
       res.send(result)
     }
