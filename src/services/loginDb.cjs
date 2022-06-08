@@ -90,7 +90,7 @@ async function registerUser (username, password) {
   })
 }
 
-async function getUser(username) {
+async function getUser (username) {
   // Returns whether the user exists
   const sqlCode = `SELECT * FROM [dbo].[Users]
   WHERE [dbo].[Users].Username = '${username}';`
@@ -105,4 +105,4 @@ async function getUser(username) {
   })
 }
 
-module.exports = {LogIn,registerUser, getUser}
+module.exports = { LogIn, registerUser, getUser }
