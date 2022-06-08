@@ -111,6 +111,15 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
     }
   }
 
+  // Disable the create game button before sending the request to the server.
+  $('#createGameBtn').attr('disabled', 'disabled')
+
+  // Add a loading icon
+  document.getElementById('createGameBtn').innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Creating game...</span>'
+
+  // Disable the join game buttons for existing games.
+  $('#gameInfoTableBody').find('button').attr('disabled', 'disabled')
+
   socket.connect()
   socket.emit('create_game', numPlayers, modeChosen, document.getElementById('customWord').value)
 })
