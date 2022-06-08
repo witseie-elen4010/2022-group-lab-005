@@ -131,6 +131,10 @@ socket.on('get_number', (num) => {
   thisPlayerNumber = num
 })
 
+socket.on('game_already_running', () => {
+  console.log('game already running!')
+})
+
 /** ********* General code ***********/
 if (window.sessionStorage.getItem('gameID') === null) {
   // If the client doesn't have a gameID in their session storage, then they
@@ -139,13 +143,6 @@ if (window.sessionStorage.getItem('gameID') === null) {
 }
 
 const gameID = window.sessionStorage.getItem('gameID')
-
-/*
-if (window.sessionStorage.getItem('gameType') === 'custom') {
-  isPlayerWordCreator = true
-} */
-// Last digit of gameID is the number of players!
-
 const userName = getFromCookie('username', document.cookie)
 
 // Try establish a connection with the server.

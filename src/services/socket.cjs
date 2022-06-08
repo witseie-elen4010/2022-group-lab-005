@@ -86,6 +86,7 @@ module.exports = function (io) {
                 // This violates the primary key constraint in the UserGame table.
                 // We end the game.
                 console.log('User cannot rejoin game')
+                socket.emit('game_already_running')
               } else {
                 console.log(err.message)
               }
@@ -117,8 +118,8 @@ module.exports = function (io) {
             if (err.number === 2627) {
               // A player that was in the game, disconnected and has now tried to reconnect.
               // This violates the primary key constraint in the UserGame table.
-              // We end the game.
               console.log('User cannot rejoin game')
+              socket.emit('game_already_running')
             } else {
               console.log(err.message)
             }
