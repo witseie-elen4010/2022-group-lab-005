@@ -72,12 +72,10 @@ function getFriendRequests (username) {
 }
 
 function receiveFriendRequests () {
-  let temp = ''
   const response = JSON.parse(this.responseText)
+  // console.log(response)
   for (let i = 0; i < response.recordset.length; i++) {
     const response = JSON.parse(this.responseText)
-    temp += response.recordset[i].Inviter + '<br>'
-
     const inviter = response.recordset[i].Inviter
     const label = document.createElement('label')
     label.innerHTML = inviter
@@ -86,18 +84,16 @@ function receiveFriendRequests () {
     acceptBtn.innerHTML = 'Accept'
     acceptBtn.setAttribute('user', inviter)
     acceptBtn.onclick = function () {
-      alert(acceptBtn.getAttribute('user') + ' accept is clicked')
+      acceptDeclineFriend(getFromCookie('username', document.cookie), acceptBtn.getAttribute('user'), 'accept')
     }
     declineBtn.innerHTML = 'Decline'
     declineBtn.onclick = function () {
-      alert(declineBtn.getAttribute('user') + ' decline is clicked')
+      acceptDeclineFriend(getFromCookie('username', document.cookie), acceptBtn.getAttribute('user'), 'decline')
     }
     document.body.appendChild(label)
     document.body.appendChild(acceptBtn)
     document.body.appendChild(declineBtn)
   }
-  console.log('this is the result : ')
-  alert(temp)
 }
 
 function addFriend (username) {
@@ -111,8 +107,20 @@ function addFriend (username) {
 function recieveAddedFriends () {
   const response = JSON.parse(this.responseText)
   const msg = response.Status
-  const addFriendResult = document.getElementById('output')
   alert(msg)
-  addFriendResult.innerHTML = msg
+  document.location.reload()
+}
+
+function acceptDeclineFriend (username, friend, acceptOrDecline) {
+  request.open('POST', 'post/updateFriend', true)
+  request.setRequestHeader('Content-type', 'application/json')
+  request.send(JSON.stringify({ usernameInput: username, friendInput: friend, acceptInput: acceptOrDecline }))
+  request.addEventListener('load', receiveAcceptDeclineFriend)
+}
+
+function receiveAcceptDeclineFriend () {
+  const response = JSON.parse(this.responseText)
+  const msg = response.updateFriendRequest
+  alert(msg)
   document.location.reload()
 }

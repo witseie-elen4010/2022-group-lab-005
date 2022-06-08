@@ -5,7 +5,7 @@ const jsonParser = bodyParser.json()
 const { getMode, changeMode } = require('../services/settings_db.cjs')
 const { getBackground } = require('../services/background_db.cjs')
 const { getUserGames, getUserStats } = require('../services/matchHistory.cjs')
-const { getUserFriends, getUserPendingFriends, getUserFriendRequests, addFriend } = require('../services/friendsDb.cjs')
+const { getUserFriends, getUserPendingFriends, getUserFriendRequests, addFriend, updateFriend } = require('../services/friendsDb.cjs')
 
 const userRouter = express.Router()
 
@@ -92,4 +92,15 @@ userRouter.post('/post/addFriend', function (req, res) {
     res.send({ Status: result })
   })
 })
+
+userRouter.post('/post/updateFriend', function (req, res) {
+  const username = req.body.usernameInput
+  const friend = req.body.friendInput
+  const acceptFriend = req.body.acceptInput
+
+  updateFriend(username, friend, acceptFriend).then((result) => {
+    res.send({ updateFriendRequest: result })
+  })
+})
+
 module.exports = userRouter
