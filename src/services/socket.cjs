@@ -61,6 +61,7 @@ module.exports = function (io) {
                   io.in(socket.data.roomID).fetchSockets().then((result) => {
                     for (let i = 0; i < result.length; i++) {
                       io.to(result[i].id).emit('get_number', result[i].data.playerNum)
+                      result[i].data.isGameRunning = true
                     }
                   }).then(() => {
                     // I think there's a better way to do this (only using one event) but I couldn't get anything to work
@@ -300,6 +301,10 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
       // Add a listener for when a connected socket leaves the server.
       socket.on('disconnect', () => {
         console.log(`${socket.data.playerName} has disconnected`)
+
+        if (socket.data.hasProperty('isGameRunning') === true) {
+          
+        }
       })
 
       resolve(socket)

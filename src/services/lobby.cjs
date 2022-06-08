@@ -79,6 +79,21 @@ async function addPlayerToGame (gameID, username) {
   })
 }
 
+async function removePlayerFromGame (gameID, username) {
+  const sqlCode = `DELETE FROM [dbo].[UserGame]
+  WHERE Username = '${username}' AND GameID = ${gameID};`
+
+  return new Promise((resolve, reject) => {
+    get('default').then(
+      (pool) => pool.request().query(sqlCode).then(
+        (result) => {
+          resolve(result)
+        }
+      ).catch(reject)
+    ).catch(reject)
+  })
+}
+
 async function logPlayersGuess (guess, gameID, username) {
   const sqlCode = `INSERT INTO [dbo].[Guess] (Word, TimeStamp, GameID, Username)
 VALUES ('${guess}', SYSDATETIME(), ${gameID}, '${username}');`
@@ -126,4 +141,4 @@ async function getGameGuesses (gameID) {
   })
 }
 
-module.exports = { createGame, getGameInformation, getPlayerNames, addPlayerToGame, logPlayersGuess, logWinningPlayer, getGameGuesses }
+module.exports = { createGame, getGameInformation, getPlayerNames, addPlayerToGame, removePlayerFromGame, logPlayersGuess, logWinningPlayer, getGameGuesses }
