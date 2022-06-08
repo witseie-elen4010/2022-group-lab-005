@@ -59,6 +59,7 @@ function receivedValue () {
     //store a new cookie everytime the user logs in or registers, until the browser is closed
     const username = 'username=' + document.getElementById('username').value
     document.cookie = username
+    getMode(document.getElementById('username').value)
     // Let's reset everything
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control'

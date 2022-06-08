@@ -14,20 +14,22 @@ $(function () {
 const darkModeButton = document.getElementById('darkButton')
 darkModeButton.addEventListener('click', function () {
   const mode = 'true'
-  document.body.classList.remove('light-mode')
-  document.body.classList.add('dark-mode')
-  sessionStorage.setItem('mode', mode)
+  document.cookie = 'darkMode='+mode+'; path=/'
   sendModeToServer(mode)
+  document.body.classList.remove('bg-light')
+  document.body.classList.add('bg-dark')
+  location.reload()
 }, false)
 
 // when user selects the light mode button send dark mode is false to server
 const lightModeButton = document.getElementById('lightButton')
 lightModeButton.addEventListener('click', function () {
   const mode = 'false'
-  document.body.classList.remove('dark-mode')
-  document.body.classList.add('light-mode')
-  sessionStorage.setItem('mode', mode)
+  document.cookie = 'darkMode='+mode+'; path=/'
   sendModeToServer(mode)
+  document.body.classList.remove('bg-dark')
+  document.body.classList.add('bg-light')
+  location.reload()
 }, false)
 
 // when user selects the light mode button send dark mode is false to server
