@@ -36,7 +36,6 @@ function updateAndSendFormControl () {
     const username = document.getElementById('username').value
     const password = document.getElementById('password').value
     const hashedPassword = addingSomeSaltAndHash(password)
-    getMode(username)
     request.send(JSON.stringify({ usernameInput: username, passwordInput: hashedPassword }))
     // wait for the server to respond back
     request.addEventListener('load', receivedValue)
@@ -60,7 +59,7 @@ function receivedValue () {
     //store a new cookie everytime the user logs in or registers, until the browser is closed
     const username = 'username=' + document.getElementById('username').value
     document.cookie = username
-
+    getMode(document.getElementById('username').value)
     // Let's reset everything
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control'
