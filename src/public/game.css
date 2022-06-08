@@ -30,7 +30,6 @@
 }
 
 
-
 .wordleRow {
   display: flex;
   align-items: center;
@@ -40,16 +39,17 @@
 
 #opponentsDivLeft .wordleDiv, #opponentsDivRight .wordleDiv{
   width: 100%;
-  padding-top: 10%;
+  padding-bottom: 10%;
+  height: 25vh;
 }
 
 #opponentsDivLeft .wordleDiv .wordleRow .block, #opponentsDivRight .wordleDiv .wordleRow .block{
   flex-grow: 1;
   margin: 2px;
   border-radius: 10%;
-  min-height: 1.5vw;
+  min-height: 2vh;
+  max-width: 2vh;
   text-align: center;
-  max-width: 1.5vw;
 }
 #playerDiv .wordleDiv .wordleRow .block{
   flex-grow: 1;
@@ -64,8 +64,11 @@ h2{
   text-align: center;
 }
 
+
+
 #keyboardDiv {
   padding-top: 5%;
+  padding-bottom: 10%;
   display: block;
   width: 80%;
   text-align: center;
@@ -85,6 +88,44 @@ h2{
   cursor: pointer;
   min-height: 3vw;
   text-align: center;
+}
+
+
+@media only screen and (max-width: 800px) {
+  #gridContainer{
+    flex-wrap: wrap;
+  }
+  #playerDiv{
+    order: 1;
+    width:100%;
+  }
+  #opponentsDivLeft {
+    order: 2;
+    width:100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  #opponentsDivRight{
+    order: 3;
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+
+  #opponentsDivLeft .wordleDiv, #opponentsDivRight .wordleDiv{
+    width: 100%;
+    padding-bottom: 5%;
+    height: 100%;
+  }
+
+  h2{
+    font-size: 0.75em;
+  }
+    
+  #keyboardDiv {
+    padding-top: 5%;
+    padding-bottom: 5%;
+  }
 }
 
 .unselectable {
