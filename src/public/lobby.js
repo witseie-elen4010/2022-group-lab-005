@@ -69,10 +69,11 @@ socket.on('update_game_list', (openGames) => {
   }
 })
 
-socket.on('get_game_id', (gameID) => {
+socket.on('get_game_id', (gameID, modeChosen) => {
   console.log(gameID)
   console.log(`UUID: ${gameID.substring(0, 36)} GameID: ${gameID.substring(36)}`)
   sessionStorage.setItem('gameID', gameID)
+  sessionStorage.setItem('gameType', modeChosen)
   window.location.href = '/game/play'
 })
 

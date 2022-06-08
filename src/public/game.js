@@ -37,7 +37,8 @@ const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 
 let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
 const playerNamesArr = []
 let thisPlayerNumber = -1
-
+let gameType = 1 // Default value is 1 => Standard game type
+let customOwner = false
 /** ********* Socket.io events ***********/
 const socket = io({ autoConnect: false })
 
@@ -139,7 +140,18 @@ if (window.sessionStorage.getItem('gameID') === null) {
 }
 
 const gameID = window.sessionStorage.getItem('gameID')
+gameType = window.sessionStorage.getItem('gameType')
+console.log(gameType)
 
+// Check what game type it is and whether the player is the custom game owner
+if (gameType === 2 || gameType === '2') {
+  customOwner = true
+} else if (gameType === 1 || gameType === '1') {
+  customOwner = false
+} else if (gameType === null) {
+  gameType = 2
+  customOwner = false
+}
 /*
 if (window.sessionStorage.getItem('gameType') === 'custom') {
   isPlayerWordCreator = true
