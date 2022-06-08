@@ -17,17 +17,12 @@ function sendModeToServer (darkModeBool) {
 function dataReceived () {
   // Let's parse the data we just received.
   const response = JSON.parse(this.responseText)
-
   const msg = response.message
-
   const msgFmServer = document.getElementById('msgFmServer')
-  msgFmServer.innerHTML = msg
-
   const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: mode is being logged.'
+  //removed error checking prints on document
 }
 
 function onError () {
   const statusTag = document.getElementById('status')
-  statusTag.innerHTML = 'Status: Error communicating with server.'
 }

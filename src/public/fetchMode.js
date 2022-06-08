@@ -13,4 +13,5 @@ function setMode() {
   const response = JSON.parse(this.responseText)
   const darkMode = response.recordset[0].isDarkmode
   document.cookie = 'darkMode='+darkMode+'; path=/'
+  window.location.href = '/loginRedirect'
 }
