@@ -4,7 +4,7 @@ const express = require('express')
 const jsonParser = bodyParser.json()
 const { getMode, changeMode } = require('../services/settings_db.cjs')
 const { getBackground } = require('../services/background_db.cjs')
-const { getUserGames, getUserStats } = require('../services/matchHistory.cjs')
+const { getUserGames, getUserStats, getUserGuesses } = require('../services/matchHistory.cjs')
 const { getUserFriends, getUserPendingFriends, getUserFriendRequests, addFriend, updateFriend } = require('../services/friendsDb.cjs')
 
 const userRouter = express.Router()
