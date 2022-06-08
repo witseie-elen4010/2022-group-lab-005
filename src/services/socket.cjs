@@ -157,24 +157,24 @@ module.exports = function (io) {
     socket.on('send_guess', function (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray) {
       if (socket.data.canGuess === true) {
         const playersGuess = letterArray[currentWordIndex].join('')
-        logPlayersGuess(playersGuess, socket.data.databaseID, socket.data.playerName).then(() => {
-          const currentWordArray = socket.data.wordToGuess.split('')
-          const [letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin] = testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray)
-
-          if (didTheyWin === true) {
-            logWinningPlayer(socket.data.databaseID, socket.data.playerName).then(() => {
-              socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
-              socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
-            }).catch((err) => {
-              console.log(err.message)
-            })
-          } else {
-            socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
-            socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
-          }
-        }).catch((err) => {
+        logPlayersGuess(playersGuess, socket.data.databaseID, socket.data.playerName).catch((err) => {
           console.log(err.message)
         })
+
+        const currentWordArray = socket.data.wordToGuess.split('')
+        const [letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin] = testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray)
+
+        if (didTheyWin === true) {
+          logWinningPlayer(socket.data.databaseID, socket.data.playerName).catch((err) => {
+            console.log(err.message)
+          })
+
+          socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
+          socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
+        } else {
+          socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
+          socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
+        }
       }
     })
 
