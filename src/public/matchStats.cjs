@@ -28,9 +28,10 @@ $(function () {
 })
 
 const appendGuess = (guess, timeStamp, guessNumber) => {
-    const guessTable = document.querySelector('.guessTable') // Find the table we created
+    const guessTable = document.querySelector('#guessTable') // Find the table we created
     let guessTableBodyRow = document.createElement('tr') // Create the current table row
     guessTableBodyRow.className = 'guessTableBodyRow'
+    guessTable.className = 'table table-striped'
     // Create cells in the row
     let guessRank = document.createElement('td')
     guessRank.innerText = guessNumber

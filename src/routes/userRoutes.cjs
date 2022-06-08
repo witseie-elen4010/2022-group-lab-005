@@ -19,7 +19,7 @@ userRouter.post('/api/DarkModeData', async function (req, res) {
 })
 
 userRouter.get('/stats', function (req, res) {
-  res.sendFile(path.join(__dirname, '../views', 'Statistics.html'))
+  res.sendFile(path.join(__dirname, '../views', 'statistics.html'))
 })
 
 userRouter.get('/match', function(req, res) {
