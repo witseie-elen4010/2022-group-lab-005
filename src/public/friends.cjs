@@ -1,6 +1,5 @@
 'use strict'
 const request = new XMLHttpRequest()
-
 $(function () {
   checkUser(document.cookie).then(
     (result) => {
@@ -10,13 +9,13 @@ $(function () {
     }
   ).catch()
 })
-// Window.onload will not work with the jquery from the user check, this can be added after the user check with jquery tho
+
+// All the commented out functions will work once Jquery is implemented
 window.onload = function () {
   // getFriends()
   const username = getFromCookie('username', document.cookie)
-  // getPendingFriends(username) // i think this got something to do with the load,
+  // getPendingFriends(username)
   getFriendRequests(username)
-  // when this is used tog ether the output becomes the same for friend list and pending friend list
   document.getElementById('addButton').addEventListener('click', function (evt) {
     evt.preventDefault()
     addFriend(username)
@@ -39,9 +38,7 @@ function recieveFriends () {
     const response = JSON.parse(this.responseText)
     temp += response.recordset[i].Invitee + '<br>'
   }
-
   const friendList = document.getElementById('Friend list')
-
   friendList.innerHTML = temp
 }
 
@@ -59,7 +56,6 @@ function recievePendingFriends () {
     const response = JSON.parse(this.responseText)
     temp += response.recordset[i].Invitee + '<br>'
   }
-
   const friendPending = document.getElementById('pending')
   friendPending.innerHTML = temp
 }
@@ -77,10 +73,16 @@ function receiveFriendRequests () {
   for (let i = 0; i < response.recordset.length; i++) {
     const response = JSON.parse(this.responseText)
     const inviter = response.recordset[i].Inviter
+
+    // create the lables and buttons
     const label = document.createElement('label')
     label.innerHTML = inviter
     const acceptBtn = document.createElement('button')
+    acceptBtn.className = ('btn btn-primary col-3')
     const declineBtn = document.createElement('button')
+    declineBtn.className = ('btn btn-primary col-3')
+
+    // button functions
     acceptBtn.innerHTML = 'Accept'
     acceptBtn.setAttribute('user', inviter)
     acceptBtn.onclick = function () {
@@ -90,9 +92,11 @@ function receiveFriendRequests () {
     declineBtn.onclick = function () {
       acceptDeclineFriend(getFromCookie('username', document.cookie), acceptBtn.getAttribute('user'), 'decline')
     }
-    document.body.appendChild(label)
-    document.body.appendChild(acceptBtn)
-    document.body.appendChild(declineBtn)
+    // adding buttons to screen
+    document.getElementById('friend').appendChild(label)
+    document.getElementById('friend').appendChild(acceptBtn)
+    document.getElementById('friend').appendChild(declineBtn)
+    document.getElementById('friend').appendChild(document.createElement('br'))
   }
 }
 

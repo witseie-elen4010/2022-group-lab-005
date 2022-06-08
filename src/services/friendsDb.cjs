@@ -42,21 +42,23 @@ async function getUserFriendRequests (username) {
 }
 
 async function addFriend (username, friend) {
-  const sqlCodeCheckFriendExist = `SELECT Username FROM [dbo].[Users] WHERE Username = '${username}'`
+  const sqlCodeCheckFriendExist = `SELECT Username FROM [dbo].[Users] WHERE Username = '${friend}'`
   const sqlCodeCheckFriendRelationship = `SELECT Status FROM [dbo].[Friends] WHERE (Inviter = '${username}' AND Invitee = '${friend}') OR (Inviter = '${friend}' AND Invitee = '${username}') ;`
   return new Promise((resolve, reject) => {
     get('default').then(
-      (pool) => pool.request().query(sqlCodeCheckFriendExist).then( // first query to see if the inputed username exists
+      // first query if the friend is an user
+      (pool) => pool.request().query(sqlCodeCheckFriendExist).then(
         (result) => {
           const list = JSON.stringify(result.recordset[0])
           try {
-            if (list === undefined) {
+            if (list !== undefined) {
               get('default').then(
-                (pool) => pool.request().query(sqlCodeCheckFriendRelationship).then( // first query to see if the inputed username exists
+                // this second query will query if the inputted Inviter and invitee 's relationship exist in the database
+                (pool) => pool.request().query(sqlCodeCheckFriendRelationship).then(
                   (result) => {
                     const list = JSON.stringify(result.recordset[0])
                     try {
-                      if (list === undefined) { // undefined list shows that username does not exist
+                      if (list === undefined) { // if there is no existing relationship in the database , add new relationship between them
                         const sqlCode = `INSERT INTO [dbo].[Friends] (Inviter, Invitee, Status)
                         VALUES ('${username}','${friend}','pending');`
                         get('default').then(
@@ -67,7 +69,7 @@ async function addFriend (username, friend) {
                           ).catch(reject)
                         ).catch(reject)
                         resolve('Friend request sent')
-                      } else if (JSON.parse(list).Status === 'denied') {
+                      } else if (JSON.parse(list).Status === 'denied') { // if user have denied the friend request, send again
                         const sqlCode = `UPDATE [dbo].[Friends] SET Inviter ='${username}',Invitee ='${friend}',Status = 'pending' WHERE (Inviter = '${username}' AND Invitee = '${friend}') OR (Inviter = '${friend}' AND Invitee = '${username}');`
                         get('default').then(
                           (pool) => pool.request().query(sqlCode).then(
@@ -76,7 +78,7 @@ async function addFriend (username, friend) {
                             }
                           ).catch(reject)
                         ).catch(reject)
-                        resolve('Friend request sent again')
+                        resolve('Friend request sent')
                       } else if (JSON.parse(list).Status === 'pending') {
                         resolve('The user you are trying to add is pending for approval.')
                       } else {
@@ -88,7 +90,6 @@ async function addFriend (username, friend) {
                     }
                   }
                 ).catch(reject)
-
               ).catch(reject)
             } else {
               resolve('The friend you trying to add does not exist')
@@ -102,7 +103,7 @@ async function addFriend (username, friend) {
   })
 }
 
-async function updateFriend (username, friend, acceptOrDecline) {
+async function updateFriend (username, friend, acceptOrDecline) { // function called when click the accept of deny button.
   let sqlCode = ''
   let accepted = false
   if (acceptOrDecline === 'accept') {
