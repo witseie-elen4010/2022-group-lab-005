@@ -1,7 +1,7 @@
 'use strict'
 
 setModeForPage()
-function setModeForPage(username) {
+function setModeForPage() {
   let isDarkmode = getFromCookie('darkMode', document.cookie)
   //  set current current scheme
   if (isDarkmode === 'true') {
