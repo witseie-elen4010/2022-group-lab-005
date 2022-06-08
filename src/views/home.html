@@ -2,24 +2,25 @@
 <html lang="en">
 
 <head>
-  <title>Home Page</title>
+  <title>Hazard a Guess | Home </title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <link rel="stylesheet" href="/src/public/darkmode.css" />
   <script defer type="text/javascript" src="/src/public/utils.js"></script>
   <script defer type="text/javascript" src="/src/public/fetchMode.js"></script>
   <script defer type="text/javascript" src="/src/public/setMode.js"></script>
+  <script defer type="text/javascript" src="/src/public/home.js"></script>
   <meta charset="utf-8" />
- 
+
 
 </head>
 
 <body>
-  <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
+  <div class="mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
     <h1 style="text-align:center">Welcome to Hazard a Guess!</h1>
   </div>
-  <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class = "px-2 py-2 d-flex justify-content-evenly">
+  <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class="px-2 py-2 d-flex justify-content-evenly">
 
     <form action="/lobby" method="POST" class="col-3">
       <button type="submit" class="btn btn-primary" style="width:100%;">Start Lobby</button>
@@ -27,10 +28,22 @@
     <button type="button" onclick="window.location.href='/user/stats'" class="btn btn-primary col-3">Your Statistics</button>
 
   </div>
-  <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class = "px-2 py-2 d-flex justify-content-evenly" >
-    <button type="button" onclick="window.location.href='/user/friends'" class ="btn btn-primary col-3">Friends</button>
+  <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class="px-2 py-2 d-flex justify-content-evenly">
+    <button type="button" onclick="window.location.href='/user/friends'" class="btn btn-primary col-3">Friends</button>
     <button type="button" onclick="window.location.href='/user/settings'" class="btn btn-primary col-3" id="settingsButton">Settings</button>
   </div>
+  <button type="button" class="btn btn-primary" id="logoutButton">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left"
+      viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+        d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z">
+      </path>
+      <path fill-rule="evenodd"
+        d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z">
+      </path>
+    </svg>
+    Logout
+  </button>
 </body>
 
 </html>
