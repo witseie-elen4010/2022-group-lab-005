@@ -15,20 +15,29 @@
 </head>
 
 <body style="color:black">
-    <h1 id="heading">General Statistics</h1>
+    <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
+        <h1 id="matchHeading" style="text-align: center;">Hazard a Guess: General Stats</h1>
+    </div>
     <p id="displayedStats"></p>
-    <h1 id="matchHeading">All matches</h1>
-    <table class="matchTable" style="width:100%">
+    <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
+        <h1 id="matchHeading" style="text-align: center;">Match List</h1>
+    </div>
+    <div style="display: block; padding-left: 20em; padding-right: 20em; text-align: center;">
+        <table class="table table-striped" style="width:100%; text-align: center;" id="matchTable">
         <thead class="tableHead">
             <tr class="tableHeadRow">
                 <th>Game Type</th>
                 <th>Correct Word</th>
                 <th>Number of Players</th>
                 <th>Winner</th>
+                <th></th>
             </tr>
         </thead>
-        <tbody class="matchTableBody"></tbody>
-        <tr class="matchTableBodyRow"></tr>
-    </table>
+        <tbody class="matchTableBody" id="matchTableBody">
+            <tr class="matchTableBodyRow"></tr>
+        </tbody>
+        </table>
+        <button type="button" class="btn btn-primary" id="backButton">Return to Menu</button>
+    </div>
 </body>
 </html>

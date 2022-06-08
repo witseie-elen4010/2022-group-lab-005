@@ -38,31 +38,34 @@ function recieveStats(response){
 }
 
 const appendMatch = (WordToGuess, GameType, NumPlayers, WhoWon, gameID) => {
-    const matchTable = document.querySelector('.matchTable') // Find the table we created
+    const matchTable = document.querySelector('#matchTableBody') // Find the table we created
     let matchTableBodyRow = document.createElement('tr') // Create the current table row
     matchTableBodyRow.className = 'matchTableBodyRow'
     // Create cells in the row
+    matchTable.className = 'table table-striped'
     let MatchType = document.createElement('td')
     MatchType.innerText = GameType
-    MatchType.style.textAlign = "centre"
     let word = document.createElement('td')
     word.innerText = WordToGuess
-    word.style.textAlign = "centre"
     let numberPlayers = document.createElement('td')
     numberPlayers.innerText = NumPlayers
-    numberPlayers.style.textAlign = "centre"
     let winner = document.createElement('td')
     winner.innerText = WhoWon
-    winner.style.textAlign = "centre"
     let toMatchButton = document.createElement('button')
     let toMatch = document.createElement('td')
-    toMatchButton.className = "btn_match"
+    toMatchButton.className = "btn btn-outline-primary"
     toMatchButton.innerText = "View Match"
     toMatchButton.onclick = function () {
         window.location.href='/user/match/?gameID='+gameID
     }
     toMatch.append(toMatchButton)
-    toMatchButton.className = 'btn_match'
     matchTableBodyRow.append(MatchType, word, numberPlayers, winner, toMatch) // Append all 4 cells to the table row
     matchTable.append(matchTableBodyRow) // Append the current row to the guess table body
 }
+
+const backButton = document.getElementById('backButton')
+backButton.addEventListener('click', function () {
+  location.href = '/'
+}, false)
+
+

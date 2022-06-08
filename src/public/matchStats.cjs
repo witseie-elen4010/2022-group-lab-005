@@ -28,20 +28,22 @@ $(function () {
 })
 
 const appendGuess = (guess, timeStamp, guessNumber) => {
-    const guessTable = document.querySelector('#guessTable') // Find the table we created
+    const guessTable = document.querySelector('#guessTableBody') // Find the table we created
     let guessTableBodyRow = document.createElement('tr') // Create the current table row
     guessTableBodyRow.className = 'guessTableBodyRow'
     guessTable.className = 'table table-striped'
     // Create cells in the row
     let guessRank = document.createElement('td')
     guessRank.innerText = guessNumber
-    guessRank.style.textAlign = "centre"
     let wordGuess = document.createElement('td')
     wordGuess.innerText = guess
-    wordGuess.style.textAlign = "centre"
     let timeData = document.createElement('td')
     timeData.innerText = timeStamp
-    timeData.style.textAlign = "centre"
     guessTableBodyRow.append(guessRank, wordGuess, timeData) // Append all 5 cells to the table row
     guessTable.append(guessTableBodyRow) // Append the current row to the guess table body
 }
+
+const backButton = document.getElementById('backButton')
+backButton.addEventListener('click', function () {
+  location.href = '/user/stats'
+}, false)

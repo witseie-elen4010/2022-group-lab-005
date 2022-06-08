@@ -13,20 +13,26 @@
 </head>
 
 <body style="color:black">
-    <h1 id="matchHeading">All guesses made:</h1>
-    <div class="allGuesses" style="display: block;">
-        <table class="table table-striped" style="width:100%" id="guessTable">
+    <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
+        <h1 id="matchHeading" style="text-align: center;">Hazard a Guess: Match History</h1>
+    </div>
+    
+    <div class="allGuesses" style="display: block; padding-left: 20em; padding-right: 20em; text-align: center;">
+        <table class="table table-striped" style="width:100%; text-align: center;" id="guessTable">
             <thead class="tableHead">
                 <tr class="tableHeadRow">
-                    <th>Guess Number</th>
-                    <th>Word Guessed</th>
-                    <th>Time Stamp</th>
+                    <th scope="col">Guess Number</th>
+                    <th scope="col">Word Guessed</th>
+                    <th scope="col">Time Stamp</th>
                 </tr>
             </thead>
-            <tbody class="guessTableBody"></tbody>
-            <tr class="guessTableBodyRow"></tr>
+            <tbody class="guessTableBody" id="guessTableBody">
+                <tr class="guessTableBodyRow"></tr>
+            </tbody>
         </table>
+        <button type="button" class="btn btn-primary" id="backButton">Return to Stats</button>
     </div>
+    
 </body>
 
 </html>
