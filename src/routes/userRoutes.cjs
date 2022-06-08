@@ -9,9 +9,13 @@ const { getUserFriends, getUserPendingFriends, getUserFriendRequests, addFriend 
 
 const userRouter = express.Router()
 
-userRouter.get('/api/DarkModeData', async function (req, res) {
-  const result = await getMode('user')
-  res.send(result)
+userRouter.post('/api/DarkModeData', async function (req, res) {
+  const username = req.body.usernameInput
+  getMode(username).then(
+    (result) => {
+      res.send(result)
+    }
+  ).catch(console.error)
 })
 
 userRouter.get('/stats', function (req, res) {
@@ -40,11 +44,16 @@ userRouter.get('/settings', function (req, res) { // works
 })
 
 userRouter.post('/changeMode', jsonParser, async function (req, res) { // ?
-  const darkMode = req.body.darkMode
+  const username = req.body.usernameInput
+  const darkMode = req.body.darkModeInput
+
   console.log(`Server received: ${darkMode}`)
 
-  const result = await changeMode(darkMode)
-  res.send(JSON.stringify({ message: `${darkMode} has been saved to the database` }))
+  changeMode(darkMode, username).then(
+    (result) => {
+      res.send(JSON.stringify({ message: `${darkMode} has been saved to the database` }))
+    }
+  ).catch(console.error)
 })
 
 userRouter.get('/friends', function (req, res) {
