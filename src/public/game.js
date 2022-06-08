@@ -289,7 +289,6 @@ function createOpponentBoards () {
         count = count + 1
       }
     }
-    document.getElementById('playerName').innerHTML = 'Your board'
   } else {
     console.log('Player number error!')
   }

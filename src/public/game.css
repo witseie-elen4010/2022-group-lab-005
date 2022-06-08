@@ -1,3 +1,4 @@
+
 #gridContainer{
   display:flex;
   flex-direction: row;
@@ -5,8 +6,7 @@
   align-items: stretch;
   align-content: center;
   flex-wrap: nowrap;
-  height: 100vh;
-  background-color: transparent;
+  background-color: transparent !important;
 }
 #playerDiv{
   order: 2;
@@ -30,7 +30,6 @@
 }
 
 
-
 .wordleRow {
   display: flex;
   align-items: center;
@@ -40,32 +39,36 @@
 
 #opponentsDivLeft .wordleDiv, #opponentsDivRight .wordleDiv{
   width: 100%;
-  padding-top: 10%;
+  padding-bottom: 10%;
+  height: 25vh;
 }
 
 #opponentsDivLeft .wordleDiv .wordleRow .block, #opponentsDivRight .wordleDiv .wordleRow .block{
   flex-grow: 1;
   margin: 2px;
   border-radius: 10%;
-  min-height: 1.5vw;
+  min-height: 2vh;
+  max-width: 2vh;
   text-align: center;
-  max-width: 1.5vw;
 }
 #playerDiv .wordleDiv .wordleRow .block{
   flex-grow: 1;
   margin: 5px;
   border-radius: 10%;
-  min-height: 4vw;
+  min-height: 3vw;
   text-align: center;
-  max-width: 4vw;
+  max-width: 3vw;
 }
 
 h2{
   text-align: center;
 }
 
+
+
 #keyboardDiv {
-  padding-top: 10%;
+  padding-top: 5%;
+  padding-bottom: 10%;
   display: block;
   width: 80%;
   text-align: center;
@@ -87,12 +90,42 @@ h2{
   text-align: center;
 }
 
-@media only screen and (max-width: 1200px) {
 
-}
+@media only screen and (max-width: 800px) {
+  #gridContainer{
+    flex-wrap: wrap;
+  }
+  #playerDiv{
+    order: 1;
+    width:100%;
+  }
+  #opponentsDivLeft {
+    order: 2;
+    width:100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
+  #opponentsDivRight{
+    order: 3;
+    width: 100%;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+  }
 
-@media only screen and (max-width: 100px) {
+  #opponentsDivLeft .wordleDiv, #opponentsDivRight .wordleDiv{
+    width: 100%;
+    padding-bottom: 5%;
+    height: 100%;
+  }
 
+  h2{
+    font-size: 0.75em;
+  }
+    
+  #keyboardDiv {
+    padding-top: 5%;
+    padding-bottom: 5%;
+  }
 }
 
 .unselectable {
@@ -133,38 +166,38 @@ h2{
 .forest{
   position:fixed;
   left: 80%;
-  top: 10%;
+  top: 20%;
 }
 
 .sunny-beach{
   position:fixed;
   left: 80%;
-  top: 15%;
+  top: 25%;
 }
 
 .mountains{
   position:fixed;
   left: 80%;
-  top: 20%;
+  top: 30%;
 }
 
 .none{
   position:fixed;
   left: 80%;
-  top: 25%;
+  top: 35%;
 }
 
 .back{
   position:fixed;
   left: 80%;
-  top: 30%;
+  top: 40%;
 }
 
 .change-background-button{
   color: black;
   position:fixed;
   left: 80%;
-  top: 5%;
+  top: 15%;
 }
 
 

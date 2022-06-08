@@ -34,17 +34,26 @@ gameRouter.get('/game_debug', function (pos, req) { // works
   req.sendFile(path.join(__dirname, '../views', 'game.html'))
 })
 
-gameRouter.get('/api/BackgroundData', async function (req, res) {
-  const result = await getBackground('1')
-  res.send(result)
+gameRouter.post('/api/BackgroundData', async function (req, res) {
+  const username = req.body.usernameInput
+  getBackground(username).then(
+    (result) => {
+      res.send(result)
+    }
+  ).catch(console.error)
 })
 
 gameRouter.post('/newBackground', jsonParser, async function (req, res) { // ?
+  const username = req.body.usernameInput
   const background = req.body.back
+
   console.log(`Server received: ${background}`)
 
-  const result = await changeBackground(background)
-  res.send(JSON.stringify({ message: `${background} has been saved to the database` }))
+  changeBackground(background, username).then(
+    (result) => {
+      res.send(JSON.stringify({ message: `${background} has been saved to the database` }))
+    }
+  ).catch(console.error)
 })
 
 module.exports = gameRouter
