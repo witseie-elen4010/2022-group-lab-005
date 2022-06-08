@@ -30,8 +30,12 @@ $('#currentNumPlayers').html($('#numPlayers').val())
 $('#gameModeContainer input:radio').on('click', () => {
   if ($('#standard').is(':checked')) {
     $('#customWordField').fadeOut('fast')
+    document.getElementById('numPlayers').min = 2
+    $('#currentNumPlayers').html($('#numPlayers').val())
   } else if ($('#custom').is(':checked')) {
     $('#customWordField').fadeIn('fast')
+    document.getElementById('numPlayers').min = 3
+    $('#currentNumPlayers').html($('#numPlayers').val())
   } else {
     console.log('Something weird has happened. This should not be reached!')
   }
