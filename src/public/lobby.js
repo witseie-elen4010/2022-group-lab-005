@@ -72,24 +72,17 @@ socket.on('get_game_id', (gameID) => {
   window.location.href = '/game/play'
 })
 
-/*
-// When the user clicks the create game button and the game is standard, the server is sent the details of the game. If it is happy,
-// it will create an unique game ID that will be received here.
-socket.on('get_game_id_reg_game', (gameID) => {
-    sessionStorage.setItem('gameID', gameID)
-    sessionStorage.setItem('gameType', 'regular')
-    window.location.href = `/game/play`
-})
+function joinRunningGame (event) {
+  // Let's disable all the buttons so that the user can't try joining multiple games while
+  // the db is being queried.
+  $('#gameInfoTableBody').find('button').attr('disabled', 'disabled')
 
-// When the user clicks the create game button and the game is custom, the server is sent the details of the game. If it is happy,
-// it will create an unique game ID that will be received here.
-socket.on('get_game_id_custom_game', (gameID) => {
-    sessionStorage.setItem('gameID', gameID)
-    sessionStorage.setItem('gameType', 'custom')
-    window.location.href = `/game/play`
-}) */
+  // Add a loading icon to the button
+  document.getElementById(event.target.id).innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span><span class="sr-only">Joining...</span>'
 
-function joinRunningGame () {
+  // Let's also disable the create game button since the user is already joining a game.
+  $('#createGameBtn').attr('disabled', 'disabled')
+
   sessionStorage.setItem('gameID', this.id)
   window.location.href = '/game/play'
 }
@@ -120,13 +113,4 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
 
   socket.connect()
   socket.emit('create_game', numPlayers, modeChosen, document.getElementById('customWord').value)
-  /*
-    // Creates the game in the database
-    request.open('POST', '/lobby/create', true)
-    request.setRequestHeader('Content-type', 'application/json')
-    request.send(JSON.stringify({ numPlayers: $("#numPlayers").val() , customWord: document.getElementById('customWord').value, gameMode: modeChosen}))
-
-    socket.connect()
-    socket.emit('create_game', gameType, numPlayers)
-    */
 })
