@@ -22,8 +22,13 @@ userRouter.get('/stats', function (req, res) {
   res.sendFile(path.join(__dirname, '../views', 'Statistics.html'))
 })
 
+userRouter.get('/match', function(req, res) {
+  res.sendFile(path.join(__dirname, '../views', 'matchHistory.html'))
+})
+
 userRouter.get('/get/games', function (req, res) {
-  getUserGames(1).then(
+  const username = req.query.user
+  getUserGames(username).then(
     (result) => {
       res.send(result)
     }
@@ -33,6 +38,15 @@ userRouter.get('/get/games', function (req, res) {
 userRouter.get('/get/stats', function (req, res) {
   const username = req.query.user
   getUserStats(username).then(
+    (result) => {
+      res.send(result)
+    }
+  ).catch(console.error)
+})
+
+userRouter.get('/get/match', function (req,res) {
+  const username = req.query.user
+  getUserGuesses(1,'winner').then(
     (result) => {
       res.send(result)
     }

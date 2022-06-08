@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Match History</title>
     <meta charset="utf-8" name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -10,7 +11,20 @@
 </head>
 
 <body style="color:black">
-    <h1 id="matchHeading"></h1>
-    <p id="matchGuesses"></p>
+    <h1 id="matchHeading">All guesses made:</h1>
+    <div class="allGuesses" style="display: block;">
+        <table class="guessTable" style="width:100%">
+            <thead class="tableHead">
+                <tr class="tableHeadRow">
+                    <th>Guess Number</th>
+                    <th>Word Guessed</th>
+                    <th>Time Stamp</th>
+                </tr>
+            </thead>
+            <tbody class="guessTableBody"></tbody>
+            <tr class="guessTableBodyRow"></tr>
+        </table>
+    </div>
 </body>
+
 </html>
