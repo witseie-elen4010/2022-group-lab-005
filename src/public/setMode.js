@@ -1,12 +1,13 @@
 'use strict'
 
-const darkMode = sessionStorage.getItem('mode')
-console.log(darkMode)
+let isDarkmode = getFromCookie('darkMode', document.cookie)
+
 //  set current current scheme
-if (darkMode === 'true') {
-  document.body.classList.remove('light-mode')
-  document.body.classList.add('dark-mode')
+if (isDarkmode === 'true') {
+  document.body.classList.remove('bg-light')
+  document.body.classList.add('bg-dark')
 } else {
-  document.body.classList.remove('dark-mode')
-  document.body.classList.add('light-mode')
+  document.body.classList.remove('bg-dark')
+  document.body.classList.add('bg-light')
 }
+
