@@ -14,24 +14,27 @@ module.exports = function (io) {
 
   // This middleware will only fire if a connection is coming from the '/rooms' namespace.
   io.of('/rooms').use((socket, next) => {
-    console.log('A client has connected to the lobby')
-
-    socket.on('disconnect', () => {
-      console.log('A client has disconnected from the lobby')
-    })
-
     // Get the open games and send them back to the client.
-    const roomArr = getOpenGames(io)
-    socket.emit('update_game_list', roomArr)
-
-    // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
-    next()
+    getOpenGames(io).then((roomArr) => {
+      socket.emit('update_game_list', roomArr)
+    }).then(() => {
+      // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
+      next()
+    }).catch((err) => {
+      console.log(err.message)
+    })
   })
 
   // This middleware will only fire if a connection is coming from the default ('/') namespace.
   io.use((socket, next) => {
+    const gameIDFromClient = socket.handshake.auth.sessionInfo.substring(36, socket.handshake.auth.sessionInfo.length - 1)
+
+    if (isGameIDValid(gameIDFromClient) === false) {
+      return next(new Error('invalid_game_id'))
+    }
+
     // When the a connection is attempted, the client sends an object that contains information about that specific game they want to join.
-    getGameInfo(socket.handshake.auth.sessionInfo.substring(36, socket.handshake.auth.sessionInfo.length - 1)).then((queryResult) => {
+    getGameInfo(gameIDFromClient).then((queryResult) => {
       return queryResult
     }).then((resultFromQuery) => {
       // This is the ID of the game in the database.
@@ -76,17 +79,21 @@ module.exports = function (io) {
               }
 
               // Update all the clients looking at the lobby page.
-              io.of('/rooms').emit('update_game_list', getOpenGames(io))
-
-              // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
-              next()
+              getOpenGames(io).then((roomArr) => {
+                io.of('/rooms').emit('update_game_list', roomArr)
+              }).then(() => {
+                // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
+                next()
+              }).catch((err) => {
+                console.log(err.message)
+              })
             }).catch((err) => {
               if (err.number === 2627) {
                 // A player that was in the game, disconnected and has now tried to reconnect.
                 // This violates the primary key constraint in the UserGame table.
                 // We end the game.
                 console.log('User cannot rejoin game')
-                socket.emit('game_already_running')
+                return next(new Error('game_already_running'))
               } else {
                 console.log(err.message)
               }
@@ -110,16 +117,20 @@ module.exports = function (io) {
             socket.emit('waiting_for_players')
 
             // Update all the clients looking at the lobby page.
-            io.of('/rooms').emit('update_game_list', getOpenGames(io))
-
-            // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
-            next()
+            getOpenGames(io).then((roomArr) => {
+              io.of('/rooms').emit('update_game_list', roomArr)
+            }).then(() => {
+              // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
+              next()
+            }).catch((err) => {
+              console.log(err.message)
+            })
           }).catch((err) => {
             if (err.number === 2627) {
               // A player that was in the game, disconnected and has now tried to reconnect.
               // This violates the primary key constraint in the UserGame table.
               console.log('User cannot rejoin game')
-              socket.emit('game_already_running')
+              return next(new Error('game_already_running'))
             } else {
               console.log(err.message)
             }
@@ -306,8 +317,8 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
         if (socket.data.isGameRunning === undefined) {
           // This socket joined before the game starts so we can remove them
           // from the db if they leave before the game begins.
-          removePlayerFromGame(socket.data.databaseID, socket.data.playerName).catch((err) => {
-            console.log(err.message)
+          removePlayerFromGame(socket.data.databaseID, socket.data.playerName).catch(() => {
+            console.log('Couldn\'t remove player from the game db')
           })
         }
       })
@@ -319,34 +330,56 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
   })
 }
 
-function getOpenGames (io) {
+async function getOpenGames (io) {
   const rooms = io.sockets.adapter.rooms // https://simplernerd.com/js-socketio-active-rooms/
   const roomArr = []
 
-  rooms.forEach((value, key) => {
-    if (key.includes('game')) {
-      // Now we know that this room is a game room.
-      // Let's see how many players are going to be playing.
-      const expectedPlayerNum = parseInt(key.substring(key.length - 1))
+  return new Promise((resolve, reject) => {
+    rooms.forEach((value, key) => {
+      if (key.includes('game')) {
+        // Now we know that this room is a game room.
+        // Let's see how many players are going to be playing.
+        const expectedPlayerNum = parseInt(key.substring(key.length - 1))
 
-      // Let's check if the room is empty
-      if (isRoomEmpty(io, key)) {
-        // The room is empty
-        // idk what to do here. This code shouldn't be reachable tho.
-        console.log('This should not have run!')
-      } else {
-        const currentPlayerNum = parseInt(io.sockets.adapter.rooms.get(key).size)
-
-        if (currentPlayerNum < expectedPlayerNum) {
-          // There's at least one slot available.
-          const temp = expectedPlayerNum - currentPlayerNum
-          roomArr.push({ roomName: key.substring(0, key.indexOf('_')), availSlots: temp })
+        // Let's check if the room is empty
+        if (isRoomEmpty(io, key)) {
+          // The room is empty
+          // idk what to do here. This code shouldn't be reachable tho.
+          console.log('This should not have run!')
+        } else {
+          isGameInProgress(io, key).then((val) => {
+            if (val === false) {
+              const currentPlayerNum = parseInt(io.sockets.adapter.rooms.get(key).size)
+              if (currentPlayerNum < expectedPlayerNum) {
+                // There's at least one slot available.
+                const temp = expectedPlayerNum - currentPlayerNum
+                roomArr.push({ roomName: key.substring(0, key.indexOf('_')), availSlots: temp })
+              }
+            }
+          }).catch((err) => {
+            console.log(err.message)
+          })
         }
       }
-    }
+    })
+    resolve(roomArr)
+  }).catch((err) => {
+    console.log(err.message)
   })
+}
 
-  return roomArr
+function isGameInProgress (io, roomID) {
+  return new Promise((resolve, reject) => {
+    io.in(roomID).fetchSockets().then((sockets) => {
+      for (const sock of sockets) {
+        if (sock.data.isGameRunning === undefined || sock.data.isGameRunning === false) {
+          resolve(false)
+        } else {
+          resolve(true)
+        }
+      }
+    }).catch(new Error('idk what happened'))
+  })
 }
 
 async function getGameInfo (gameID) {
@@ -366,7 +399,7 @@ async function insertNewGameIntoDB (numPlayers, modeChosen, customWord) {
     } else if (modeChosen === 2) { // Custom game
       gameData = { gameMode: modeChosen, numPlayers, customWord }
     } else {
-      reject
+      reject(new Error('Invalid game mode'))
     }
 
     createGame(gameData).then((queryResult) => {
@@ -374,4 +407,17 @@ async function insertNewGameIntoDB (numPlayers, modeChosen, customWord) {
       resolve(resultsObj[0])
     }).catch(reject)
   })
+}
+
+function isGameIDValid (gameID) {
+  if (gameID.length > 0) {
+    if (isNaN(gameID.substring(36, gameID.length - 1)) === false) {
+      const num = Number(gameID.substring(36, gameID.length - 1))
+      if (Number.isInteger(num) && num > -1) {
+        return true
+      }
+    }
+  }
+
+  return false
 }

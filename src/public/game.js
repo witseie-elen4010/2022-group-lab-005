@@ -44,9 +44,11 @@ const socket = io({ autoConnect: false })
 // This will fire if the server is unhappy with something.
 socket.on('connect_error', (err) => {
   if (err.message === 'invalid_game_id') {
-    console.log('Game code is invalid.')
+    document.getElementById('errorText').innerHTML = 'Game code is invalid.'
+    $('#gameErrorModal').modal('show')
   } else if (err.message === 'game_already_running') {
-    console.log('You cannot join a game that is already in progress!')
+    document.getElementById('errorText').innerHTML = 'You cannot rejoin a game that is in progress!'
+    $('#gameErrorModal').modal('show')
   }
 })
 
@@ -131,10 +133,6 @@ socket.on('get_number', (num) => {
   thisPlayerNumber = num
 })
 
-socket.on('game_already_running', () => {
-  console.log('game already running!')
-})
-
 /** ********* General code ***********/
 if (window.sessionStorage.getItem('gameID') === null) {
   // If the client doesn't have a gameID in their session storage, then they
@@ -149,12 +147,16 @@ const userName = getFromCookie('username', document.cookie)
 socket.auth = { sessionInfo: gameID, playerName: userName }
 socket.connect()
 
-// Add event listener to the modal close button so the player is sent back to the lobby
-document.getElementById('modalCloseButton').addEventListener('click', () => {
+function redirectToLobby () {
   // First, lets remove the gameID from the session storage.
   sessionStorage.removeItem('gameID')
   window.location.href = '/lobby'
-})
+}
+
+// Add event listener to the modal close button so the player is sent back to the lobby
+document.getElementById('modalCloseButtonGameOver').addEventListener('click', redirectToLobby)
+document.getElementById('modalCloseButtonError').addEventListener('click', redirectToLobby)
+
 // Updates the color currently displayed in this user's wordle table
 function updateWordleTableColor () {
   const wordlePlayer = document.getElementById('playerDiv')
