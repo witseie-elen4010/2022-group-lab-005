@@ -145,30 +145,34 @@ module.exports = function (io) {
   // This listener will only fire if a connection is coming from the '/rooms' namespace.
   io.of('/rooms').on('connection', (socket) => {
     socket.on('create_game', function (numPlayers, modeChosen, customWord) {
-      if (modeChosen === 1) {
-        insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
-          console.log(result)
-          const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-          socket.emit('get_game_id', clientGameID, 'StandardCreate')
-        }).catch((err) => {
-          console.log(err.message)
-        })
-      } else if (modeChosen === 2) {
-        isGuessAWord(customWord).then(result => {
-          if (result) {
-            insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
-              console.log(result)
-              const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-              socket.emit('get_game_id', clientGameID, 'CustomCreate')
-            }).catch((err) => {
-              console.log(err.message)
-            })
-          } else {
-            socket.emit('invalid_word')
-          }
-        })
+      if (!isNaN(numPlayers) && Number.isInteger(Number(numPlayers)) && parseInt(numPlayers) > 1 && parseInt(numPlayers) < 8) {
+        if (modeChosen === 1) {
+          insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
+            console.log(result)
+            const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
+            socket.emit('get_game_id', clientGameID, 'StandardCreate')
+          }).catch((err) => {
+            console.log(err.message)
+          })
+        } else if (modeChosen === 2) {
+          isGuessAWord(customWord).then(result => {
+            if (result) {
+              insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
+                console.log(result)
+                const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
+                socket.emit('get_game_id', clientGameID, 'CustomCreate')
+              }).catch((err) => {
+                console.log(err.message)
+              })
+            } else {
+              socket.emit('invalid_word')
+            }
+          })
+        } else {
+          socket.emit('invalid_game_mode')
+        }
       } else {
-        socket.emit('invalid_game_mode')
+        socket.emit('invalid_player_number')
       }
     })
   })
