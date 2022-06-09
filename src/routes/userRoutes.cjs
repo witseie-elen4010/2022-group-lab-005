@@ -4,7 +4,7 @@ const express = require('express')
 const jsonParser = bodyParser.json()
 const { getMode, changeMode, changePassword } = require('../services/settings_db.cjs')
 const { getUserGames, getUserStats, getUserGuesses } = require('../services/matchHistory.cjs')
-const { getUserFriends, getUserPendingFriends, getUserFriendRequests, addFriend, updateFriend } = require('../services/friendsDb.cjs')
+const { getUserFriends, getFriendUser, getUserPendingFriends, getUserFriendRequests, addFriend, updateFriend } = require('../services/friendsDb.cjs')
 
 const userRouter = express.Router()
 
@@ -85,10 +85,19 @@ userRouter.post('/updatePassword', jsonParser, async function (req, res) { // ?
 userRouter.get('/friends', function (req, res) {
   res.sendFile(path.join(__dirname, '../views', 'friends.html'))
 })
-
+// the two functions below together will return User's friends
 userRouter.get('/get/friends', function (req, res) {
   const username = req.query.usernameInput
   getUserFriends(username).then(
+    (result) => {
+      res.send(result)
+    }
+  ).catch(console.error)
+})
+
+userRouter.get('/get/friendUser', function (req, res) {
+  const username = req.query.usernameInput
+  getFriendUser(username).then(
     (result) => {
       res.send(result)
     }

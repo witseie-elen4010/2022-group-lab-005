@@ -1,5 +1,5 @@
 'use strict'
-const request = new XMLHttpRequest()
+// redirect if user is not logged in
 $(function () {
   checkUser(document.cookie).then(
     (result) => {
@@ -9,25 +9,32 @@ $(function () {
     }
   ).catch()
 })
-// All the commented out functions will work once Jquery is implemented
+
 window.onload = function () {
   const username = getFromCookie('username', document.cookie)
+  // first two get will together return Friends of the user
   $.get('/user/get/friends', { usernameInput: username }).done(
     function (friendResponse) {
       recieveFriends(friendResponse)
-      $.get('/user/get/pending', { usernameInput: username }).done(
-        function (pendingResponse) {
-          recievePendingFriends(pendingResponse)
-          $.get('/user/get/friendRequest', { usernameInput: username }).done(
-            function (acceptResponse) {
-              receiveFriendRequests(acceptResponse)
+      $.get('/user/get/friendUser', { usernameInput: username }).done(
+        function (friendResponse) {
+          recieveFriendUser(friendResponse)
+          // next two get will return the friend request send and recieved
+          $.get('/user/get/pending', { usernameInput: username }).done(
+            function (pendingResponse) {
+              recievePendingFriends(pendingResponse)
+              $.get('/user/get/friendRequest', { usernameInput: username }).done(
+                function (acceptResponse) {
+                  receiveFriendRequests(acceptResponse)
+                }
+              )
             }
           )
         }
       )
     }
   )
-
+  // accept or decline friend request on click
   document.getElementById('addButton').addEventListener('click', function (evt) {
     evt.preventDefault()
     const friend = document.getElementById('Friend').value
@@ -39,7 +46,7 @@ window.onload = function () {
   })
 }
 
-// Recieves query from the database
+// display friends where user first sent request
 function recieveFriends (response) {
   let temp = ''
   for (let i = 0; i < response.recordset.length; i++) {
@@ -51,6 +58,19 @@ function recieveFriends (response) {
   }
 }
 
+// display friends where friend first sent request
+function recieveFriendUser (response) {
+  let temp = ''
+  for (let i = 0; i < response.recordset.length; i++) {
+    temp += response.recordset[i].Inviter + '<br>'
+  }
+  const friendList = document.getElementById('Friend list')
+  if (temp !== '') {
+    friendList.innerHTML += temp
+  }
+}
+
+// display all sent pending frient request
 function recievePendingFriends (response) {
   let temp = ''
   for (let i = 0; i < response.recordset.length; i++) {
@@ -61,7 +81,7 @@ function recievePendingFriends (response) {
     friendPending.innerHTML = temp
   }
 }
-
+// display all incoming friend request and generate button to accept and decline them
 function receiveFriendRequests (response) {
   if (response.recordset.length > 0) {
     document.getElementById('friend name').innerHTML = ''
@@ -89,7 +109,6 @@ function receiveFriendRequests (response) {
           receiveAcceptDeclineFriend(addFriendResponse)
         }
       )
-      // acceptDeclineFriend(getFromCookie('username', document.cookie), acceptBtn.getAttribute('user'), 'accept')
     }
     declineBtn.innerHTML = 'Decline'
     declineBtn.onclick = function () {
@@ -98,7 +117,6 @@ function receiveFriendRequests (response) {
           receiveAcceptDeclineFriend(addFriendResponse)
         }
       )
-      // acceptDeclineFriend(getFromCookie('username', document.cookie), acceptBtn.getAttribute('user'), 'decline')
     }
     // append the buttons while adding space to make it look neat
     document.getElementById('friend name').appendChild(label)
@@ -111,13 +129,13 @@ function receiveFriendRequests (response) {
     document.getElementById('requestButtons').appendChild(document.createElement('br'))
   }
 }
-
+// response to show if friend requested
 function recieveAddedFriends (response) {
   const msg = response.Status // there is only 1 possible response so record set at 0 is used
   alert(msg)
   document.location.reload()
 }
-
+// response to show if declined friend or accepted friend
 function receiveAcceptDeclineFriend (response) {
   const msg = response.updateFriendRequest
   alert(msg)
