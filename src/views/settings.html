@@ -20,10 +20,16 @@
 
 <body style="color:black">
 
-    <h1 id="heading">Game Settings</h1>
-    <button type="button" class="btn btn-primary" id="darkButton">Dark Mode</button>
-    <button type="button" class="btn btn-primary" id="lightButton">Light Mode</button>
-    <button type="button" class="btn btn-primary" id="backButton">Back</button>
+    <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
+        <h1 id="heading" style="text-align:center">Game Settings</h1>
+    </div>
+
+    <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class="px-2 py-2 d-flex justify-content-evenly">
+
+        <button type="button" class="btn btn-primary col-3" id="darkButton">Dark Mode</button>
+        <button type="button" class="btn btn-primary col-3" id="lightButton">Light Mode</button>
+    </div>
+    <button type="button" class="btn btn-primary mx-5 my-5 px-2 py-2" id="backButton">Back</button>
     <p id="status"></p>
     <p id="msgFmServer"></p>
 </body>
