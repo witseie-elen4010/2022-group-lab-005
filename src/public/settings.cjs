@@ -3,8 +3,8 @@
 $(function () {
   checkUser(document.cookie).then(
     (result) => {
-      if(result === false){
-        window.location.href = "/login"
+      if (result === false) {
+        window.location.href = '/login'
       }
     }
   ).catch()
@@ -14,7 +14,7 @@ $(function () {
 const darkModeButton = document.getElementById('darkButton')
 darkModeButton.addEventListener('click', function () {
   const mode = 'true'
-  document.cookie = 'darkMode='+mode+'; path=/'
+  document.cookie = 'darkMode=' + mode + '; path=/'
   sendModeToServer(mode)
   document.body.classList.remove('bg-light')
   document.body.classList.add('bg-dark')
@@ -25,12 +25,45 @@ darkModeButton.addEventListener('click', function () {
 const lightModeButton = document.getElementById('lightButton')
 lightModeButton.addEventListener('click', function () {
   const mode = 'false'
-  document.cookie = 'darkMode='+mode+'; path=/'
+  document.cookie = 'darkMode=' + mode + '; path=/'
   sendModeToServer(mode)
   document.body.classList.remove('bg-dark')
   document.body.classList.add('bg-light')
   location.reload()
 }, false)
+
+document.getElementById('updatePassword').addEventListener('click', function (evt) {
+  evt.preventDefault()
+  request.open('POST', '/user/updatePassword', true)
+  request.setRequestHeader('Content-type', 'application/json')
+  updateAndSendFormControl()
+})
+
+function updateAndSendFormControl () {
+  if (document.getElementById('password').value === '') {
+    document.getElementById('password').className = 'form-control is-invalid'
+    document.getElementById('output').innerHTML = 'Please input new password'
+  } else {
+    const password = document.getElementById('password').value
+    const username = getFromCookie('username', document.cookie)
+    const hashedPassword = addingSomeSaltAndHash(password)
+    request.send(JSON.stringify({ usernameInput: username, passwordInput: hashedPassword }))
+    request.addEventListener('load', receivedValue)
+  }
+}
+
+function receivedValue () {
+  const response = JSON.parse(this.responseText)
+  const msg = 'Password successfully updated'
+  console.log(msg)
+  document.getElementById('output').innerHTML = msg
+}
+
+function addingSomeSaltAndHash (password) {
+  const saltPassword = password + 'PleaseGiveGoodMark'
+  const hash = CryptoJS.SHA256(saltPassword).toString()
+  return hash
+}
 
 // when user selects the light mode button send dark mode is false to server
 const backButton = document.getElementById('backButton')
