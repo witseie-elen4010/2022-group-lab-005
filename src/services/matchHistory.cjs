@@ -13,7 +13,8 @@ async function getUserGames (user) {
       (pool) => pool.request().query(sqlCode).then(
         (result) => {
           let output = setMode(result)
-          resolve(output)
+          let final = setWinner(output)
+          resolve(final)
         }
       ).catch(reject)
     ).catch(reject)
@@ -77,10 +78,22 @@ function parseStats(response){
   return guesses
 }
 
+// Sets games with no winner to a 'No Winner Recorded' string
+function setWinner(input){
+  const size = input.recordset.length
+  for(let i = 0; i < size; i++){
+    if(input.recordset[i].WhoWon === '' || input.recordset[i].WhoWon === null){
+      input.recordset[i].WhoWon = 'No Winner Recorded'
+    }
+  }
+  return input
+}
+
 module.exports = {
   getUserGames: getUserGames,
   getUserStats: getUserStats,
   getUserGuesses: getUserGuesses,
   setMode: setMode,
-  parseStats: parseStats
+  parseStats: parseStats,
+  setWinner: setWinner
 }

@@ -64,7 +64,27 @@ test('Check set mode correctly changes GameType', () => {
     expect(expected).toBe(true)
 })
 
-test('Check that a users games are correctly returned', () => {
+test('Check games with a blank winner have the correct string output', () => {
+    let data = {
+        "recordset": [
+          {  "WhoWon": "" }
+        ]
+    }
+    let result = matchStats.setWinner(data)
+    expect(result.recordset[0].WhoWon).toBe("No Winner Recorded")
+})
+
+test('Check games without a winner have the correct string output', () => {
+    let data = {
+        "recordset": [
+          {  "WhoWon": null }
+        ]
+    }
+    let result = matchStats.setWinner(data)
+    expect(result.recordset[0].WhoWon).toBe("No Winner Recorded")
+})
+
+test('Check that a users games is correctly returned', () => {
     return matchStats.getUserStats('Winner').then(data => {
         let sum = 0
         for(let i = 0; i < 6; i++){
