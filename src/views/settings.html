@@ -14,6 +14,8 @@
     <script defer type="text/javascript" src="/src/public/setMode.js"></script>
     <script defer type="text/javascript" src="/src/public/sendToServer.cjs"></script>
     <script defer src="/src/public/settings.cjs"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/2.3.1/jsencrypt.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
 
  </head>
@@ -30,7 +32,23 @@
         <button type="button" class="btn btn-primary px-2 py-2 col-3" id="lightButton">Light Mode</button>
     </div>
     <button type="button" class="btn btn-primary mx-5 my-5 px-2 py-2 col-1" id="backButton">Back</button>
+    <h1 id="heading">Game Settings</h1>
+    <button type="button" class="btn btn-primary" id="darkButton">Dark Mode</button>
+    <button type="button" class="btn btn-primary" id="lightButton">Light Mode</button>
+    <p></p>
+
+    <h2 id="heading">Change Password</h2>
+    <div class="form-floating">
+        <input id="password" type="password" class="form-control-sm" id="floatingPassword" placeholder="New Password">
+    </div>
+    <button type="submit" class="w-20 btn btn-sm btn-primary my-1" id="updatePassword">Update Password</button>
+    <label>If you want to change existing password enter new password</label>
     <p id="status"></p>
     <p id="msgFmServer"></p>
+    <div class="form-floating">
+        <p id="output"></p>
+    </div>
+    <button type="button" class="btn btn-secondary" id="backButton">Back</button>
+
 </body>
 </html>
