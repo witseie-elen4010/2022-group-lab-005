@@ -141,4 +141,27 @@ async function getGameGuesses (gameID) {
   })
 }
 
-module.exports = { createGame, getGameInformation, getPlayerNames, addPlayerToGame, removePlayerFromGame, logPlayersGuess, logWinningPlayer, getGameGuesses }
+async function isGuessAWord (word) {
+  const sqlCode = `SELECT * FROM [dbo].[Vocabulary]
+  WHERE Word = '${word.toLowerCase()}'`
+
+  return new Promise((resolve, reject) => {
+    if (/^[a-zA-Z]+$/.test(word.toLowerCase()) === true && word.length === 5) {
+      get('default').then(
+        (pool) => pool.request().query(sqlCode).then(
+          (result) => {
+            if (result.rowsAffected[0] >= 1) { // There should only be one result but we just add this in the event that a word is part of another word or something like that
+              resolve(true)
+            } else {
+              resolve(false)
+            }
+          }
+        ).catch(reject)
+      ).catch(reject)
+    } else {
+      reject(new Error('Word contains invalid characters'))
+    }
+  })
+}
+
+module.exports = { createGame, getGameInformation, getPlayerNames, addPlayerToGame, removePlayerFromGame, logPlayersGuess, logWinningPlayer, getGameGuesses, isGuessAWord }

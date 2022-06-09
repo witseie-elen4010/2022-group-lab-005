@@ -70,9 +70,15 @@ socket.on('update_game_list', (openGames) => {
   }
 })
 
+socket.on('invalid_word', () => {
+  document.getElementById('feedbackText').innerHTML = 'Your word is not in our database, please pick another word.'
+  $('#invalidWord').show()
+  document.getElementById('customWord').className = 'form-control is-invalid'
+})
+
 socket.on('get_game_id', (gameID, gameType) => {
-  // console.log(gameID)
-  /// console.log(`UUID: ${gameID.substring(0, 36)} GameID: ${gameID.substring(36)}`)
+  console.log(gameID)
+  console.log(`UUID: ${gameID.substring(0, 36)} GameID: ${gameID.substring(36)}`)
   sessionStorage.setItem('gameID', gameID)
   sessionStorage.setItem('gameType', gameType)
   window.location.href = '/game/play'
