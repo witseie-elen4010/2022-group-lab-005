@@ -156,7 +156,7 @@ module.exports = function (io) {
   // This listener will only fire if a connection is coming from the '/rooms' namespace.
   io.of('/rooms').on('connection', (socket) => {
     socket.on('create_game', function (numPlayers, modeChosen, customWord) {
-      if (modeChosen === 1 || modeChosen === 2) {
+      if (modeChosen === 1) {
         insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
           console.log(`Successfully created game with details Database ID=${result.ID} GameType=${result.ModeChosen} Word=${result.WordToGuess} NumPlayers=${result.NumPlayers}`)
           console.log(result)
@@ -165,8 +165,21 @@ module.exports = function (io) {
         }).catch(() => {
           socket.emit('invalid_game_mode')
         })
-      } else {
-        socket.emit('invalid_game_mode')
+      } else if (modeChosen === 2) {
+        isGuessAWord(customWord).then((result) => {
+          if (result === true) {
+            insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
+              console.log(`Successfully created game with details Database ID=${result.ID} GameType=${result.ModeChosen} Word=${result.WordToGuess} NumPlayers=${result.NumPlayers}`)
+              console.log(result)
+              const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
+              socket.emit('get_game_id', clientGameID)
+            }).catch(() => {
+              socket.emit('invalid_game_mode')
+            })
+          } else {
+            socket.emit('invalid_word')
+          }
+        })
       }
     })
   })
