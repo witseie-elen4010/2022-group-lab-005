@@ -27,13 +27,25 @@ window.onload = function () {
                 function (acceptResponse) {
                   receiveFriendRequests(acceptResponse)
                 }
-              )
+              ).fail(
+                function (serverResponse) {
+                  alert(serverResponse)
+                })
             }
-          )
+          ).fail(
+            function (serverResponse) {
+              alert(serverResponse)
+            })
         }
-      )
+      ).fail(
+        function (serverResponse) {
+          alert(serverResponse)
+        })
     }
-  )
+  ).fail(
+    function (serverResponse) {
+      alert(serverResponse)
+    })
   // accept or decline friend request on click
   document.getElementById('addButton').addEventListener('click', function (evt) {
     evt.preventDefault()
@@ -42,7 +54,10 @@ window.onload = function () {
       function (addFriendResponse) {
         recieveAddedFriends(addFriendResponse)
       }
-    )
+    ).fail(
+      function (serverResponse) {
+        alert(serverResponse)
+      })
   })
 }
 
@@ -108,7 +123,10 @@ function receiveFriendRequests (response) {
         function (addFriendResponse) {
           receiveAcceptDeclineFriend(addFriendResponse)
         }
-      )
+      ).fail(
+        function (serverResponse) {
+          alert(serverResponse)
+        })
     }
     declineBtn.innerHTML = 'Decline'
     declineBtn.onclick = function () {
@@ -116,7 +134,10 @@ function receiveFriendRequests (response) {
         function (addFriendResponse) {
           receiveAcceptDeclineFriend(addFriendResponse)
         }
-      )
+      ).fail(
+        function (serverResponse) {
+          alert(serverResponse)
+        })
     }
     // append the buttons while adding space to make it look neat
     document.getElementById('friend name').appendChild(label)
@@ -131,7 +152,7 @@ function receiveFriendRequests (response) {
 }
 // response to show if friend requested
 function recieveAddedFriends (response) {
-  const msg = response.Status // there is only 1 possible response so record set at 0 is used
+  const msg = response.Status
   alert(msg)
   document.location.reload()
 }
