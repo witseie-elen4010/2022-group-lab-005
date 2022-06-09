@@ -26,29 +26,31 @@
         <h1 id="heading" style="text-align:center">Settings</h1>
     </div>
 
-    <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class="px-2 py-2 d-flex justify-content-evenly">
+    <div class = "px-2 py-2 border border-primary border-3 rounded-3 bg-body" style = "margin: 2vw 10vw 2vw 10vw;">
+        <h2 id="heading">Change Dark Mode</h2>
+        <div style="text-align:center;" class="px-2 py-2 d-flex justify-content-evenly">
+            <button type="button" class="btn btn-primary px-2 py-2 col-3" id="darkButton">Dark Mode</button>
+            <button type="button" class="btn btn-primary px-2 py-2 col-3 mx-2" id="lightButton">Light Mode</button>
+        </div>
+    </div>
 
-        <button type="button" class="btn btn-primary px-2 py-2 col-3" id="darkButton">Dark Mode</button>
-        <button type="button" class="btn btn-primary px-2 py-2 col-3" id="lightButton">Light Mode</button>
+    <div class = "px-2 py-2 border border-primary border-3 rounded-3 bg-body" style = "margin: 2vw 10vw 2vw 10vw;">
+        <h2 id="heading">Change Password</h2>
+        <div class="px-2 py-2">
+            <div class = "d-flex">
+                <div class="form-floating">
+                    <input id="password" type="password" style = "width:100%;" class="form-control-sm px-2 py-2" id="floatingPassword" placeholder="New Password">
+                </div>
+                <button type="submit" class="btn btn-primary px-2 py-2 mx-2" id="updatePassword">Update Password</button>
+            </div>
+            <label>If you want to change existing password enter new password</label>
+            <p id="status"></p>
+            <p id="msgFmServer"></p>
+            <div class="form-floating">
+                <p id="output"></p>
+            </div>
+        </div>
     </div>
     <button type="button" class="btn btn-primary mx-5 my-5 px-2 py-2 col-1" id="backButton">Back</button>
-    <h1 id="heading">Game Settings</h1>
-    <button type="button" class="btn btn-primary" id="darkButton">Dark Mode</button>
-    <button type="button" class="btn btn-primary" id="lightButton">Light Mode</button>
-    <p></p>
-
-    <h2 id="heading">Change Password</h2>
-    <div class="form-floating">
-        <input id="password" type="password" class="form-control-sm" id="floatingPassword" placeholder="New Password">
-    </div>
-    <button type="submit" class="w-20 btn btn-sm btn-primary my-1" id="updatePassword">Update Password</button>
-    <label>If you want to change existing password enter new password</label>
-    <p id="status"></p>
-    <p id="msgFmServer"></p>
-    <div class="form-floating">
-        <p id="output"></p>
-    </div>
-    <button type="button" class="btn btn-secondary" id="backButton">Back</button>
-
 </body>
 </html>
