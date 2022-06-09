@@ -1,7 +1,28 @@
 'use strict'
+
+setModeForPage()
+function setModeForPage () {
+  const isDarkmode = getFromCookie('darkMode', document.cookie)
+  //  set current current scheme
+  if (isDarkmode === 'true') {
+    document.body.classList.remove('bg-light')
+    document.body.classList.add('bg-dark')
+    document.body.style.color = 'white'
+    document.getElementById('gameErrorModal').style.color = 'black'
+    document.getElementById('gameoverModal').style.color = 'black'
+    document.getElementById('gridContainer').style.color = 'black'
+    document.getElementById('keyboardDiv').style.color = 'black'
+    document.getElementById('opponentsDivLeft').style.color = 'white'
+  } else {
+    document.body.classList.remove('bg-dark')
+    document.body.classList.add('bg-light')
+    document.body.style.color = 'black'
+    document.getElementById('opponentsDivLeft').style.color = 'black'
+  }
+}
+
 const background = document.querySelector('body')
 const forestButton = document.getElementById('forestButton')
-
 // if button is pressed change background and send new background to server
 forestButton.addEventListener('click', function () {
   background.style.setProperty('background-image', 'url("/src/public/Forest.jpg")')
@@ -33,13 +54,12 @@ noneButton.addEventListener('click', function () {
   sendBackgroundToServer(back)
 }, false)
 
+const popup = document.getElementById("background_popup")
 
-let popup = document.getElementById("background_popup")
-
-function openBackgroundPopup(){
-  popup.classList.add("background-popup-visible")
+function openBackgroundPopup () {
+  popup.classList.add('background-popup-visible')
 }
 
-function closeBackgroundPopup(){
-  popup.classList.remove("background-popup-visible")
+function closeBackgroundPopup () {
+  popup.classList.remove('background-popup-visible')
 }
