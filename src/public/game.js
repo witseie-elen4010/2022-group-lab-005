@@ -61,7 +61,8 @@ socket.on('connect_error', (err) => {
 // When this is fired, the server is telling us that it is waiting for more players to join.
 // So, we show the loading icon so that the player knows.
 socket.on('waiting_for_players', () => {
-  document.getElementById('spinner').style.display = 'block'
+  // document.getElementById('spinner').style.display = 'block'
+  socket.emit('update_lobby_list')
 })
 
 // This will fire when the server tells the clients that the right number of players have joined the game.
