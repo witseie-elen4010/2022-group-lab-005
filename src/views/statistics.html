@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Hazard a Guess | Your stats</title>
+    <meta charset="utf-8" name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script defer type="text/javascript" src="/src/public/utils.js"></script>
+    <script defer type="text/javascript" src="/src/public/generalStats.cjs"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <script defer type="text/javascript" src="/src/public/setMode.js"></script>
+</head>
+
+<body style="color:black">
+    <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
+        <h1 id="matchHeading" style="text-align: center;">Hazard a Guess: General Stats</h1>
+    </div>
+    <div>
+        <h2 style="text-align: center;">Guess Distribution in Wins:</h2>
+        <canvas id="myChart" style="width:100%;max-width:25em;margin: 0 auto;"></canvas>
+        <p id="noWins" style="text-align: center;">You have not won any matches, yet...</p>
+    </div>
+    <div style="padding-left: 20em;">
+        <button type="button" class="btn btn-primary" id="backButton">Return to Menu</button>
+    </div>
+    <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
+        <h1 id="matchHeading" style="text-align: center;">Match List</h1>
+    </div>
+    <div style="display: block; padding-left: 20em; padding-right: 20em; text-align: center;">
+        <table class="table table-striped" style="width:100%; text-align: center;" id="matchTable">
+        <thead class="tableHead">
+            <tr class="tableHeadRow">
+                <th>Game Type</th>
+                <th>Correct Word</th>
+                <th>Number of Players</th>
+                <th>Winner</th>
+                <th>Game Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody class="matchTableBody" id="matchTableBody">
+            <tr class="matchTableBodyRow"></tr>
+        </tbody>
+        </table>
+        <p id="noMatches">You have not played any matches</p>
+    </div>
+</body>
+</html>
