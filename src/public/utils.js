@@ -55,3 +55,5 @@ function createFakeUser () {
   console.log(fakeUser) // User for testing so the console.log stays
   return fakeUser
 }
+
+
