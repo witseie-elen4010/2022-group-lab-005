@@ -47,6 +47,39 @@ $('#numPlayers').on('change', function () {
   $('#currentNumPlayers').html($('#numPlayers').val())
 })
 
+socket.on('invalid_player_number', () => {
+  document.getElementById('errorText').innerHTML = 'The specified player number is invalid.'
+  $('#errorModal').modal('show')
+
+  // Re-enable all the buttons
+  $('#createGameBtn').removeAttr('disabled')
+  $('#gameInfoTableBody').find('button').removeAttr('disabled')
+
+  // Remove loading icon
+  document.getElementById('createGameBtn').innerHTML = 'Create game'
+})
+
+socket.on('invalid_word', () => {
+  document.getElementById('feedbackText').innerHTML = 'Your word is not in our database, please pick another word.'
+  $('#invalidWord').show()
+  document.getElementById('customWord').className = 'form-control is-invalid'
+
+  // Re-enable all the buttons
+  $('#createGameBtn').removeAttr('disabled')
+  $('#gameInfoTableBody').find('button').removeAttr('disabled')
+
+  // Remove loading icon
+  document.getElementById('createGameBtn').innerHTML = 'Create game'
+})
+
+socket.on('get_game_id', (gameID, gameType) => {
+  console.log(gameID)
+  console.log(`UUID: ${gameID.substring(0, 36)} GameID: ${gameID.substring(36)}`)
+  sessionStorage.setItem('gameID', gameID)
+  sessionStorage.setItem('gameType', gameType)
+  window.location.href = '/game/play'
+})
+
 // When this is fired, the game list is updated with a new list of open games.
 socket.on('update_game_list', (openGames) => {
   // First, lets empty the table's body
