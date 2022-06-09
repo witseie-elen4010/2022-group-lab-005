@@ -140,6 +140,16 @@ socket.on('get_number', (num) => {
   thisPlayerNumber = num
 })
 
+socket.on('word_not_found', () => {
+  document.getElementById('errorText').innerHTML = 'HI JESSE, THE WORD IS NOT IN THE DATABASE!!'
+  $('#gameErrorModal').modal('show')
+})
+
+socket.on('invalid_guess', () => {
+  document.getElementById('errorText').innerHTML = 'HI JESSE, THE WORD CONTAINS ILLEGAL LETTERS'
+  $('#gameErrorModal').modal('show')
+})
+
 /** ********* General code ***********/
 if (window.sessionStorage.getItem('gameID') === null) {
   // If the client doesn't have a gameID in their session storage, then they
