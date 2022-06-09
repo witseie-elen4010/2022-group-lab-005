@@ -13,28 +13,43 @@
   </head>
 
 <body style="color:black">
-    <h1>Friends List</h1>
+    <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
+        <h1 class="text-center">Friends</h1>
+    </div>
     <div style = "display: flex; flex-wrap: nowrap;">
         <div style = "width:50%">
-            <p id="Friend list"></p>
-            <form>
-                <h3 class="h3 mb-3 fw-normal">Add a friend</h3>
-                <div class="form-floating">
-                    <input id="Friend" type="text" class="form-control" id="floatingInput" placeholder="friend's username">
-                    <button class="w-100 btn btn-lg btn-primary" id="addButton" type="submit">Search</button>
-                </div>
-            </form>
-            <p id="output"></p>
-            <h1>Pending Friend Request</h1>
-            <p id="pending" style="color:black"></p>
+            <div class = "px-1 py-1 border border-primary border-3 rounded-3" style = "margin: 2vw 2.5vw 2vw 10vw;">
+                <h2 class="text-left">Friends List</h1>
+                <p id="Friend list">You have no friends</p>
+                <h2>Pending Friend Request</h1>
+                <p id="pending">There are no pending friend requests</p>
+                <form>
+                    <h3 class="h2 mb-2 text-left">Add a friend</h3>
+                    <div class="form-floating d-flex">
+                        <input id="Friend" style="width:70%" type="text" class="form-control" id="floatingInput" placeholder="friend's username">
+                        <button class="w-30 btn btn-lg btn-primary" style="width:30%" id="addButton" type="submit">Search</button>
+                    </div>
+                </form>
+            </div>
         </div>
         <div style = "width:50%">
-            <h1>Accept friend request</h1>
-            <div id="friend">
+            <div class = "px-1 py-1 border border-primary border-3 rounded-3" style = "margin: 2vw 10vw 2vw 2.5vw;">
+                <h2>Accept friend request</h2>
+                <div style = "display: flex; flex-wrap: nowrap;">
+                    <div style = "width:50%">
+                        <p id="friend name">
+                            There are no incoming friend request
+                        </p>
+                    </div>
+                    <div style = "width:50%">
+                        <p id="requestButtons">
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
+    <button type="button" class="btn btn-primary mx-5 my-5 px-2 py-2 col-1" id="homeButton">Return to Menu</button>
 </body>
 
 </html>

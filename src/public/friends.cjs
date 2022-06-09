@@ -1,5 +1,5 @@
 'use strict'
-const request = new XMLHttpRequest()
+// redirect if user is not logged in
 $(function () {
   checkUser(document.cookie).then(
     (result) => {
@@ -10,121 +10,159 @@ $(function () {
   ).catch()
 })
 
-// All the commented out functions will work once Jquery is implemented
 window.onload = function () {
-  // getFriends()
   const username = getFromCookie('username', document.cookie)
-  // getPendingFriends(username)
-  getFriendRequests(username)
+  // first two get will together return Friends of the user
+  $.get('/user/get/friends', { usernameInput: username }).done(
+    function (friendResponse) {
+      recieveFriends(friendResponse)
+      $.get('/user/get/friendUser', { usernameInput: username }).done(
+        function (friendResponse) {
+          recieveFriendUser(friendResponse)
+          // next two get will return the friend request send and recieved
+          $.get('/user/get/pending', { usernameInput: username }).done(
+            function (pendingResponse) {
+              recievePendingFriends(pendingResponse)
+              $.get('/user/get/friendRequest', { usernameInput: username }).done(
+                function (acceptResponse) {
+                  receiveFriendRequests(acceptResponse)
+                }
+              ).fail(
+                function (serverResponse) {
+                  alert(serverResponse)
+                })
+            }
+          ).fail(
+            function (serverResponse) {
+              alert(serverResponse)
+            })
+        }
+      ).fail(
+        function (serverResponse) {
+          alert(serverResponse)
+        })
+    }
+  ).fail(
+    function (serverResponse) {
+      alert(serverResponse)
+    })
+  // accept or decline friend request on click
   document.getElementById('addButton').addEventListener('click', function (evt) {
     evt.preventDefault()
-    addFriend(username)
+    const friend = document.getElementById('Friend').value
+    $.get('/user/get/addFriend', { usernameInput: username, friendInput: friend }).done(
+      function (addFriendResponse) {
+        recieveAddedFriends(addFriendResponse)
+      }
+    ).fail(
+      function (serverResponse) {
+        alert(serverResponse)
+      })
   })
 }
 
-// Display friends the logged in user have
-function getFriends (username) {
-  request.open('POST', 'post/friends', true)
-  request.setRequestHeader('Content-type', 'application/json')
-  request.send(JSON.stringify({ usernameInput: username }))
-  request.addEventListener('load', recieveFriends)
-}
-
-// Recieves query from the database
-function recieveFriends () {
+// display friends where user first sent request
+function recieveFriends (response) {
   let temp = ''
-  const response = JSON.parse(this.responseText)
   for (let i = 0; i < response.recordset.length; i++) {
-    const response = JSON.parse(this.responseText)
     temp += response.recordset[i].Invitee + '<br>'
   }
   const friendList = document.getElementById('Friend list')
-  friendList.innerHTML = temp
+  if (temp !== '') {
+    friendList.innerHTML = temp
+  }
 }
 
-function getPendingFriends (username) {
-  request.open('POST', 'post/pending', true)
-  request.setRequestHeader('Content-type', 'application/json')
-  request.send(JSON.stringify({ usernameInput: username }))
-  request.addEventListener('load', recievePendingFriends)
-}
-
-function recievePendingFriends () {
+// display friends where friend first sent request
+function recieveFriendUser (response) {
   let temp = ''
-  const response = JSON.parse(this.responseText)
   for (let i = 0; i < response.recordset.length; i++) {
-    const response = JSON.parse(this.responseText)
+    temp += response.recordset[i].Inviter + '<br>'
+  }
+  const friendList = document.getElementById('Friend list')
+  if (temp !== '') {
+    friendList.innerHTML += temp
+  }
+}
+
+// display all sent pending frient request
+function recievePendingFriends (response) {
+  let temp = ''
+  for (let i = 0; i < response.recordset.length; i++) {
     temp += response.recordset[i].Invitee + '<br>'
   }
   const friendPending = document.getElementById('pending')
-  friendPending.innerHTML = temp
+  if (temp !== '') {
+    friendPending.innerHTML = temp
+  }
 }
-
-function getFriendRequests (username) {
-  request.open('POST', 'post/friendRequest', true)
-  request.setRequestHeader('Content-type', 'application/json')
-  request.send(JSON.stringify({ usernameInput: username }))
-  request.addEventListener('load', receiveFriendRequests)
-}
-
-function receiveFriendRequests () {
-  const response = JSON.parse(this.responseText)
-  // console.log(response)
+// display all incoming friend request and generate button to accept and decline them
+function receiveFriendRequests (response) {
+  if (response.recordset.length > 0) {
+    document.getElementById('friend name').innerHTML = ''
+  }
   for (let i = 0; i < response.recordset.length; i++) {
-    const response = JSON.parse(this.responseText)
     const inviter = response.recordset[i].Inviter
 
     // create the lables and buttons
     const label = document.createElement('label')
     label.innerHTML = inviter
+    label.style.height = '40px'
     const acceptBtn = document.createElement('button')
-    acceptBtn.className = ('btn btn-primary col-3')
+    acceptBtn.className = ('btn btn-primary ')
+    acceptBtn.style.height = '40px'
     const declineBtn = document.createElement('button')
-    declineBtn.className = ('btn btn-primary col-3')
+    declineBtn.className = ('btn btn-primary ')
+    declineBtn.style.height = '40px'
 
     // button functions
     acceptBtn.innerHTML = 'Accept'
     acceptBtn.setAttribute('user', inviter)
     acceptBtn.onclick = function () {
-      acceptDeclineFriend(getFromCookie('username', document.cookie), acceptBtn.getAttribute('user'), 'accept')
+      $.get('/user/get/updateFriend', { usernameInput: getFromCookie('username', document.cookie), friendInput: acceptBtn.getAttribute('user'), acceptInput: 'accept' }).done(
+        function (addFriendResponse) {
+          receiveAcceptDeclineFriend(addFriendResponse)
+        }
+      ).fail(
+        function (serverResponse) {
+          alert(serverResponse)
+        })
     }
     declineBtn.innerHTML = 'Decline'
     declineBtn.onclick = function () {
-      acceptDeclineFriend(getFromCookie('username', document.cookie), acceptBtn.getAttribute('user'), 'decline')
+      $.get('/user/get/updateFriend', { usernameInput: getFromCookie('username', document.cookie), friendInput: acceptBtn.getAttribute('user'), acceptInput: 'decline' }).done(
+        function (addFriendResponse) {
+          receiveAcceptDeclineFriend(addFriendResponse)
+        }
+      ).fail(
+        function (serverResponse) {
+          alert(serverResponse)
+        })
     }
-    // adding buttons to screen
-    document.getElementById('friend').appendChild(label)
-    document.getElementById('friend').appendChild(acceptBtn)
-    document.getElementById('friend').appendChild(declineBtn)
-    document.getElementById('friend').appendChild(document.createElement('br'))
+    // append the buttons while adding space to make it look neat
+    document.getElementById('friend name').appendChild(label)
+    document.getElementById('requestButtons').appendChild(acceptBtn)
+    document.getElementById('requestButtons').appendChild(document.createTextNode(' '))
+    document.getElementById('requestButtons').appendChild(declineBtn)
+    document.getElementById('friend name').appendChild(document.createElement('br'))
+    document.getElementById('friend name').appendChild(document.createElement('br'))
+    document.getElementById('requestButtons').appendChild(document.createElement('br'))
+    document.getElementById('requestButtons').appendChild(document.createElement('br'))
   }
 }
-
-function addFriend (username) {
-  request.open('POST', 'post/addFriend', true)
-  request.setRequestHeader('Content-type', 'application/json')
-  const friend = document.getElementById('Friend').value
-  request.send(JSON.stringify({ usernameInput: username, friendInput: friend }))
-  request.addEventListener('load', recieveAddedFriends)
-}
-
-function recieveAddedFriends () {
-  const response = JSON.parse(this.responseText)
+// response to show if friend requested
+function recieveAddedFriends (response) {
   const msg = response.Status
   alert(msg)
   document.location.reload()
 }
-
-function acceptDeclineFriend (username, friend, acceptOrDecline) {
-  request.open('POST', 'post/updateFriend', true)
-  request.setRequestHeader('Content-type', 'application/json')
-  request.send(JSON.stringify({ usernameInput: username, friendInput: friend, acceptInput: acceptOrDecline }))
-  request.addEventListener('load', receiveAcceptDeclineFriend)
-}
-
-function receiveAcceptDeclineFriend () {
-  const response = JSON.parse(this.responseText)
+// response to show if declined friend or accepted friend
+function receiveAcceptDeclineFriend (response) {
   const msg = response.updateFriendRequest
   alert(msg)
   document.location.reload()
 }
+
+document.getElementById('homeButton').addEventListener('click', () => {
+  window.location.href = '/'
+})

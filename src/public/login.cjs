@@ -1,19 +1,23 @@
 'use strict'
 const request = new XMLHttpRequest()
 request.addEventListener('error', onError)
+let loginOrRegister = true
 
 window.onload = function () {
-  document.getElementById('loginbutton').addEventListener('click', function (evt) {
+  document.getElementById('loginButton').addEventListener('click', function (evt) {
     evt.preventDefault()
+    document.getElementById('registerButton').disabled = true
+    loginOrRegister = true
     // open the post request to the server with url of log
     request.open('POST', '/log', true)
     request.setRequestHeader('Content-type', 'application/json')
-
     updateAndSendFormControl()
   })
 
   document.getElementById('registerButton').addEventListener('click', function (evt) {
     evt.preventDefault()
+    document.getElementById('loginButton').disabled = true
+    loginOrRegister = false
     // open the post request to the server with url of log
     request.open('POST', '/register', true)
     request.setRequestHeader('Content-type', 'application/json')
@@ -27,10 +31,20 @@ function updateAndSendFormControl () {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
     document.getElementById('output').innerHTML = 'Please input your username'
+    if (loginOrRegister) {
+      document.getElementById('registerButton').disabled = false
+    } else {
+      document.getElementById('loginButton').disabled = false
+    }
   } else if (document.getElementById('password').value === '') {
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control is-invalid'
     document.getElementById('output').innerHTML = 'Please input your password'
+    if (loginOrRegister) {
+      document.getElementById('registerButton').disabled = false
+    } else {
+      document.getElementById('loginButton').disabled = false
+    }
   } else {
     // get username and password and send it via json
     const username = document.getElementById('username').value
@@ -54,17 +68,22 @@ function receivedValue () {
   if (msg === 'Please input a valid username') {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
-  } else if(msg === "User is now logged in" || msg === "Registration completed"){
-    //the code below is to set a cookie value, the only issue with this cookie is that it will 
-    //store a new cookie everytime the user logs in or registers, until the browser is closed
+  } else if (msg === 'User is now logged in' || msg === 'Registration completed') {
+    // the code below is to set a cookie value, the only issue with this cookie is that it will
+    // store a new cookie everytime the user logs in or registers, until the browser is closed
     const usernameText = document.getElementById('username').value
-    const username = 'username=' + usernameText 
+    const username = 'username=' + usernameText
     document.cookie = username
     // Let's reset everything
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control'
     getMode(usernameText)
-    //redirect in getMode
+    // redirect in getMode
+  }
+  if (loginOrRegister === true) {
+    document.getElementById('registerButton').disabled = false
+  } else {
+    document.getElementById('loginButton').disabled = false
   }
 }
 

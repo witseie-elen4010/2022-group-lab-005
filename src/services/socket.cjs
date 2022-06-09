@@ -77,16 +77,6 @@ module.exports = function (io) {
               } else {
                 socket.emit('waiting_for_players')
               }
-
-              // Update all the clients looking at the lobby page.
-              getOpenGames(io).then((roomArr) => {
-                io.of('/rooms').emit('update_game_list', roomArr)
-              }).then(() => {
-                // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
-                next()
-              }).catch((err) => {
-                console.log(err.message)
-              })
             }).catch((err) => {
               if (err.number === 2627) {
                 // This code runs if a player has disconnected from a running game and then tries to join it again OR
@@ -102,10 +92,9 @@ module.exports = function (io) {
                 })
               } else {
                 console.log(err.message)
+                // Ending the game for the user.
+                socket.disconnect()
               }
-
-              // Ending the game for the user.
-              socket.disconnect()
             })
           } else {
             return next(new Error('game_already_running'))
@@ -121,16 +110,6 @@ module.exports = function (io) {
           addPlayerToRoom(socket, gameID, playerName, numPlayers, io).then((result) => {
             socket = result
             socket.emit('waiting_for_players')
-
-            // Update all the clients looking at the lobby page.
-            getOpenGames(io).then((roomArr) => {
-              io.of('/rooms').emit('update_game_list', roomArr)
-            }).then(() => {
-              // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
-              next()
-            }).catch((err) => {
-              console.log(err.message)
-            })
           }).catch((err) => {
             if (err.number === 2627) {
               // A player that was in the game, disconnected and has now tried to reconnect.
@@ -148,6 +127,16 @@ module.exports = function (io) {
       } else {
         return next(new Error('invalid_game_id'))
       }
+
+      // Update all the clients looking at the lobby page.
+      getOpenGames(io).then((roomArr) => {
+        io.of('/rooms').emit('update_game_list', roomArr)
+      }).then(() => {
+        // This must be here or else the connection will hang until it times out. Its part of the middleware stuff.
+        next()
+      }).catch((err) => {
+        console.log(err.message)
+      })
     })
   })
 
@@ -156,30 +145,34 @@ module.exports = function (io) {
   // This listener will only fire if a connection is coming from the '/rooms' namespace.
   io.of('/rooms').on('connection', (socket) => {
     socket.on('create_game', function (numPlayers, modeChosen, customWord) {
-      if (modeChosen === 1) {
-        insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
-          console.log(result)
-          const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-          socket.emit('get_game_id', clientGameID, 'StandardCreate')
-        }).catch((err) => {
-          console.log(err.message)
-        })
-      } else if (modeChosen === 2) {
-        isGuessAWord(customWord).then(result => {
-          if (result) {
-            insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
-              console.log(result)
-              const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-              socket.emit('get_game_id', clientGameID, 'CustomCreate')
-            }).catch((err) => {
-              console.log(err.message)
-            })
-          } else {
-            socket.emit('invalid_word')
-          }
-        })
+      if (!isNaN(numPlayers) && Number.isInteger(Number(numPlayers)) && parseInt(numPlayers) > 1 && parseInt(numPlayers) < 8) {
+        if (modeChosen === 1) {
+          insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
+            console.log(result)
+            const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
+            socket.emit('get_game_id', clientGameID, 'StandardCreate')
+          }).catch((err) => {
+            console.log(err.message)
+          })
+        } else if (modeChosen === 2) {
+          isGuessAWord(customWord).then(result => {
+            if (result) {
+              insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
+                console.log(result)
+                const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
+                socket.emit('get_game_id', clientGameID, 'CustomCreate')
+              }).catch((err) => {
+                console.log(err.message)
+              })
+            } else {
+              socket.emit('invalid_word')
+            }
+          })
+        } else {
+          socket.emit('invalid_game_mode')
+        }
       } else {
-        socket.emit('invalid_game_mode')
+        socket.emit('invalid_player_number')
       }
     })
   })
@@ -227,8 +220,30 @@ module.exports = function (io) {
       }
     })
 
+    socket.on('disconnect', () => {
+      getOpenGames(io).then((roomArr) => {
+        io.of('/rooms').emit('update_game_list', roomArr)
+      }).catch((err) => {
+        console.log(err.message)
+      })
+    })
+
     socket.on('game_over', () => {
       socket.disconnect()
+    })
+
+    socket.on('update_lobby_list', () => {
+      /* const gameUUID = uuidv4(result.ID).toString()
+          const databaseID = result.ID.toString()
+          const playerNum = numPlayers.toString()
+          const clientGameID = `${gameUUID}${databaseID}${playerNum}`
+          const serverGameID = `${gameUUID}${databaseID}${playerNum}_game_${playerNum}_1` */
+
+      getOpenGames(io).then((roomArr) => {
+        io.of('/rooms').emit('update_game_list', roomArr)
+      }).catch((err) => {
+        console.log(err.message)
+      })
     })
   })
 }

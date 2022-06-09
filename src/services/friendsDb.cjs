@@ -1,9 +1,9 @@
 'use strict'
 const { get } = require('./poolManagement.cjs')
 
+// return all friends user sent friend request first
 async function getUserFriends (username) {
-  // Returns all guesses made in games the user won
-  const sqlCode = "SELECT Invitee FROM [dbo].[Friends] WHERE (Inviter = '" + username + "'OR Invitee = '" + username + "') AND Status = 'isFriend';"
+  const sqlCode = `SELECT Invitee FROM [dbo].[Friends] WHERE Inviter = '${username}' AND Status = 'isFriend';`
   return new Promise((resolve, reject) => {
     get('default').then(
       (pool) => pool.request().query(sqlCode).then(
@@ -15,6 +15,22 @@ async function getUserFriends (username) {
   })
 }
 
+// return all friends friend sent request first
+async function getFriendUser (username) {
+  // Returns all guesses made in games the user won
+  const sqlCode = `SELECT Inviter FROM [dbo].[Friends] WHERE Invitee = '${username}' AND Status = 'isFriend';`
+  return new Promise((resolve, reject) => {
+    get('default').then(
+      (pool) => pool.request().query(sqlCode).then(
+        (result) => {
+          resolve(result)
+        }
+      ).catch(reject)
+    ).catch(reject)
+  })
+}
+
+// return all pending user friend requests
 async function getUserPendingFriends (username) {
   const sqlCode = "SELECT Invitee FROM [dbo].[Friends] WHERE Inviter = '" + username + "' AND Status = 'pending';"
   return new Promise((resolve, reject) => {
@@ -27,7 +43,7 @@ async function getUserPendingFriends (username) {
     ).catch(reject)
   })
 }
-
+// return all pending friend requests user need to accept
 async function getUserFriendRequests (username) {
   const sqlCode = "SELECT Inviter FROM [dbo].[Friends] WHERE Invitee = '" + username + "' AND Status = 'pending';"
   return new Promise((resolve, reject) => {
@@ -41,6 +57,7 @@ async function getUserFriendRequests (username) {
   })
 }
 
+// add a friend
 async function addFriend (username, friend) {
   const sqlCodeCheckFriendExist = `SELECT Username FROM [dbo].[Users] WHERE Username = '${friend}'`
   const sqlCodeCheckFriendRelationship = `SELECT Status FROM [dbo].[Friends] WHERE (Inviter = '${username}' AND Invitee = '${friend}') OR (Inviter = '${friend}' AND Invitee = '${username}') ;`
@@ -103,7 +120,8 @@ async function addFriend (username, friend) {
   })
 }
 
-async function updateFriend (username, friend, acceptOrDecline) { // function called when click the accept of deny button.
+// called upon accept / decline button press, will update relationship in database accordingly
+async function updateFriend (username, friend, acceptOrDecline) {
   let sqlCode = ''
   let accepted = false
   if (acceptOrDecline === 'accept') {
@@ -129,6 +147,7 @@ async function updateFriend (username, friend, acceptOrDecline) { // function ca
 
 module.exports = {
   getUserFriends,
+  getFriendUser,
   getUserPendingFriends,
   getUserFriendRequests,
   addFriend,

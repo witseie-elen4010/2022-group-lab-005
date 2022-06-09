@@ -16,22 +16,22 @@
 
 <body style="color:black">
 
-  <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3">
+  <div class = "mx-5 my-5 px-2 py-2 border border-primary border-3 rounded-3 bg-primary">
     <h1 style="text-align:center">Welcome to Hazard a Guess!</h1>
   </div>
-  <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class="px-2 py-2 d-flex justify-content-evenly">
+  <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class="d-flex justify-content-evenly">
 
     <form action="/lobby" method="POST" class="col-3">
-      <button type="submit" class="btn btn-primary" style="width:100%;">Start Lobby</button>
+      <button type="submit" class="btn btn-primary px-2 py-2" style="width:100%;">Start Lobby</button>
     </form>
-    <button type="button" onclick="window.location.href='/user/stats'" class="btn btn-primary col-3">Your Statistics</button>
+    <button type="button" onclick="window.location.href='/user/stats'" class="btn btn-primary px-2 py-2 col-3">Your Statistics</button>
 
   </div>
-  <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class="px-2 py-2 d-flex justify-content-evenly">
-    <button type="button" onclick="window.location.href='/user/friends'" class="btn btn-primary col-3">Friends</button>
-    <button type="button" onclick="window.location.href='/user/settings'" class="btn btn-primary col-3" id="settingsButton">Settings</button>
+  <div style="text-align:center; margin: 2vw 10vw 2vw 10vw;" class=" d-flex justify-content-evenly">
+    <button type="button" onclick="window.location.href='/user/friends'" class="btn btn-primary px-2 py-2 col-3">Friends</button>
+    <button type="button" onclick="window.location.href='/user/settings'" class="btn btn-primary px-2 py-2 col-3" id="settingsButton">Settings</button>
   </div>
-  <button type="button" class="btn btn-primary mx-5 my-5 px-2 py-2" id="logoutButton">
+  <button type="button" class="btn btn-primary mx-5 my-5 px-2 py-2 col-1" id="logoutButton">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left"
       viewBox="0 0 16 16">
       <path fill-rule="evenodd"
