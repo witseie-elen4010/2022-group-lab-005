@@ -9,7 +9,6 @@ $(function () {
     }
   ).catch()
 })
-
 // All the commented out functions will work once Jquery is implemented
 window.onload = function () {
   // getFriends()
@@ -69,7 +68,9 @@ function getFriendRequests (username) {
 
 function receiveFriendRequests () {
   const response = JSON.parse(this.responseText)
-  // console.log(response)
+  if (response.recordset.length > 0) {
+    document.getElementById('friend').innerHTML = ''
+  }
   for (let i = 0; i < response.recordset.length; i++) {
     const response = JSON.parse(this.responseText)
     const inviter = response.recordset[i].Inviter
@@ -78,9 +79,9 @@ function receiveFriendRequests () {
     const label = document.createElement('label')
     label.innerHTML = inviter
     const acceptBtn = document.createElement('button')
-    acceptBtn.className = ('btn btn-primary col-3')
+    acceptBtn.className = ('w-20 btn btn-primary col-3 ')
     const declineBtn = document.createElement('button')
-    declineBtn.className = ('btn btn-primary col-3')
+    declineBtn.className = ('w-20 btn btn-primary col-3 ')
 
     // button functions
     acceptBtn.innerHTML = 'Accept'
@@ -94,7 +95,9 @@ function receiveFriendRequests () {
     }
     // adding buttons to screen
     document.getElementById('friend').appendChild(label)
+    document.getElementById('friend').appendChild(document.createTextNode(' '))
     document.getElementById('friend').appendChild(acceptBtn)
+    document.getElementById('friend').appendChild(document.createTextNode(' '))
     document.getElementById('friend').appendChild(declineBtn)
     document.getElementById('friend').appendChild(document.createElement('br'))
   }
