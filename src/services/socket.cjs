@@ -89,11 +89,17 @@ module.exports = function (io) {
               })
             }).catch((err) => {
               if (err.number === 2627) {
-                // A player that was in the game, disconnected and has now tried to reconnect.
+                // This code runs if a player has disconnected from a running game and then tries to join it again OR
+                // a player is already in the game and is trying to join it from a different session with the same account.
                 // This violates the primary key constraint in the UserGame table.
-                // We end the game.
-                console.log('User cannot rejoin game')
-                return next(new Error('game_already_running'))
+
+                isGameInProgress(io, gameID).then((result) => {
+                  if (result === false) {
+                    return next(new Error('user_already_in_game'))
+                  } else {
+                    return next(new Error('game_already_running'))
+                  }
+                })
               } else {
                 console.log(err.message)
               }
