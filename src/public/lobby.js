@@ -23,6 +23,7 @@ function setModeForPage () {
     document.getElementById('numPlayersContainer').style.color = 'white'
     document.getElementById('gameModeContainer').style.color = 'white'
     document.getElementById('gameInfo').style.color = 'white'
+    document.getElementById('gameInfo').classList.remove('table-hover')
   } else {
     document.body.classList.remove('bg-dark')
     document.body.classList.add('bg-light')
@@ -30,6 +31,7 @@ function setModeForPage () {
     document.getElementById('numPlayersContainer').style.color = 'black'
     document.getElementById('gameModeContainer').style.color = 'black'
     document.getElementById('gameInfo').style.color = 'black'
+    document.getElementById('gameInfo').classList.add('table-hover')
   }
 }
 
@@ -188,4 +190,3 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
 document.getElementById('homeButton').addEventListener('click', () => {
   window.location.href = '/'
 })
-
