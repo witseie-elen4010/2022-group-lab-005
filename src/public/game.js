@@ -49,6 +49,9 @@ socket.on('connect_error', (err) => {
   } else if (err.message === 'game_already_running') {
     document.getElementById('errorText').innerHTML = 'You cannot rejoin a game that is in progress!'
     $('#gameErrorModal').modal('show')
+  } else if (err.message === 'user_already_in_game') {
+    document.getElementById('errorText').innerHTML = 'You cannot join a game that you are already in!'
+    $('#gameErrorModal').modal('show')
   }
 })
 
