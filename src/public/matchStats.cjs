@@ -17,6 +17,7 @@ $(function () {
                     function (response) {
                         let lastUser = response.recordset[0].Username
                         let count = 0
+                        //Will be moved to the back-end
                         for(let i = 0; i < response.recordset.length; i++){
                             if(response.recordset[i].Username === lastUser){
                                 count++
@@ -36,6 +37,7 @@ $(function () {
     ).catch()
 })
 
+//Adds all guesses to the match table
 const appendGuess = (guess, timeStamp, guessNumber, user) => {
     const guessTable = document.querySelector('#guessTableBody') // Find the table we created
     let guessTableBodyRow = document.createElement('tr') // Create the current table row
@@ -54,6 +56,7 @@ const appendGuess = (guess, timeStamp, guessNumber, user) => {
     guessTable.append(guessTableBodyRow) // Append the current row to the guess table body
 }
 
+//Returns to the previous menu
 const backButton = document.getElementById('backButton')
 backButton.addEventListener('click', function () {
   location.href = '/user/stats'

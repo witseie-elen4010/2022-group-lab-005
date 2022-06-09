@@ -38,6 +38,7 @@ async function getUserStats (username) {
   })
 }
 
+//Gets all guesses in a game
 async function getUserGuesses(gameId){
   const sqlCode = `SELECT Word, TimeStamp, Username FROM [dbo].[Guess] WHERE (GameID = '${gameId}') ORDER BY Username;`
   return new Promise((resolve, reject) => {
@@ -51,6 +52,7 @@ async function getUserGuesses(gameId){
   })
 }
 
+//Sets the gameMode from an enum to a string
 function setMode(input){
   const size = input.recordset.length
   for(let i = 0; i < size; i++){

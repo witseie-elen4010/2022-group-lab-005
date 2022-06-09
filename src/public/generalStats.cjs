@@ -27,6 +27,7 @@ $(function () {
     ).catch()
 })
 
+//Creates general stats doughnut chart
 function recieveStats(response) {
     let guesses = [0, 0, 0, 0, 0, 0]
     const displayedStats = document.getElementById('displayedStats')
@@ -56,6 +57,7 @@ function recieveStats(response) {
 
 }
 
+//Adds the match stats to the match list
 const appendMatch = (WordToGuess, GameType, NumPlayers, WhoWon, gameID, DateTime) => {
     const matchTable = document.querySelector('#matchTableBody') // Find the table we created
     let matchTableBodyRow = document.createElement('tr') // Create the current table row
@@ -80,7 +82,7 @@ const appendMatch = (WordToGuess, GameType, NumPlayers, WhoWon, gameID, DateTime
         window.location.href = '/user/match/?gameID=' + gameID
     }
     toMatch.append(toMatchButton)
-    matchTableBodyRow.append(MatchType, word, numberPlayers, winner, gameDate, toMatch) // Append all 4 cells to the table row
+    matchTableBodyRow.append(MatchType, word, numberPlayers, winner, gameDate, toMatch) // Append all 5 cells to the table row and the button
     matchTable.append(matchTableBodyRow) // Append the current row to the guess table body
 }
 
