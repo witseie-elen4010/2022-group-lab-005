@@ -24,7 +24,7 @@ module.exports = {
       console.log(sqlCode)
       get('default').then(
         (pool) => pool.request().query(sqlCode).then(
-          (result) => { return result }
+          (result) => { resolve(JSON.stringify({ message: `${DarkMode} has been saved to the database` })) }
         ).catch(console.error)
       ).catch(console.error)
     })
