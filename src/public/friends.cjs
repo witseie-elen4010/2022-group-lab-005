@@ -11,10 +11,10 @@ $(function () {
 })
 // All the commented out functions will work once Jquery is implemented
 window.onload = function () {
-  // getFriends()
   const username = getFromCookie('username', document.cookie)
+  getFriends(username)
   // getPendingFriends(username)
-  getFriendRequests(username)
+  // getFriendRequests(username)
   document.getElementById('addButton').addEventListener('click', function (evt) {
     evt.preventDefault()
     addFriend(username)
@@ -38,7 +38,9 @@ function recieveFriends () {
     temp += response.recordset[i].Invitee + '<br>'
   }
   const friendList = document.getElementById('Friend list')
-  friendList.innerHTML = temp
+  if (temp !== '') {
+    friendList.innerHTML = temp
+  }
 }
 
 function getPendingFriends (username) {
@@ -56,7 +58,9 @@ function recievePendingFriends () {
     temp += response.recordset[i].Invitee + '<br>'
   }
   const friendPending = document.getElementById('pending')
-  friendPending.innerHTML = temp
+  if (temp !== '') {
+    friendPending.innerHTML = temp
+  }
 }
 
 function getFriendRequests (username) {
@@ -78,10 +82,13 @@ function receiveFriendRequests () {
     // create the lables and buttons
     const label = document.createElement('label')
     label.innerHTML = inviter
+    label.style.height = '40px'
     const acceptBtn = document.createElement('button')
-    acceptBtn.className = ('btn btn-primary col-3 ')
+    acceptBtn.className = ('btn btn-primary ')
+    acceptBtn.style.height = '40px'
     const declineBtn = document.createElement('button')
-    declineBtn.className = ('btn btn-primary col-3 ')
+    declineBtn.className = ('btn btn-primary ')
+    declineBtn.style.height = '40px'
 
     // button functions
     acceptBtn.innerHTML = 'Accept'
@@ -93,18 +100,14 @@ function receiveFriendRequests () {
     declineBtn.onclick = function () {
       acceptDeclineFriend(getFromCookie('username', document.cookie), acceptBtn.getAttribute('user'), 'decline')
     }
-    // adding buttons to screen
-    // document.getElementById('friend name').appendChild(label)
-    // document.getElementById('requestButtons').appendChild(acceptBtn)
-    // document.getElementById('requestButtons').appendChild(document.createTextNode(' '))
-    // document.getElementById('requestButtons').appendChild(declineBtn)
-    // document.getElementById('friend').appendChild(document.createElement('br'))
-    // document.getElementById('requestButtons').appendChild(document.createElement('br'))
+    // append the buttons while adding space to make it look neat
     document.getElementById('friend name').appendChild(label)
     document.getElementById('requestButtons').appendChild(acceptBtn)
     document.getElementById('requestButtons').appendChild(document.createTextNode(' '))
     document.getElementById('requestButtons').appendChild(declineBtn)
     document.getElementById('friend name').appendChild(document.createElement('br'))
+    document.getElementById('friend name').appendChild(document.createElement('br'))
+    document.getElementById('requestButtons').appendChild(document.createElement('br'))
     document.getElementById('requestButtons').appendChild(document.createElement('br'))
   }
 }
