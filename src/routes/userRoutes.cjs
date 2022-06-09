@@ -2,8 +2,9 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const express = require('express')
 const jsonParser = bodyParser.json()
-const { getMode, changeMode, changePassword } = require('../services/settings_db.cjs')
-const { getUserGames, getUserStats, getUserGuesses } = require('../services/matchHistory.cjs')
+const { getMode, changeMode } = require('../services/settings_db.cjs')
+const { getBackground } = require('../services/background_db.cjs')
+const { getUserGames, getUserStats } = require('../services/matchHistory.cjs')
 const { getUserFriends, getUserPendingFriends, getUserFriendRequests, addFriend, updateFriend } = require('../services/friendsDb.cjs')
 
 const userRouter = express.Router()
@@ -18,16 +19,11 @@ userRouter.post('/api/DarkModeData', async function (req, res) {
 })
 
 userRouter.get('/stats', function (req, res) {
-  res.sendFile(path.join(__dirname, '../views', 'statistics.html'))
-})
-
-userRouter.get('/match', function(req, res) {
-  res.sendFile(path.join(__dirname, '../views', 'matchHistory.html'))
+  res.sendFile(path.join(__dirname, '../views', 'Statistics.html'))
 })
 
 userRouter.get('/get/games', function (req, res) {
-  const username = req.query.user
-  getUserGames(username).then(
+  getUserGames(1).then(
     (result) => {
       res.send(result)
     }
@@ -37,15 +33,6 @@ userRouter.get('/get/games', function (req, res) {
 userRouter.get('/get/stats', function (req, res) {
   const username = req.query.user
   getUserStats(username).then(
-    (result) => {
-      res.send(result)
-    }
-  ).catch(console.error)
-})
-
-userRouter.get('/get/match', function (req,res) {
-  const game = req.query.game
-  getUserGuesses(game).then(
     (result) => {
       res.send(result)
     }

@@ -90,13 +90,13 @@ socket.on('game_can_start', (playerNames) => {
 })
 
 // This will fire when the server sends the opponents' colours to the client.
-socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum, wordToGuess) => {
+socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum) => {
   if (didTheyWin) {
     // Disable the keyboard.
     document.removeEventListener('keydown', keyboardInputEvent)
     document.removeEventListener('click', virtualKeyboardInputEvent)
 
-    document.getElementById('winText').innerHTML = `${playerName} won the game!` + '<br /> They were able to guess <b>' + `${wordToGuess}` + '</b>!'
+    document.getElementById('winText').innerHTML = `${playerName} won the game!`
     $('#gameoverModal').modal('show')
 
     socket.emit('game_over')
@@ -113,7 +113,7 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
 
 // This will fire when the server sends the results of the word validation and testing to the client.
 // This basically contains the results of the game logic on the server.
-socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin, wordToGuess) => {
+socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) => {
   currentLetterIndex = 0
   letterArray = letterArr
   currentWordIndex = currWordIndex + 1 // Move the keyboard to the next row on the grid.
@@ -126,7 +126,7 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
     document.removeEventListener('keydown', keyboardInputEvent)
     document.removeEventListener('click', virtualKeyboardInputEvent)
 
-    document.getElementById('winText').innerHTML = '🎉 You won the game! 🎉 <br />' + 'Well done for guessing <b>' + `${wordToGuess}` + '</b>!'
+    document.getElementById('winText').innerHTML = '🎉 You won the game! 🎉'
     $('#gameoverModal').modal('show')
 
     socket.emit('game_over')
@@ -148,11 +148,6 @@ socket.on('word_not_found', () => {
 socket.on('invalid_guess', () => {
   document.getElementById('errorText').innerHTML = 'HI JESSE, THE WORD CONTAINS ILLEGAL LETTERS'
   $('#gameErrorModal').modal('show')
-})
-
-socket.on('nobody_won', (wordToGuess) => {
-  document.getElementById('winText').innerHTML = 'Nobody was able to guess the word 😔 <br />' + `You had to guess ${wordToGuess}`
-  $('#gameoverModal').modal('show')
 })
 
 /** ********* General code ***********/
