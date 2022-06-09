@@ -2,8 +2,7 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const express = require('express')
 const jsonParser = bodyParser.json()
-const { getMode, changeMode } = require('../services/settings_db.cjs')
-const { getBackground } = require('../services/background_db.cjs')
+const { getMode, changeMode, changePassword } = require('../services/settings_db.cjs')
 const { getUserGames, getUserStats, getUserGuesses } = require('../services/matchHistory.cjs')
 const { getUserFriends, getUserPendingFriends, getUserFriendRequests, addFriend, updateFriend } = require('../services/friendsDb.cjs')
 
@@ -66,6 +65,19 @@ userRouter.post('/changeMode', jsonParser, async function (req, res) { // ?
   changeMode(darkMode, username).then(
     (result) => {
       res.send(JSON.stringify({ message: `${darkMode} has been saved to the database` }))
+    }
+  ).catch(console.error)
+})
+
+userRouter.post('/updatePassword', jsonParser, async function (req, res) { // ?
+  const username = req.body.usernameInput
+  const password = req.body.passwordInput
+
+  console.log(`Server received: ${password}`)
+
+  changePassword(password, username).then(
+    (result) => {
+      res.send(JSON.stringify({ message: `${password} has been saved to the database` }))
     }
   ).catch(console.error)
 })

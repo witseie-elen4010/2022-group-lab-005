@@ -24,7 +24,9 @@ module.exports = {
 
         // save new background in database
         (pool) => pool.request().query(sqlCode).then(
-          (result) => { resolve(result) }
+          (result) => {
+            resolve(JSON.stringify({ message: `${Background} has been saved to the database` }))
+          }
         ).catch(console.error)
       ).catch(console.error)
     })
