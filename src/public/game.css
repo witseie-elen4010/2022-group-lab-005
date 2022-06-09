@@ -9,6 +9,7 @@
   background-color: transparent !important;
 }
 #playerDiv{
+  display: block;
   order: 2;
   width:60%;
 }
@@ -206,6 +207,5 @@ body{
   min-width: 100%;
   background-size:100% 100%;
   background-repeat:no-repeat;
-  overflow-y: hidden;
   overflow-x: hidden;
 } 

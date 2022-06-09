@@ -15,8 +15,9 @@ $(function () {
 // Try establish a connection with the server.
 socket.connect()
 
-// First, lets remove any previous gameIDs from the session storage.
+// First, lets remove any previous gameIDs and gameTypes from the session storage.
 sessionStorage.removeItem('gameID')
+sessionStorage.removeItem('gameType')
 
 // Hide the custom word field for now since the standard radio button is selected by default.
 $('#customWordField').hide()
