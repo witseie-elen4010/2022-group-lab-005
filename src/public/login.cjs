@@ -57,13 +57,14 @@ function receivedValue () {
   } else if(msg === "User is now logged in" || msg === "Registration completed"){
     //the code below is to set a cookie value, the only issue with this cookie is that it will 
     //store a new cookie everytime the user logs in or registers, until the browser is closed
-    const username = 'username=' + document.getElementById('username').value
+    const usernameText = document.getElementById('username').value
+    const username = 'username=' + usernameText 
     document.cookie = username
-    getMode(document.getElementById('username').value)
     // Let's reset everything
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control'
-    window.location.href = '/loginRedirect'
+    getMode(usernameText)
+    //redirect in getMode
   }
 }
 
