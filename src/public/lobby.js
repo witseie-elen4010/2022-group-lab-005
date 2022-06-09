@@ -51,6 +51,13 @@ socket.on('invalid_word', () => {
   document.getElementById('feedbackText').innerHTML = 'Your word is not in our database, please pick another word.'
   $('#invalidWord').show()
   document.getElementById('customWord').className = 'form-control is-invalid'
+
+  // Re-enable all the buttons
+  $('#createGameBtn').removeAttr('disabled')
+  $('#gameInfoTableBody').find('button').removeAttr('disabled')
+
+  // Remove loading icon
+  document.getElementById('createGameBtn').innerHTML = 'Create game'
 })
 
 socket.on('get_game_id', (gameID, gameType) => {
