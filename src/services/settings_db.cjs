@@ -16,7 +16,6 @@ module.exports = {
     })
   },
 
-  // This should go in its own file, not in testDB which is for testing the DB and pool.
   changeMode: async function changeMode(DarkMode, username) {
     // update users table if dark mode has changed
     const sqlCode = `UPDATE Settings SET isDarkmode = '${DarkMode}' WHERE Username = '${username}'`
@@ -25,6 +24,19 @@ module.exports = {
       get('default').then(
         (pool) => pool.request().query(sqlCode).then(
           (result) => { resolve(JSON.stringify({ message: `${DarkMode} has been saved to the database` })) }
+        ).catch(console.error)
+      ).catch(console.error)
+    })
+  },
+
+ changePassword: async function changePassword(password, username) {
+    // update users table if dark mode has changed
+    const sqlCode = `UPDATE Users SET Password = '${password}' WHERE Username = '${username}'`
+    return new Promise((resolve, reject) => {
+      console.log(sqlCode)
+      get('default').then(
+        (pool) => pool.request().query(sqlCode).then(
+          (result) => { resolve(JSON.stringify({ message: `${password} has been saved to the database` })) }
         ).catch(console.error)
       ).catch(console.error)
     })
