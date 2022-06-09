@@ -32,13 +32,14 @@ describe('Test socket.cjs', () => {
     const gameClient = new Client(`http://localhost:${port}`, { autoConnect: false })
 
     gameClient.auth = { sessionInfo: 'xazwsx!', playerName: 'nick' }
-    gameClient.connect()
 
     gameClient.on('connect_error', (err) => {
       expect(err.message).toBe('invalid_game_id')
       gameClient.close()
       done()
     })
+
+    gameClient.connect()
   })
 
   test('Connect to the lobby while no games are active', (done) => {
@@ -82,6 +83,63 @@ describe('Test socket.cjs', () => {
 
     lobbyClient.connect()
     lobbyClient.emit('create_game', 2, 1, 'none')
+  })
+
+  test('Create a regular game with 0 players', (done) => {
+    // Make the client.
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      lobbyClient.close()
+      throw new Error('get_game_id should not run because the player number is invalid.')
+    })
+
+    lobbyClient.on('invalid_word', () => {
+      lobbyClient.close()
+      throw new Error('invalid_word')
+    })
+
+    lobbyClient.on('invalid_game_mode', () => {
+      lobbyClient.close()
+      throw new Error('invalid_game_mode')
+    })
+
+    lobbyClient.on('invalid_player_number', () => {
+      lobbyClient.close()
+      done()
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 0, 1, 'none')
+  })
+
+  test('Create a custom game with 3 players using the word \'hello\'', (done) => {
+    // Make the client.
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      lobbyClient.close()
+      expect(gameType).toBe('CustomCreate')
+      done()
+    })
+
+    lobbyClient.on('invalid_word', () => {
+      lobbyClient.close()
+      throw new Error('invalid_word')
+    })
+
+    lobbyClient.on('invalid_game_mode', () => {
+      lobbyClient.close()
+      throw new Error('invalid_game_mode')
+    })
+
+    lobbyClient.on('invalid_player_number', () => {
+      lobbyClient.close()
+      throw new Error('invalid_player_number')
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 3, 2, 'hello')
   })
 })
 
