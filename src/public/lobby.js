@@ -47,6 +47,19 @@ $('#numPlayers').on('change', function () {
   $('#currentNumPlayers').html($('#numPlayers').val())
 })
 
+socket.on('invalid_word', () => {
+  document.getElementById('feedbackText').innerHTML = 'Your word is not in our database, please pick another word.'
+  $('#invalidWord').show()
+  document.getElementById('customWord').className = 'form-control is-invalid'
+})
+
+socket.on('get_game_id', (gameID, gameType) => {
+  console.log(gameID)
+  console.log(`UUID: ${gameID.substring(0, 36)} GameID: ${gameID.substring(36)}`)
+  sessionStorage.setItem('gameID', gameID)
+  window.location.href = '/game/play'
+})
+
 // When this is fired, the game list is updated with a new list of open games.
 socket.on('update_game_list', (openGames) => {
   // First, lets empty the table's body

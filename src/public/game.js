@@ -44,6 +44,8 @@ const socket = io({ autoConnect: false })
 
 // This will fire if the server is unhappy with something.
 socket.on('connect_error', (err) => {
+  document.getElementById('modalCloseButtonError').addEventListener('click', redirectToLobby)
+
   if (err.message === 'invalid_game_id') {
     document.getElementById('errorText').innerHTML = 'Game code is invalid.'
     $('#gameErrorModal').modal('show')
@@ -140,6 +142,16 @@ socket.on('get_number', (num) => {
   thisPlayerNumber = num
 })
 
+socket.on('word_not_found', () => {
+  document.getElementById('errorText').innerHTML = 'This word is not in our database. Please try a different word.'
+  $('#gameErrorModal').modal('show')
+})
+
+socket.on('invalid_guess', () => {
+  document.getElementById('errorText').innerHTML = 'You entered a word that contains illegal values. Please make sure your word only contains letters of the alphabet.'
+  $('#gameErrorModal').modal('show')
+})
+
 /** ********* General code ***********/
 if (window.sessionStorage.getItem('gameID') === null) {
   // If the client doesn't have a gameID in their session storage, then they
@@ -173,8 +185,6 @@ function redirectToLobby () {
 
 // Add event listener to the modal close button so the player is sent back to the lobby
 document.getElementById('modalCloseButtonGameOver').addEventListener('click', redirectToLobby)
-document.getElementById('modalCloseButtonError').addEventListener('click', redirectToLobby)
-
 // Updates the color currently displayed in this user's wordle table
 function updateWordleTableColor () {
   const wordlePlayer = document.getElementById('playerDiv')
