@@ -47,6 +47,18 @@ $('#numPlayers').on('change', function () {
   $('#currentNumPlayers').html($('#numPlayers').val())
 })
 
+socket.on('invalid_player_number', () => {
+  document.getElementById('errorText').innerHTML = 'The specified player number is invalid.'
+  $('#errorModal').modal('show')
+
+  // Re-enable all the buttons
+  $('#createGameBtn').removeAttr('disabled')
+  $('#gameInfoTableBody').find('button').removeAttr('disabled')
+
+  // Remove loading icon
+  document.getElementById('createGameBtn').innerHTML = 'Create game'
+})
+
 socket.on('invalid_word', () => {
   document.getElementById('feedbackText').innerHTML = 'Your word is not in our database, please pick another word.'
   $('#invalidWord').show()
