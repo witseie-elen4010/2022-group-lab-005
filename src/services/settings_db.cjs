@@ -30,7 +30,6 @@ module.exports = {
   },
 
  changePassword: async function changePassword(password, username) {
-    // update users table if dark mode has changed
     const sqlCode = `UPDATE Users SET Password = '${password}' WHERE Username = '${username}'`
     return new Promise((resolve, reject) => {
       console.log(sqlCode)
