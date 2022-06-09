@@ -37,7 +37,7 @@ const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 
 let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
 const playerNamesArr = []
 let thisPlayerNumber = -1
-let gameType = 1 // Default value is 1 => Standard game type
+let gameType = 'Standard' // Default value for Standard game type
 let customOwner = false
 /** ********* Socket.io events ***********/
 const socket = io({ autoConnect: false })
@@ -102,11 +102,10 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
     socket.emit('game_over')
   }
 
-  // if (gameType === '1' || gameType === 1) { // Standard game
   if (playerNum > thisPlayerNumber) {
     playerNum = playerNum - 1
   }
-  if ((gameType === '2' || gameType === 2) && customOwner === false) { // Custom game
+  if ((gameType === 'Custom') && customOwner === false) { // Custom game
     playerNum = playerNum - 1
   }
   updateOpponentColors(colorArr, playerNum, playerName)
@@ -150,21 +149,15 @@ if (window.sessionStorage.getItem('gameID') === null) {
 
 const gameID = window.sessionStorage.getItem('gameID')
 gameType = window.sessionStorage.getItem('gameType')
-
+console.log(gameType)
 // Check what game type it is and whether the player is the custom game owner
-if (gameType === 2 || gameType === '2') {
+if (gameType === 'CustomCreate') {
   customOwner = true
-} else if (gameType === 1 || gameType === '1') {
+} else if (gameType === 'Standard' || gameType === 'StandardCreate') {
   customOwner = false
-} else if (gameType === null) { // Could be standard or custom game
-  gameType = 2
+} else if (gameType === 'Custom') { // Could be standard or custom game
   customOwner = false
 }
-/*
-if (window.sessionStorage.getItem('gameType') === 'custom') {
-  isPlayerWordCreator = true
-} */
-// Last digit of gameID is the number of players!
 
 const userName = getFromCookie('username', document.cookie)
 
@@ -300,6 +293,7 @@ function updateKeyboard () {
 }
 
 function customOwnerLayout () {
+  document.getElementById('gridContainer').style.flexWrap = 'wrap'
   document.getElementById('playerDiv').style.display = 'none'
   document.getElementById('playerDiv').style.order = '3'
   document.getElementById('opponentsDivRight').style.display = '2'
@@ -317,6 +311,7 @@ function customOwnerLayout () {
 }
 
 function normalLayout () {
+  document.getElementById('gridContainer').style.flexWrap = 'nowrap'
   document.getElementById('playerDiv').style.display = 'block'
   document.getElementById('playerDiv').style.order = '2'
   document.getElementById('opponentsDivRight').style.display = '3'
@@ -337,7 +332,7 @@ function createOpponentBoards () {
   if (thisPlayerNumber !== -1) {
     const numPlayers = parseInt(gameID[gameID.length - 1])
 
-    if (gameType === '1' || gameType === 1) { // Standard game
+    if (gameType === 'Standard' || gameType === 'StandardCreate') { // Standard game
       normalLayout()
       let count = 1
       for (let i = 1; i <= numPlayers; i++) {
@@ -349,7 +344,7 @@ function createOpponentBoards () {
           count = count + 1
         }
       }
-    } else if (gameType === '2' || gameType === 2) { // Custom game + lobby owner
+    } else if (gameType === 'CustomCreate') { // Custom game + lobby owner
       if (customOwner === true) {
         customOwnerLayout()
         let count = 1
@@ -362,17 +357,17 @@ function createOpponentBoards () {
             count = count + 1
           }
         }
-      } else { // Custom game + non-lobby-owner
-        normalLayout()
-        let count = 1
-        for (let i = 2; i <= numPlayers; i++) {
-          if (i !== thisPlayerNumber) {
-            const opponent = document.getElementById(`opponent${count}`)
-            const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
-            opponentNameHeading.innerHTML = 'Opponent ' + count
-            updateOpponentColors(colorArray, count)
-            count = count + 1
-          }
+      }
+    } else if (gameType === 'Custom') { // Custom game + non-lobby-owner
+      normalLayout()
+      let count = 1
+      for (let i = 2; i <= numPlayers; i++) {
+        if (i !== thisPlayerNumber) {
+          const opponent = document.getElementById(`opponent${count}`)
+          const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+          opponentNameHeading.innerHTML = 'Opponent ' + count
+          updateOpponentColors(colorArray, count)
+          count = count + 1
         }
       }
     }
