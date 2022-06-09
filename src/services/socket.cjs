@@ -1,7 +1,7 @@
 'use strict'
 
 const { v4: uuidv4 } = require('uuid')
-const { createGame, getGameInformation, getPlayerNames, addPlayerToGame, removePlayerFromGame, logPlayersGuess, logWinningPlayer } = require('../services/lobby.cjs')
+const { createGame, getGameInformation, getPlayerNames, addPlayerToGame, removePlayerFromGame, logPlayersGuess, logWinningPlayer, isGuessAWord } = require('../services/lobby.cjs')
 
 const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'BACK']
 
@@ -156,14 +156,27 @@ module.exports = function (io) {
   // This listener will only fire if a connection is coming from the '/rooms' namespace.
   io.of('/rooms').on('connection', (socket) => {
     socket.on('create_game', function (numPlayers, modeChosen, customWord) {
-      if (modeChosen === 1 || modeChosen === 2) {
+      if (modeChosen === 1) {
         insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
-          console.log(`Successfully created game with details Database ID=${result.ID} GameType=${result.ModeChosen} Word=${result.WordToGuess} NumPlayers=${result.NumPlayers}`)
           console.log(result)
           const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-          socket.emit('get_game_id', clientGameID, ((modeChosen === 1) ? 'StandardCreate' : 'CustomCreate'))
-        }).catch(() => {
-          socket.emit('invalid_game_mode')
+          socket.emit('get_game_id', clientGameID, 'StandardCreate')
+        }).catch((err) => {
+          console.log(err.message)
+        })
+      } else if (modeChosen === 2) {
+        isGuessAWord(customWord).then(result => {
+          if (result) {
+            insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
+              console.log(result)
+              const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
+              socket.emit('get_game_id', clientGameID, 'CustomCreate')
+            }).catch((err) => {
+              console.log(err.message)
+            })
+          } else {
+            socket.emit('invalid_word')
+          }
         })
       } else {
         socket.emit('invalid_game_mode')
@@ -175,25 +188,42 @@ module.exports = function (io) {
   io.on('connection', (socket) => {
     socket.on('send_guess', function (letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray) {
       if (socket.data.canGuess === true) {
-        const playersGuess = letterArray[currentWordIndex].join('')
-        logPlayersGuess(playersGuess, socket.data.databaseID, socket.data.playerName).catch((err) => {
+        isGuessAWord(letterArray[currentWordIndex].join('')).then((result) => {
+          if (result) {
+            socket.data.guessesRemaining = socket.data.guessesRemaining - 1
+            const playersGuess = letterArray[currentWordIndex].join('')
+            logPlayersGuess(playersGuess, socket.data.databaseID, socket.data.playerName).catch((err) => {
+              console.log(err.message)
+            })
+
+            const currentWordArray = socket.data.wordToGuess.split('')
+            const [letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin] = testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray)
+
+            if (didTheyWin === true) {
+              logWinningPlayer(socket.data.databaseID, socket.data.playerName).catch((err) => {
+                console.log(err.message)
+              })
+
+              socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin, socket.data.wordToGuess) // These values get sent back to the sender.
+              socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum, socket.data.wordToGuess) // These values get broadcast to everyone except the sender.
+            } else {
+              socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
+              socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
+            }
+
+            playersCanGuess(io, socket.data.roomID).then((result) => {
+              if (result === false) {
+                // Everybody is out of guesses, so nobody wins.
+                io.in(socket.data.roomID).emit('nobody_won', socket.data.wordToGuess)
+              }
+            }).catch((err) => { console.log(err.message) })
+          } else {
+            socket.emit('word_not_found')
+          }
+        }).catch(err => {
           console.log(err.message)
+          socket.emit('invalid_guess')
         })
-
-        const currentWordArray = socket.data.wordToGuess.split('')
-        const [letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin] = testWord(letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray, currentWordArray)
-
-        if (didTheyWin === true) {
-          logWinningPlayer(socket.data.databaseID, socket.data.playerName).catch((err) => {
-            console.log(err.message)
-          })
-
-          socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
-          socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
-        } else {
-          socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
-          socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
-        }
       }
     })
 
@@ -311,6 +341,7 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
       socket.data.playerName = playerName
       socket.data.roomID = gameID
       socket.data.numPlayers = numPlayers
+      socket.data.guessesRemaining = 6
 
       // Add the player to the room
       socket.join(socket.data.roomID)
@@ -337,7 +368,7 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
 }
 
 async function getOpenGames (io) {
-  const rooms = io.sockets.adapter.rooms // https://simplernerd.com/js-socketio-active-rooms/
+  const rooms = io.sockets.adapter.rooms
   const roomArr = []
 
   return new Promise((resolve, reject) => {
@@ -349,11 +380,7 @@ async function getOpenGames (io) {
         const expectedPlayerNum = parseInt(key.substring(key.lastIndexOf('_') - 1, key.lastIndexOf('_')))
 
         // Let's check if the room is empty
-        if (isRoomEmpty(io, key)) {
-          // The room is empty
-          // idk what to do here. This code shouldn't be reachable tho.
-          console.log('This should not have run!')
-        } else {
+        if (!isRoomEmpty(io, key)) {
           isGameInProgress(io, key).then((val) => {
             if (val === false) {
               const currentPlayerNum = parseInt(io.sockets.adapter.rooms.get(key).size)
@@ -426,4 +453,20 @@ function isGameIDValid (gameID) {
   }
 
   return false
+}
+
+async function playersCanGuess (io, roomID) {
+  return new Promise((resolve, reject) => {
+    io.in(roomID).fetchSockets().then((sockets) => {
+      let canAnyPlayerGuess = false
+      for (const sock of sockets) {
+        if (sock.data.guessesRemaining > 0) {
+          canAnyPlayerGuess = true
+        }
+      }
+      resolve(canAnyPlayerGuess)
+    }).catch((err) => {
+      console.log(err.message)
+    })
+  })
 }
