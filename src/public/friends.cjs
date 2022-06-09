@@ -9,7 +9,7 @@ $(function () {
     }
   ).catch()
 })
-
+let haveFriends = false
 window.onload = function () {
   const username = getFromCookie('username', document.cookie)
   // first two get will together return Friends of the user
@@ -70,6 +70,7 @@ function recieveFriends (response) {
   const friendList = document.getElementById('Friend list')
   if (temp !== '') {
     friendList.innerHTML = temp
+    haveFriends = true
   }
 }
 
@@ -80,8 +81,10 @@ function recieveFriendUser (response) {
     temp += response.recordset[i].Inviter + '<br>'
   }
   const friendList = document.getElementById('Friend list')
-  if (temp !== '') {
+  if (haveFriends === true) {
     friendList.innerHTML += temp
+  } else {
+    friendList.innerHTML = temp
   }
 }
 

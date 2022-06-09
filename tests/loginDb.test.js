@@ -1,11 +1,5 @@
 'use strict'
 const { LogIn, registerUser, validateInput } = require('../src/services/loginDb')
-// original format
-// test('user login if username input empty and password is empty', () => {
-//   LogIn('a', '').then(data => {
-//     expect(data).toBe('Please input a username and password')
-//   })
-// })
 
 test('user input if username input empty and password is empty', () => {
   const data = validateInput('', '')
@@ -38,7 +32,7 @@ test('user login if username does not exist', async () => {
 })
 jest.setTimeout(10000)
 
-// winner is a user in the database with password： password
+// winner is a user in the database with password：fbe789cb41b2fc32df9b89cacff9830d85ac62de09ca48395ebcef69e069160a
 test('user login if password is incorrect', async () => {
   const data = await LogIn('winner', 'wrongpassword')
   await expect(data).toBe('Check username and password.')
@@ -51,11 +45,12 @@ test('user login is sucessful', async () => {
 })
 jest.setTimeout(10000)
 
-// jest.setTimeout(10000)
 // code above is for Login function
 // ---------------------------------------
 // ---------------------------------------
 // code below is for registeration function
+// did not test for insertion as it will only work once
+// validation for registration is already tested above
 test('user registration if username exist already', async () => {
   const data = await registerUser('winner', 'wrongpassword')
   await expect(data).toBe('Account exists already.')
