@@ -1,6 +1,8 @@
 'use strict'
 
 $(function () {
+    $('#noMatches').hide()
+    $('#noWins').hide()
     checkUser(document.cookie).then(
         (result) => {
             if (result === false) {
@@ -10,9 +12,17 @@ $(function () {
                 $.get('/user/get/stats', { user: username }).done(
                     // Recieves the user's stats
                     function (response) {
+                        if(response.recordset.length === 0){
+                            $('#myChart').hide()
+                            $('#noWins').show()
+                        }
                         recieveStats(response)
                         $.get('/user/get/games', { user: username }).done(
                             function (out) {
+                                if(out.recordset.length === 0){
+                                    $('#matchTable').hide()
+                                    $('#noMatches').show()
+                                }
                                 for (let i = 0; i < out.recordset.length; i++) {
                                     appendMatch(out.recordset[i].WordToGuess, out.recordset[i].GameType, out.recordset[i].NumPlayers, out.recordset[i].WhoWon, out.recordset[i].ID, out.recordset[i].GameDateTime)
                                 }
