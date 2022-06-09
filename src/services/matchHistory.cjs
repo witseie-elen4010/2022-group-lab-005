@@ -2,7 +2,7 @@
 
 const { get } = require('./poolManagement.cjs')
 
-async function getUserGames(user) {
+async function getUserGames (user) {
   // Returns the placement and GameID of any game the user took part in
   const sqlCode = `SELECT GameID, Placement 
   FROM [dbo].[UserGame] 
@@ -18,7 +18,7 @@ async function getUserGames(user) {
   })
 }
 
-async function getUserStats(username) {
+async function getUserStats (username) {
   // Returns all guesses made in games the user won
   const sqlCode = `SELECT [dbo].[UserGame].GameID, COUNT([dbo].[Guess].Word) AS CountGuesses
   FROM [dbo].[UserGame]
@@ -37,6 +37,6 @@ async function getUserStats(username) {
 }
 
 module.exports = {
-  getUserGames: getUserGames,
-  getUserStats: getUserStats
+  getUserGames,
+  getUserStats
 }
