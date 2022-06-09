@@ -1,6 +1,5 @@
 'use strict'
 const { get } = require('./poolManagement.cjs')
-const { resolve } = require('path')
 
 async function LogIn (username, password) {
   const sqlCode = `SELECT Password FROM Users WHERE Username = '${username}'`
@@ -75,21 +74,6 @@ async function registerUser (username, password) {
   })
 }
 
-async function getUser (username) {
-  // Returns whether the user exists
-  const sqlCode = `SELECT * FROM [dbo].[Users]
-  WHERE [dbo].[Users].Username = '${username}';`
-  return new Promise((resolve, reject) => {
-    get('default').then(
-      (pool) => pool.request().query(sqlCode).then(
-        (result) => {
-          resolve(result)
-        }
-      ).catch(reject)
-    ).catch(reject)
-  })
-}
-
 function validateInput (username, password) {
   // validate username input, password does not need to be validated due to hashing
   if (username === '' & password === '') {
@@ -105,4 +89,4 @@ function validateInput (username, password) {
   }
 }
 
-module.exports = { LogIn, registerUser, getUser , validateInput }
+module.exports = { LogIn, registerUser, validateInput }
