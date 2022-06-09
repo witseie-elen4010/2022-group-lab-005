@@ -68,6 +68,7 @@ function setMode(input){
   return input
 }
 
+// Puts the guesses in wins into an array for easy input on client side
 function parseStats(response){
   let guesses = [0, 0, 0, 0, 0, 0]
   for (let i = 0; i < response.recordset.length; i++) {
