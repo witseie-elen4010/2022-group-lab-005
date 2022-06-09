@@ -190,6 +190,7 @@ module.exports = function (io) {
       if (socket.data.canGuess === true) {
         isGuessAWord(letterArray[currentWordIndex].join('')).then((result) => {
           if (result) {
+            socket.data.guessesRemaining = socket.data.guessesRemaining - 1
             const playersGuess = letterArray[currentWordIndex].join('')
             logPlayersGuess(playersGuess, socket.data.databaseID, socket.data.playerName).catch((err) => {
               console.log(err.message)
@@ -203,12 +204,19 @@ module.exports = function (io) {
                 console.log(err.message)
               })
 
-              socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
-              socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
+              socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin, socket.data.wordToGuess) // These values get sent back to the sender.
+              socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum, socket.data.wordToGuess) // These values get broadcast to everyone except the sender.
             } else {
               socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
               socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
             }
+
+            playersCanGuess(io, socket.data.roomID).then((result) => {
+              if (result === false) {
+                // Everybody is out of guesses, so nobody wins.
+                io.in(socket.data.roomID).emit('nobody_won', socket.data.wordToGuess)
+              }
+            }).catch((err) => { console.log(err.message) })
           } else {
             socket.emit('word_not_found')
           }
@@ -333,6 +341,7 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
       socket.data.playerName = playerName
       socket.data.roomID = gameID
       socket.data.numPlayers = numPlayers
+      socket.data.guessesRemaining = 6
 
       // Add the player to the room
       socket.join(socket.data.roomID)
@@ -359,7 +368,7 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
 }
 
 async function getOpenGames (io) {
-  const rooms = io.sockets.adapter.rooms // https://simplernerd.com/js-socketio-active-rooms/
+  const rooms = io.sockets.adapter.rooms
   const roomArr = []
 
   return new Promise((resolve, reject) => {
@@ -444,4 +453,20 @@ function isGameIDValid (gameID) {
   }
 
   return false
+}
+
+async function playersCanGuess (io, roomID) {
+  return new Promise((resolve, reject) => {
+    io.in(roomID).fetchSockets().then((sockets) => {
+      let canAnyPlayerGuess = false
+      for (const sock of sockets) {
+        if (sock.data.guessesRemaining > 0) {
+          canAnyPlayerGuess = true
+        }
+      }
+      resolve(canAnyPlayerGuess)
+    }).catch((err) => {
+      console.log(err.message)
+    })
+  })
 }
