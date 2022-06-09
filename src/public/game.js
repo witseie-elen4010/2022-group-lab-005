@@ -37,7 +37,8 @@ const allLettersArray = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', 'A', 
 let allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
 const playerNamesArr = []
 let thisPlayerNumber = -1
-
+let gameType = 'Standard' // Default value for Standard game type
+let customOwner = false
 /** ********* Socket.io events ***********/
 const socket = io({ autoConnect: false })
 
@@ -104,6 +105,9 @@ socket.on('update_opponent_colors', (colorArr, didTheyWin, playerName, playerNum
   if (playerNum > thisPlayerNumber) {
     playerNum = playerNum - 1
   }
+  if ((gameType === 'Custom') && customOwner === false) { // Custom game
+    playerNum = playerNum - 1
+  }
   updateOpponentColors(colorArr, playerNum, playerName)
 })
 
@@ -144,6 +148,17 @@ if (window.sessionStorage.getItem('gameID') === null) {
 }
 
 const gameID = window.sessionStorage.getItem('gameID')
+gameType = window.sessionStorage.getItem('gameType')
+console.log(gameType)
+// Check what game type it is and whether the player is the custom game owner
+if (gameType === 'CustomCreate') {
+  customOwner = true
+} else if (gameType === 'Standard' || gameType === 'StandardCreate') {
+  customOwner = false
+} else if (gameType === 'Custom') { // Could be standard or custom game
+  customOwner = false
+}
+
 const userName = getFromCookie('username', document.cookie)
 
 // Try establish a connection with the server.
@@ -277,18 +292,83 @@ function updateKeyboard () {
   }
 }
 
+function customOwnerLayout () {
+  document.getElementById('gridContainer').style.flexWrap = 'wrap'
+  document.getElementById('playerDiv').style.display = 'none'
+  document.getElementById('playerDiv').style.order = '3'
+  document.getElementById('opponentsDivRight').style.display = '2'
+  document.getElementById('opponentsDivRight').style.width = '100%'
+  document.getElementById('opponentsDivRight').style.flexWrap = 'nowrap'
+  document.getElementById('opponentsDivRight').style.justifyContent = 'space-between'
+  document.getElementById('opponentsDivLeft').style.width = '100%'
+  document.getElementById('opponentsDivLeft').style.flexWrap = 'nowrap'
+  document.getElementById('opponentsDivLeft').style.justifyContent = 'space-between'
+
+  const wordleDivArray = document.getElementsByClassName('wordleDiv')
+  for (let i = 1; i < wordleDivArray.length; i++) {
+    wordleDivArray[i].style.height = '50vh'
+  }
+}
+
+function normalLayout () {
+  document.getElementById('gridContainer').style.flexWrap = 'nowrap'
+  document.getElementById('playerDiv').style.display = 'block'
+  document.getElementById('playerDiv').style.order = '2'
+  document.getElementById('opponentsDivRight').style.display = '3'
+  document.getElementById('opponentsDivRight').style.width = '20%'
+  document.getElementById('opponentsDivRight').style.flexWrap = 'wrap'
+  document.getElementById('opponentsDivRight').style.justifyContent = 'space-evenly'
+  document.getElementById('opponentsDivLeft').style.width = '20%'
+  document.getElementById('opponentsDivLeft').style.flexWrap = 'wrap'
+  document.getElementById('opponentsDivLeft').style.justifyContent = 'space-evenly'
+
+  const wordleDivArray = document.getElementsByClassName('wordleDiv')
+  for (let i = 1; i < wordleDivArray.length; i++) {
+    wordleDivArray[i].style.height = '25vh'
+  }
+}
+
 function createOpponentBoards () {
   if (thisPlayerNumber !== -1) {
     const numPlayers = parseInt(gameID[gameID.length - 1])
-    console.log(numPlayers)
-    let count = 1
-    for (let i = 1; i <= numPlayers; i++) {
-      if (i !== thisPlayerNumber) {
-        const opponent = document.getElementById(`opponent${count}`)
-        const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
-        opponentNameHeading.innerHTML = 'Opponent ' + count
-        updateOpponentColors(colorArray, count)
-        count = count + 1
+
+    if (gameType === 'Standard' || gameType === 'StandardCreate') { // Standard game
+      normalLayout()
+      let count = 1
+      for (let i = 1; i <= numPlayers; i++) {
+        if (i !== thisPlayerNumber) {
+          const opponent = document.getElementById(`opponent${count}`)
+          const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+          opponentNameHeading.innerHTML = 'Opponent ' + count
+          updateOpponentColors(colorArray, count)
+          count = count + 1
+        }
+      }
+    } else if (gameType === 'CustomCreate') { // Custom game + lobby owner
+      if (customOwner === true) {
+        customOwnerLayout()
+        let count = 1
+        for (let i = 1; i <= numPlayers; i++) {
+          if (i !== thisPlayerNumber) {
+            const opponent = document.getElementById(`opponent${count}`)
+            const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+            opponentNameHeading.innerHTML = 'Opponent ' + count
+            updateOpponentColors(colorArray, count)
+            count = count + 1
+          }
+        }
+      }
+    } else if (gameType === 'Custom') { // Custom game + non-lobby-owner
+      normalLayout()
+      let count = 1
+      for (let i = 2; i <= numPlayers; i++) {
+        if (i !== thisPlayerNumber) {
+          const opponent = document.getElementById(`opponent${count}`)
+          const opponentNameHeading = opponent.getElementsByTagName('h2')[0]
+          opponentNameHeading.innerHTML = 'Opponent ' + count
+          updateOpponentColors(colorArray, count)
+          count = count + 1
+        }
       }
     }
   } else {
