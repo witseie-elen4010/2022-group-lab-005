@@ -1,3 +1,5 @@
+jest.setTimeout(10000)
+
 const express = require('express')
 const { set } = require('express/lib/application')
 const { createServer } = require('http')
@@ -6,37 +8,85 @@ const Client = require('socket.io-client')
 const soc = require('../src/services/socket.cjs')
 
 describe('Test socket.cjs', () => {
-  let io, serverSocket, clientSocket1, clientSocket2, clientSocket3
+  let io, port
   const app = express()
-  let port
 
   beforeAll((done) => {
     const httpServer = createServer(app)
     io = new Server(httpServer)
     httpServer.listen(() => {
       port = httpServer.address().port
-      // Make three client sockets to simulate three clients that can connect.
-      // Set their autoConnect to false so we have to tell them when to connect.
-      clientSocket1 = new Client(`http://localhost:${port}`, { autoConnect: false })
-      clientSocket2 = new Client(`http://localhost:${port}`, { autoConnect: false })
-      clientSocket3 = new Client(`http://localhost:${port}`, { autoConnect: false })
       soc(io)
       done()
     })
   })
 
   // Close the server after we are done with all the tests.
-  afterAll(() => {
+  afterAll((done) => {
     io.close()
+    done()
   })
 
-  // After each test, close all the client sockets.
-  afterEach(() => {
-    closeClientSocket(clientSocket1)
-    closeClientSocket(clientSocket2)
-    closeClientSocket(clientSocket3)
+  test('Send invalid session information (invalid game id)', (done) => {
+    // Make the client.
+    const gameClient = new Client(`http://localhost:${port}`, { autoConnect: false })
+
+    gameClient.auth = { sessionInfo: 'xazwsx!', playerName: 'nick' }
+    gameClient.connect()
+
+    gameClient.on('connect_error', (err) => {
+      expect(err.message).toBe('invalid_game_id')
+      gameClient.close()
+      done()
+    })
   })
 
+  test('Connect to the lobby while no games are active', (done) => {
+    // Make the client.
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('update_game_list', (openGames) => {
+      expect(openGames.length).toBe(0)
+      lobbyClient.close()
+      done()
+    })
+
+    lobbyClient.connect()
+  })
+
+  test('Create a regular game with 2 players', (done) => {
+    // Make the client.
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      expect(gameType).toBe('StandardCreate')
+      // TODO Validate gameID
+      lobbyClient.close()
+      done()
+    })
+
+    lobbyClient.on('invalid_word', () => {
+      lobbyClient.close()
+      throw new Error('invalid_word')
+    })
+
+    lobbyClient.on('invalid_game_mode', () => {
+      lobbyClient.close()
+      throw new Error('invalid_game_mode')
+    })
+
+    lobbyClient.on('invalid_player_number', () => {
+      lobbyClient.close()
+      throw new Error('invalid_player_number')
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 2, 1, 'none')
+  })
+})
+
+// Old tests
+/*
   test('Send invalid session information (invalid character for number of players)', (done) => {
     clientSocket1.auth = { sessionInfo: 'xazwsx!', playerName: 'nick' }
     clientSocket1.connect()
@@ -145,4 +195,4 @@ function closeClientSocket (sock) {
   if (sock.auth !== undefined) {
     sock.close()
   }
-}
+} */
