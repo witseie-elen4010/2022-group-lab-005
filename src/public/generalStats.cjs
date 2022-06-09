@@ -12,7 +12,11 @@ $(function () {
                 $.get('/user/get/stats', { user: username }).done(
                     // Recieves the user's stats
                     function (response) {
-                        if(response.recordset.length === 0){
+                        let sum = 0
+                        for(let i = 0; i < response.length; i++){
+                            sum += response[i]
+                        }
+                        if(sum === 0){
                             $('#myChart').hide()
                             $('#noWins').show()
                         }
@@ -39,11 +43,7 @@ $(function () {
 
 //Creates general stats doughnut chart
 function recieveStats(response) {
-    let guesses = [0, 0, 0, 0, 0, 0]
-    const displayedStats = document.getElementById('displayedStats')
-    for (let i = 0; i < response.recordset.length; i++) {
-        guesses[response.recordset[i].CountGuesses - 1] += 1
-    }
+    
     let guessLabels = ["1", "2", "3", "4", "5", "6"]
     let barColors = ["red", "green", "blue", "orange", "brown", "purple"]
 
@@ -53,7 +53,7 @@ function recieveStats(response) {
             labels: guessLabels,
             datasets: [{
                 backgroundColor: barColors,
-                data: guesses
+                data: response
             }]
         },
         options: {

@@ -31,7 +31,8 @@ async function getUserStats (username) {
     get('default').then(
       (pool) => pool.request().query(sqlCode).then(
         (result) => {
-          resolve(result)
+          let stats = parseStats(result)
+          resolve(stats)
         }
       ).catch(reject)
     ).catch(reject)
@@ -67,8 +68,18 @@ function setMode(input){
   return input
 }
 
+function parseStats(response){
+  let guesses = [0, 0, 0, 0, 0, 0]
+  for (let i = 0; i < response.recordset.length; i++) {
+      guesses[response.recordset[i].CountGuesses - 1] += 1
+  }
+  return guesses
+}
+
 module.exports = {
   getUserGames: getUserGames,
   getUserStats: getUserStats,
-  getUserGuesses: getUserGuesses
+  getUserGuesses: getUserGuesses,
+  setMode: setMode,
+  parseStats: parseStats
 }
