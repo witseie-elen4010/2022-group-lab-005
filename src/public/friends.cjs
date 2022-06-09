@@ -162,3 +162,7 @@ function receiveAcceptDeclineFriend (response) {
   alert(msg)
   document.location.reload()
 }
+
+document.getElementById('homeButton').addEventListener('click', () => {
+  window.location.href = '/'
+})

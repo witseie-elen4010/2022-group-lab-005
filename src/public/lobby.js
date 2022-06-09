@@ -163,3 +163,7 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
   socket.connect()
   socket.emit('create_game', numPlayers, modeChosen, document.getElementById('customWord').value)
 })
+
+document.getElementById('homeButton').addEventListener('click', () => {
+  window.location.href = '/'
+})
