@@ -76,7 +76,7 @@ socket.on('invalid_word', () => {
   document.getElementById('customWord').className = 'form-control is-invalid'
 })
 
-socket.on('get_game_id', (gameID) => {
+socket.on('get_game_id', (gameID, gameType) => {
   console.log(gameID)
   console.log(`UUID: ${gameID.substring(0, 36)} GameID: ${gameID.substring(36)}`)
   sessionStorage.setItem('gameID', gameID)

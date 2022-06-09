@@ -161,7 +161,7 @@ module.exports = function (io) {
           console.log(`Successfully created game with details Database ID=${result.ID} GameType=${result.ModeChosen} Word=${result.WordToGuess} NumPlayers=${result.NumPlayers}`)
           console.log(result)
           const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-          socket.emit('get_game_id', clientGameID, ((modeChosen === 1) ? 'StandardCreate' : 'CustomCreate'))
+          socket.emit('get_game_id', clientGameID, 'StandardCreate')
         }).catch(() => {
           socket.emit('invalid_game_mode')
         })
@@ -172,7 +172,7 @@ module.exports = function (io) {
               console.log(`Successfully created game with details Database ID=${result.ID} GameType=${result.ModeChosen} Word=${result.WordToGuess} NumPlayers=${result.NumPlayers}`)
               console.log(result)
               const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-              socket.emit('get_game_id', clientGameID)
+              socket.emit('get_game_id', clientGameID, 'CustomCreate')
             }).catch(() => {
               socket.emit('invalid_game_mode')
             })
