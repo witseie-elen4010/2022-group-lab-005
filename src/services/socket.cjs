@@ -46,7 +46,7 @@ module.exports = function (io) {
       socket.data.canGuess = true
 
       // We add _game_ and numPlayers to the gameID so that we can determine if the room (socket.io) (which has a identity of gameID) is a game or if it is some other room.
-      const gameID = `${socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length)}_game_${numPlayers.toString()}_${socket.data.gameType}`
+      const gameID = `${socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length)}_game_${numPlayers.toString()}`
 
       console.log(socket.data.wordToGuess)
 
@@ -161,7 +161,7 @@ module.exports = function (io) {
           console.log(`Successfully created game with details Database ID=${result.ID} GameType=${result.ModeChosen} Word=${result.WordToGuess} NumPlayers=${result.NumPlayers}`)
           console.log(result)
           const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-          socket.emit('get_game_id', clientGameID, ((modeChosen === 1) ? 'StandardCreate' : 'CustomCreate'))
+          socket.emit('get_game_id', clientGameID, 'StandardCreate')
         }).catch(() => {
           socket.emit('invalid_game_mode')
         })
@@ -172,7 +172,7 @@ module.exports = function (io) {
               console.log(`Successfully created game with details Database ID=${result.ID} GameType=${result.ModeChosen} Word=${result.WordToGuess} NumPlayers=${result.NumPlayers}`)
               console.log(result)
               const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-              socket.emit('get_game_id', clientGameID)
+              socket.emit('get_game_id', clientGameID, 'CustomCreate')
             }).catch(() => {
               socket.emit('invalid_game_mode')
             })
@@ -367,8 +367,7 @@ async function getOpenGames (io) {
       if (key.includes('game')) {
         // Now we know that this room is a game room.
         // Let's see how many players are going to be playing.
-        // const expectedPlayerNum = parseInt(key.substring(key.length - 1))
-        const expectedPlayerNum = parseInt(key.substring(key.lastIndexOf('_') - 1, key.lastIndexOf('_')))
+        const expectedPlayerNum = parseInt(key.substring(key.length - 1))
 
         // Let's check if the room is empty
         if (isRoomEmpty(io, key)) {
@@ -381,7 +380,8 @@ async function getOpenGames (io) {
               const currentPlayerNum = parseInt(io.sockets.adapter.rooms.get(key).size)
               if (currentPlayerNum < expectedPlayerNum) {
                 // There's at least one slot available.
-                roomArr.push({ roomName: key.substring(0, key.indexOf('_')), availSlots: expectedPlayerNum - currentPlayerNum, gameType: (key.substring(key.lastIndexOf('_') + 1)) === '1' ? 'Standard' : 'Custom' })
+                const temp = expectedPlayerNum - currentPlayerNum
+                roomArr.push({ roomName: key.substring(0, key.indexOf('_')), availSlots: temp })
               }
             }
           }).catch((err) => {
