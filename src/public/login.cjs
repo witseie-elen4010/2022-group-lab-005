@@ -31,10 +31,20 @@ function updateAndSendFormControl () {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
     document.getElementById('output').innerHTML = 'Please input your username'
+    if (loginOrRegister) {
+      document.getElementById('registerButton').disabled = false
+    } else {
+      document.getElementById('loginButton').disabled = false
+    }
   } else if (document.getElementById('password').value === '') {
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control is-invalid'
     document.getElementById('output').innerHTML = 'Please input your password'
+    if (loginOrRegister) {
+      document.getElementById('registerButton').disabled = false
+    } else {
+      document.getElementById('loginButton').disabled = false
+    }
   } else {
     // get username and password and send it via json
     const username = document.getElementById('username').value

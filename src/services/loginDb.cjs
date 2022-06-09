@@ -105,4 +105,4 @@ function validateInput (username, password) {
   }
 }
 
-module.exports = { LogIn, registerUser, getUser }
+module.exports = { LogIn, registerUser, getUser , validateInput }
