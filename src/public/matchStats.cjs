@@ -15,8 +15,17 @@ $(function () {
                 $.get('/user/get/match', {user:username, game: gameID}).done(
                     // Recieves the user's match
                     function (response) {
+                        let lastUser = response.recordset[0].Username
+                        let count = 0
                         for(let i = 0; i < response.recordset.length; i++){
-                            appendGuess(response.recordset[i].Word, response.recordset[i].TimeStamp, i+1)
+                            if(response.recordset[i].Username === lastUser){
+                                count++
+                            }
+                            else{
+                                count = 1
+                                lastUser = response.recordset[i].Username
+                            }
+                            appendGuess(response.recordset[i].Word, response.recordset[i].TimeStamp, count, response.recordset[i].Username)
                         }
                     }).fail(
                         function (serverResponse) {
@@ -27,7 +36,7 @@ $(function () {
     ).catch()
 })
 
-const appendGuess = (guess, timeStamp, guessNumber) => {
+const appendGuess = (guess, timeStamp, guessNumber, user) => {
     const guessTable = document.querySelector('#guessTableBody') // Find the table we created
     let guessTableBodyRow = document.createElement('tr') // Create the current table row
     guessTableBodyRow.className = 'guessTableBodyRow'
@@ -38,8 +47,10 @@ const appendGuess = (guess, timeStamp, guessNumber) => {
     let wordGuess = document.createElement('td')
     wordGuess.innerText = guess
     let timeData = document.createElement('td')
-    timeData.innerText = timeStamp
-    guessTableBodyRow.append(guessRank, wordGuess, timeData) // Append all 5 cells to the table row
+    timeData.innerText = new Date(timeStamp).toLocaleString()
+    let userData = document.createElement('td')
+    userData.innerText = user
+    guessTableBodyRow.append(userData, guessRank, wordGuess, timeData) // Append all 4 cells to the table row
     guessTable.append(guessTableBodyRow) // Append the current row to the guess table body
 }
 

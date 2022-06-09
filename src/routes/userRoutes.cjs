@@ -45,9 +45,8 @@ userRouter.get('/get/stats', function (req, res) {
 })
 
 userRouter.get('/get/match', function (req,res) {
-  const username = req.query.user
   const game = req.query.game
-  getUserGuesses(game,username).then(
+  getUserGuesses(game).then(
     (result) => {
       res.send(result)
     }
