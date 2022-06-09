@@ -46,7 +46,7 @@ module.exports = function (io) {
       socket.data.canGuess = true
 
       // We add _game_ and numPlayers to the gameID so that we can determine if the room (socket.io) (which has a identity of gameID) is a game or if it is some other room.
-      const gameID = `${socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length)}_game_${numPlayers.toString()}_${socket.data.gameType}`
+      const gameID = `${socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length)}_game_${numPlayers.toString()}`
 
       console.log(socket.data.wordToGuess)
 
@@ -161,7 +161,7 @@ module.exports = function (io) {
           console.log(`Successfully created game with details Database ID=${result.ID} GameType=${result.ModeChosen} Word=${result.WordToGuess} NumPlayers=${result.NumPlayers}`)
           console.log(result)
           const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
-          socket.emit('get_game_id', clientGameID, ((modeChosen === 1) ? 'StandardCreate' : 'CustomCreate'))
+          socket.emit('get_game_id', clientGameID)
         }).catch(() => {
           socket.emit('invalid_game_mode')
         })
@@ -190,7 +190,6 @@ module.exports = function (io) {
       if (socket.data.canGuess === true) {
         isGuessAWord(letterArray[currentWordIndex].join('')).then((result) => {
           if (result === true) {
-            socket.data.guessesRemaining = socket.data.guessesRemaining - 1
             const playersGuess = letterArray[currentWordIndex].join('')
             logPlayersGuess(playersGuess, socket.data.databaseID, socket.data.playerName).catch((err) => {
               console.log(err.message)
@@ -204,19 +203,12 @@ module.exports = function (io) {
                 console.log(err.message)
               })
 
-              socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin, socket.data.wordToGuess) // These values get sent back to the sender.
-              socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum, socket.data.wordToGuess) // These values get broadcast to everyone except the sender.
+              socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
+              socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
             } else {
               socket.emit('update_player_screen', letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin) // These values get sent back to the sender.
               socket.broadcast.to(socket.data.roomID).emit('update_opponent_colors', colorArr, didTheyWin, socket.data.playerName, socket.data.playerNum) // These values get broadcast to everyone except the sender.
             }
-
-            playersCanGuess(io, socket.data.roomID).then((result) => {
-              if (result === false) {
-                // Everybody is out of guesses, so nobody wins.
-                io.in(socket.data.roomID).emit('nobody_won', socket.data.wordToGuess)
-              }
-            }).catch((err) => { console.log(err.message) })
           } else {
             socket.emit('word_not_found')
           }
@@ -341,7 +333,6 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
       socket.data.playerName = playerName
       socket.data.roomID = gameID
       socket.data.numPlayers = numPlayers
-      socket.data.guessesRemaining = 6
 
       // Add the player to the room
       socket.join(socket.data.roomID)
@@ -376,8 +367,7 @@ async function getOpenGames (io) {
       if (key.includes('game')) {
         // Now we know that this room is a game room.
         // Let's see how many players are going to be playing.
-        // const expectedPlayerNum = parseInt(key.substring(key.length - 1))
-        const expectedPlayerNum = parseInt(key.substring(key.lastIndexOf('_') - 1, key.lastIndexOf('_')))
+        const expectedPlayerNum = parseInt(key.substring(key.length - 1))
 
         // Let's check if the room is empty
         if (isRoomEmpty(io, key)) {
@@ -390,7 +380,8 @@ async function getOpenGames (io) {
               const currentPlayerNum = parseInt(io.sockets.adapter.rooms.get(key).size)
               if (currentPlayerNum < expectedPlayerNum) {
                 // There's at least one slot available.
-                roomArr.push({ roomName: key.substring(0, key.indexOf('_')), availSlots: expectedPlayerNum - currentPlayerNum, gameType: (key.substring(key.lastIndexOf('_') + 1)) === '1' ? 'Standard' : 'Custom' })
+                const temp = expectedPlayerNum - currentPlayerNum
+                roomArr.push({ roomName: key.substring(0, key.indexOf('_')), availSlots: temp })
               }
             }
           }).catch((err) => {
@@ -457,20 +448,4 @@ function isGameIDValid (gameID) {
   }
 
   return false
-}
-
-async function playersCanGuess (io, roomID) {
-  return new Promise((resolve, reject) => {
-    io.in(roomID).fetchSockets().then((sockets) => {
-      let canAnyPlayerGuess = false
-      for (const sock of sockets) {
-        if (sock.data.guessesRemaining > 0) {
-          canAnyPlayerGuess = true
-        }
-      }
-      resolve(canAnyPlayerGuess)
-    }).catch((err) => {
-      console.log(err.message)
-    })
-  })
 }

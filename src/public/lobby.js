@@ -17,7 +17,6 @@ socket.connect()
 
 // First, lets remove any previous gameIDs from the session storage.
 sessionStorage.removeItem('gameID')
-sessionStorage.removeItem('gameType')
 
 // Hide the custom word field for now since the standard radio button is selected by default.
 $('#customWordField').hide()
@@ -64,9 +63,9 @@ socket.on('update_game_list', (openGames) => {
 
     gameName.innerHTML = openGames[i].roomName
     availPlayers.innerHTML = openGames[i].availSlots
-    gameType.innerHTML = openGames[i].gameType
-    joinBtn.innerHTML = `<button class="btn btn-primary col-4" style="width:100%" id="${openGames[i].roomName},${openGames[i].gameType}">Join game</button>`
-    document.getElementById(`${openGames[i].roomName},${openGames[i].gameType}`).addEventListener('click', joinRunningGame)
+    gameType.innerHTML = 'TODO'
+    joinBtn.innerHTML = `<button class="btn btn-primary col-4" style="width:100%" id="${openGames[i].roomName}">Join game</button>`
+    document.getElementById(openGames[i].roomName).addEventListener('click', joinRunningGame)
   }
 })
 
@@ -80,7 +79,6 @@ socket.on('get_game_id', (gameID) => {
   console.log(gameID)
   console.log(`UUID: ${gameID.substring(0, 36)} GameID: ${gameID.substring(36)}`)
   sessionStorage.setItem('gameID', gameID)
-  sessionStorage.setItem('gameType', gameType)
   window.location.href = '/game/play'
 })
 
@@ -95,8 +93,7 @@ function joinRunningGame (event) {
   // Let's also disable the create game button since the user is already joining a game.
   $('#createGameBtn').attr('disabled', 'disabled')
 
-  sessionStorage.setItem('gameID', this.id.substring(0, this.id.indexOf(',')))
-  sessionStorage.setItem('gameType', this.id.substring(this.id.indexOf(',') + 1))
+  sessionStorage.setItem('gameID', this.id)
   window.location.href = '/game/play'
 }
 
