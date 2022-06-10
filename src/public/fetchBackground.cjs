@@ -9,9 +9,7 @@ function getBackground() {
   $.post('/game/api/BackgroundData', { usernameInput: username })
     .done(function (response) {
       const new_response = response.recordset[0].Background
-      console.log(new_response)
       const background = document.querySelector('body')
-
       if (new_response === 'Mountains') {
         background.style.setProperty('background-image', 'url("/src/public/Mountain.jpg")')
       } else if (new_response === 'Forest') {

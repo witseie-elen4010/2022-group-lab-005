@@ -12,7 +12,6 @@ userRouter.get('/api/DarkModeData', async function (req, res) {
   const username = req.query.usernameInput
   getMode(username).then(
     (result) => {
-      console.log(result)
       res.send(result)
     }
   ).catch(console.error)

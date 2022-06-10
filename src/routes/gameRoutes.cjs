@@ -35,7 +35,7 @@ gameRouter.get('/game_debug', function (pos, req) { // works
 })
 
 gameRouter.post('/api/BackgroundData', async function (req, res) {
-  const username = req.query.usernameInput
+  const username = req.body.usernameInput
   getBackground(username).then(
     (result) => {
       res.send(result)
