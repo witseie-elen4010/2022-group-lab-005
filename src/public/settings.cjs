@@ -15,7 +15,7 @@ const darkModeButton = document.getElementById('darkButton')
 darkModeButton.addEventListener('click', function () {
   const mode = 'true'
   // save dark mode in cookie
-  document.cookie = 'darkMode=' + mode + ';'
+  document.cookie = 'darkMode=' + mode + '; path=/'
   // send dark mode is true to server
   sendModeToServer(mode)
   // remove light mode class
@@ -30,7 +30,7 @@ const lightModeButton = document.getElementById('lightButton')
 lightModeButton.addEventListener('click', function () {
   const mode = 'false'
   // save dark mode in cookie
-  document.cookie = 'darkMode=' + mode + ';'
+  document.cookie = 'darkMode=' + mode + '; path=/'
   // send dark mode is false to server
   sendModeToServer(mode)
   // remove dark mode class
