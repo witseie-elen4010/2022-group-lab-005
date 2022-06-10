@@ -9,10 +9,10 @@ jest.setTimeout(30000)
 
 // -----------------
 // user friend list
-// test("Get the user's friends where the user sent friend request first", async () => {
-//   const data = await getUserFriends('winner')
-//   await expect(data.recordset.length).toBe(1)
-// })
+test("Get the user's friends where the user sent friend request first", async () => {
+  const data = await getUserFriends('winner')
+  await expect(data.recordset.length).toBe(1)
+})
 
 test("Get the user's friends where the user sent friend request first, but user does not have friends", async () => {
   const data = await getUserFriends('use')
