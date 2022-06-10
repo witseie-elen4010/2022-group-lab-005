@@ -9,15 +9,15 @@ test('Check Beach option is successfully updated into Settings Table', () => {
 })
 
 jest.setTimeout(30000)
-  test('Check nothing is returned if user is not in database', () => {
-    return GameBackground.getBackground('').then(result => {
-        expect(result.recordset[0]).toBe(undefined)
-    })
+test('Check nothing is returned if user is not in database', () => {
+  return GameBackground.getBackground('').then(result => {
+    expect(result.recordset[0]).toBe(undefined)
   })
+})
 
 test('Check the correct background is returned for user', () => {
   GameBackground.changeBackground('Beach', 'robyn')
   return GameBackground.getBackground('robyn').then(result => {
-      expect(result.recordset[0].Background).toBe('Beach')
+    expect(result.recordset[0].Background).toBe('Beach')
   })
 })
