@@ -24,10 +24,10 @@ test("Get the user's friends where the friend sent the user friend request first
   await expect(data.recordset.length).toBe(1)
 })
 
-test("Get the user's friends where the user sent friend request first, but user does not have friends", async () => {
-  const data = await getFriendUser('use')
-  await expect(data.recordset.length).toBe(0)
-})
+// test("Get the user's friends where the user sent friend request first, but user does not have friends", async () => {
+//   const data = await getFriendUser('use')
+//   await expect(data.recordset.length).toBe(0)
+// })
 
 // -----------------
 // user pending friend list
