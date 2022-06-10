@@ -16,15 +16,15 @@ test('Check password is updated in the Users table ', () => {
 })
 
 jest.setTimeout(30000)
-  test('Check nothing is returned if user is not in database', () => {
-    return GameSettings.getMode('').then(result => {
-        expect(result.recordset[0]).toBe(undefined)
-    })
+test('Check nothing is returned if user is not in database', () => {
+  return GameSettings.getMode('').then(result => {
+    expect(result.recordset[0]).toBe(undefined)
   })
+})
 
 test('Check the correct dark mode setting is returned for user', () => {
-    GameSettings.changeMode('true', 'robyn')
+  GameSettings.changeMode('true', 'robyn')
   return GameSettings.getMode('robyn').then(result => {
-      expect(result.recordset[0].isDarkmode).toBe(true)
+    expect(result.recordset[0].isDarkmode).toBe(true)
   })
 })

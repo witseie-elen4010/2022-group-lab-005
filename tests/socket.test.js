@@ -1,4 +1,4 @@
-jest.setTimeout(25000)
+jest.setTimeout(50000)
 
 const express = require('express')
 const { set } = require('express/lib/application')
@@ -184,6 +184,34 @@ describe('Test socket.cjs', () => {
 
     lobbyClient.connect()
     lobbyClient.emit('create_game', 3, 2, 'hello')
+  })
+
+  test('Create a custom game with 3 players using a word to guess that doesn\'t exist', (done) => {
+    // Make the client.
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      lobbyClient.close()
+      throw new Error('Game should not be made because the word is invalid')
+    })
+
+    lobbyClient.on('invalid_word', () => {
+      lobbyClient.close()
+      done()
+    })
+
+    lobbyClient.on('invalid_game_mode', () => {
+      lobbyClient.close()
+      throw new Error('invalid_game_mode')
+    })
+
+    lobbyClient.on('invalid_player_number', () => {
+      lobbyClient.close()
+      throw new Error('invalid_player_number')
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 3, 2, 'qwert')
   })
 
   test('Create a game with an invalid game mode', (done) => {
