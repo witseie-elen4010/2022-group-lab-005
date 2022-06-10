@@ -83,8 +83,6 @@ function recieveFriendUser (response) {
   const friendList = document.getElementById('Friend list')
   if (haveFriends === true) {
     friendList.innerHTML += temp
-  } else {
-    friendList.innerHTML = temp
   }
 }
 
