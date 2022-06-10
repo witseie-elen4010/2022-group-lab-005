@@ -101,7 +101,6 @@ backButton.addEventListener('click', function () {
     location.href = '/'
 }, false)
 
-
 setModeForPage()
 function setModeForPage () {
   const isDarkmode = getFromCookie('darkMode', document.cookie)
@@ -113,7 +112,6 @@ function setModeForPage () {
     document.getElementById('matchTable').classList.remove('table-striped')
     document.getElementById('matchTable').style.color = 'white'
     document.getElementById('matchTableBody').style.color = 'white'
-    document.getElementById('matchTableBodyRow').style.color = 'white'
   } else {
     document.body.classList.remove('bg-dark')
     document.body.classList.add('bg-light')
