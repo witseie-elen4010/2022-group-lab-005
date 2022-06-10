@@ -151,11 +151,15 @@ h2{
 
 .container{
   visibility: hidden;
+  position: relative;
+  justify-content: center;
+  display: flex;
 }
 
 .containerBackground{
-  position: absolute;
-  left: 85%;
+  position: relative;
+  justify-content: center;
+  display: flex;
 }
 
 .background-popup-visible{

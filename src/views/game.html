@@ -89,22 +89,6 @@
       <h1 style="text-align:center">Hazard a Guess Game Time!</h1>
     </div>
 
-    <div class="containerBackground">
-      <div class="btn-group-vertical">
-        <button type="button" class="btn btn-light" style = "width: 180px;" onclick=openBackgroundPopup() id="changeBackgroundButton">Change
-          Background</button>
-        <div class="container" style="position: relative; left: -11px">
-          <div id="background_popup" class="btn-group-vertical" >
-            <button type="button" class="btn btn-primary" style="width: 180px;" id="forestButton">Forest</button>
-            <button type="button" class="btn btn-primary" style="width: 180px;" id="sunBeachButton">Sunny Beach</button>
-            <button type="button" class="btn btn-primary" style="width: 180px;" id="mountainsButton">Mountains</button>
-            <button type="button" class="btn btn-primary" style="width: 180px;" id="noneButton">None</button>
-            <button type="button" class="btn btn-secondary" style="width: 180px;" onclick="closeBackgroundPopup()" id="option">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div id=gridContainer>
       <div id="playerDiv" class="unselectable">
         <div class="wordleDiv">
@@ -468,9 +452,21 @@
           </div>
         </div>
       </div>
-
+    </div>
+    <div class="containerBackground">
+      <button type="button" class="btn btn-primary btn-sm" onclick=openBackgroundPopup()
+        id="changeBackgroundButton">Background</button>
+    </div>
+    <div class="container">
+      <div id="background_popup">
+        <button type="button" class="btn btn-primary btn-sm" id="forestButton">Forest</button>
+        <button type="button" class="btn btn-primary btn-sm" id="sunBeachButton">Sunny Beach</button>
+        <button type="button" class="btn btn-primary btn-sm" id="mountainsButton">Mountains</button>
+        <button type="button" class="btn btn-primary btn-sm" id="noneButton">None</button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="closeBackgroundPopup()"
+          id="option">Close</button>
+      </div>
     </div>
   </div>
 </body>
-
 </html>
