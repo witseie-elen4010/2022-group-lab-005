@@ -1,12 +1,11 @@
 # ADR 1: Database design
 ## Context
-Update to the orginal Database design to as new tables are needed and old ones are changes
+Update to the original Database design as new tables are needed and old ones are modified.
 ## Decision
 We will make use of seven tables to store all the data in a database. These seven tables have been designed in such a way as to ensure that the number of duplicate entries is kept to a minimum. To do this, a primary key in one table may act as a foreign key in another table. By doing this, we can associate a row in one table with a row in a different table. The names of the fields in each table have been chosen in such a way that they are self-explanatory.
 
-
 ### Friends table
-This table consist of two foriegn keys from the table Users, and it also contains a column containing the friend relationship between the Users.
+This table consists of two foreign keys from the table Users, and it also contains a column containing the friend relationship between the Users.
 
 | Field       	| Type                    	| Can contain null value? 	|
 |-------------	|-------------------------	|-------------------------	|
@@ -50,17 +49,16 @@ Note that 🔑 indicates a primary key and 🔶 indicates a foreign key.
 
 ### Settings table
 This table contains the username which is the primary key for this table, and it is at the same time a foreign key from table Users. It is used to link which user the settings are related to.
-| Field       	| Type      	| Can contain null value? 	|
-|-------------- |------------ |-------------------------	|
+| Field | Type | Can contain null value? |
+| ----- | ---- | ----------------------- ||
 | Username(🔑🔶)  | Character 	| No                      	|
 | Background 	  | Character 	| No                      	|
 | isDarkmode	  | Character 	| No                      	|
 
 Note that 🔑 indicates a primary key and 🔶 indicates a foreign key.
 
-
 ### UserGame table
-This table consist of two foreign keys to see who is in the same game at the same time.
+This table consists of two foreign keys to see who is in the same game at the same time.
 
 | Field      	  | Type                    	| Can contain null value? 	|
 |--------------	|-------------------------	|-------------------------	|
@@ -83,7 +81,7 @@ Note that 🔑 indicates a primary key.
 
 
 ### Vocabulary table
-This table contains the primary key ID and its associated word , this tables stores all the words the user's guesses can come from.
+This table contains the primary key ID and its associated word, this table stores all the words the user's guesses can come from.
 
 | Field       	| Type                    	| Can contain null value? 	|
 |-------------	|-------------------------	|-------------------------	|
@@ -97,9 +95,9 @@ Note that 🔑 indicates a primary key.
 Accepted
 
 ## Consequences
-- Due to the nature of the database scheme, changes that are made to the databse will affect the code, and code is updated to suit the database design.
-- deletion of some variables will not be allowed as some columns(🔑primary key) are predecessor of other columns(🔶foreign key).
-- The database is well structured and normalised. This means that to show specific information, calculations and database result sorting will have to occur. 
+- Due to the nature of the database scheme, changes that are made to the database will affect the code, and the code is updated to suit the database design.
+- Deletion of some variables will not be allowed as some columns(🔑primary key) are predecessors of other columns(🔶foreign key).
+- The database is well structured and normalised. This means that to show specific information, calculations and database results sorting will have to occur. 
 
 ## User Contribution
 Huan Lei -> users table
@@ -112,4 +110,4 @@ Roger de Mello Koch -> Game table
 
 Jesse van der Merwe -> UserGame table
 
-Nicholas Warrenar -> Guess table
+Nicholas Warrener -> Guess table
