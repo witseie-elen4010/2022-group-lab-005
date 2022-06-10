@@ -24,6 +24,7 @@ function setModeForPage () {
     document.getElementById('gameModeContainer').style.color = 'white'
     document.getElementById('gameInfo').style.color = 'white'
     document.getElementById('gameInfo').classList.remove('table-hover')
+    document.getElementById('customWordField').style.color = 'black'
   } else {
     document.body.classList.remove('bg-dark')
     document.body.classList.add('bg-light')
@@ -84,6 +85,19 @@ socket.on('invalid_player_number', () => {
 
 socket.on('invalid_word', () => {
   document.getElementById('feedbackText').innerHTML = 'Your word is not in our database, please pick another word.'
+  $('#invalidWord').show()
+  document.getElementById('customWord').className = 'form-control is-invalid'
+
+  // Re-enable all the buttons
+  $('#createGameBtn').removeAttr('disabled')
+  $('#gameInfoTableBody').find('button').removeAttr('disabled')
+
+  // Remove loading icon
+  document.getElementById('createGameBtn').innerHTML = 'Create game'
+})
+
+socket.on('invalid_characters_in_custom_word', () => {
+  document.getElementById('feedbackText').innerHTML = 'Your word must only contain letters of the alphabet.'
   $('#invalidWord').show()
   document.getElementById('customWord').className = 'form-control is-invalid'
 
