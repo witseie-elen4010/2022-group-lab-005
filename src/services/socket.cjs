@@ -167,6 +167,9 @@ module.exports = function (io) {
             } else {
               socket.emit('invalid_word')
             }
+          }).catch(err => {
+            console.log(err.message)
+            socket.emit('invalid_characters_in_custom_word')
           })
         } else {
           socket.emit('invalid_game_mode')
@@ -476,7 +479,9 @@ async function playersCanGuess (io, roomID) {
       let canAnyPlayerGuess = false
       for (const sock of sockets) {
         if (sock.data.guessesRemaining > 0) {
-          canAnyPlayerGuess = true
+          if (sock.data.canGuess === true) {
+            canAnyPlayerGuess = true
+          }
         }
       }
       resolve(canAnyPlayerGuess)

@@ -95,6 +95,19 @@ socket.on('invalid_word', () => {
   document.getElementById('createGameBtn').innerHTML = 'Create game'
 })
 
+socket.on('invalid_characters_in_custom_word', () => {
+  document.getElementById('feedbackText').innerHTML = 'Your word must only contain letters of the alphabet.'
+  $('#invalidWord').show()
+  document.getElementById('customWord').className = 'form-control is-invalid'
+
+  // Re-enable all the buttons
+  $('#createGameBtn').removeAttr('disabled')
+  $('#gameInfoTableBody').find('button').removeAttr('disabled')
+
+  // Remove loading icon
+  document.getElementById('createGameBtn').innerHTML = 'Create game'
+})
+
 socket.on('get_game_id', (gameID, gameType) => {
   console.log(gameID)
   console.log(`UUID: ${gameID.substring(0, 36)} GameID: ${gameID.substring(36)}`)
