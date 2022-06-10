@@ -31,7 +31,10 @@ $(function () {
                                     appendMatch(out.recordset[i].WordToGuess, out.recordset[i].GameType, out.recordset[i].NumPlayers, out.recordset[i].WhoWon, out.recordset[i].ID, out.recordset[i].GameDateTime)
                                 }
                             }
-                        )
+                        ).fail(
+                            function (serverResponse) {
+                                alert(serverResponse)
+                            })
                     }).fail(
                         function (serverResponse) {
                             alert(serverResponse)
