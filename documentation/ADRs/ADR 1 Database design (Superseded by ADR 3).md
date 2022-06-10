@@ -53,7 +53,7 @@ This table consists of data associated with each user. The ``DarkMode`` field is
 Note that 🔑 indicates a primary key.
 
 ## Status
-Accepted
+Superseded (see ADR 3).
 
 ## Consequences
 - Due to the nature of the database scheme, changes to features that require more fields to be added to existing tables may impact other code that is in production.
