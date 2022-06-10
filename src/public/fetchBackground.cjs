@@ -4,7 +4,7 @@ $(function () {
   getBackground()
 })
 
-function getBackground() {
+function getBackground () {
   const username = getFromCookie('username', document.cookie)
   $.post('/game/api/BackgroundData', { usernameInput: username })
     .done(function (response) {
@@ -22,4 +22,3 @@ function getBackground() {
       alert(serverResponse)
     })
 }
-

@@ -1,6 +1,5 @@
 'use strict'
 
-
 function sendBackgroundToServer (background) {
   console.log(background)
   // send new background to page
@@ -20,4 +19,3 @@ function dataReceived (response) {
   const msgFmServer = document.getElementById('msgFmServer')
   const statusTag = document.getElementById('status')
 }
-
