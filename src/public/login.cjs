@@ -1,26 +1,20 @@
 'use strict'
-const request = new XMLHttpRequest()
-request.addEventListener('error', onError)
 let loginOrRegister = true
 
 window.onload = function () {
   document.getElementById('loginButton').addEventListener('click', function (evt) {
     evt.preventDefault()
     document.getElementById('registerButton').disabled = true
+    document.getElementById('loginButton').disabled = true
     loginOrRegister = true
-    // open the post request to the server with url of log
-    request.open('POST', '/log', true)
-    request.setRequestHeader('Content-type', 'application/json')
     updateAndSendFormControl()
   })
 
   document.getElementById('registerButton').addEventListener('click', function (evt) {
     evt.preventDefault()
+    document.getElementById('registerButton').disabled = true
     document.getElementById('loginButton').disabled = true
     loginOrRegister = false
-    // open the post request to the server with url of log
-    request.open('POST', '/register', true)
-    request.setRequestHeader('Content-type', 'application/json')
     updateAndSendFormControl()
   })
 }
@@ -31,40 +25,44 @@ function updateAndSendFormControl () {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
     document.getElementById('output').innerHTML = 'Please input your username'
-    if (loginOrRegister) {
-      document.getElementById('registerButton').disabled = false
-    } else {
-      document.getElementById('loginButton').disabled = false
-    }
+    document.getElementById('registerButton').disabled = false
+    document.getElementById('loginButton').disabled = false
   } else if (document.getElementById('password').value === '') {
     document.getElementById('username').className = 'form-control'
     document.getElementById('password').className = 'form-control is-invalid'
     document.getElementById('output').innerHTML = 'Please input your password'
-    if (loginOrRegister) {
-      document.getElementById('registerButton').disabled = false
-    } else {
-      document.getElementById('loginButton').disabled = false
-    }
+    document.getElementById('registerButton').disabled = false
+    document.getElementById('loginButton').disabled = false
   } else {
     // get username and password and send it via json
     const username = document.getElementById('username').value
     const password = document.getElementById('password').value
     const hashedPassword = addingSomeSaltAndHash(password)
-    request.send(JSON.stringify({ usernameInput: username, passwordInput: hashedPassword }))
-    // wait for the server to respond back
-    request.addEventListener('load', receivedValue)
+    if (loginOrRegister === true) {
+      $.get('/log', { usernameInput: username, passwordInput: hashedPassword }).done(
+        function (response) {
+          receivedValue(response)
+        }
+      ).fail(
+        function (serverResponse) {
+          alert(serverResponse)
+        })
+    } else {
+      $.get('/register', { usernameInput: username, passwordInput: hashedPassword }).done(
+        function (response) {
+          receivedValue(response)
+        }
+      ).fail(
+        function (serverResponse) {
+          alert(serverResponse)
+        })
+    }
   }
 }
 
-function receivedValue () {
-  // parse the data received from server
-  const response = JSON.parse(this.responseText)
-  // get the msg of the json (get the value of a field loggedInOrNot)
+function receivedValue (response) {
   const msg = response.loggedInOrNot
-  console.log(msg)
-  // out put the value
   document.getElementById('output').innerHTML = msg
-
   if (msg === 'Please input a valid username') {
     document.getElementById('username').className = 'form-control is-invalid'
     document.getElementById('password').className = 'form-control'
@@ -80,16 +78,8 @@ function receivedValue () {
     getMode(usernameText)
     // redirect in getMode
   }
-  if (loginOrRegister === true) {
-    document.getElementById('registerButton').disabled = false
-  } else {
-    document.getElementById('loginButton').disabled = false
-  }
-}
-
-function onError () {
-  // Let's tell the user that something wrong happened.
-  document.getElementById('output').innerHTML = 'Status: Error communicating with server.'
+  document.getElementById('registerButton').disabled = false
+  document.getElementById('loginButton').disabled = false
 }
 
 function addingSomeSaltAndHash (password) {
