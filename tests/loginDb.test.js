@@ -1,5 +1,12 @@
 'use strict'
+const { closeAll } = require('../src/services/poolManagement.cjs')
+
 const { LogIn, registerUser, getUser, validateInput } = require('../src/services/loginDb')
+
+afterAll(() => {
+  closeAll()
+})
+jest.setTimeout(10000)
 
 test('user input if username input empty and password is empty', () => {
   const data = validateInput('', '')
@@ -30,20 +37,17 @@ test('user login if username does not exist', async () => {
   const data = await LogIn('dadadadada', 'wrongpassword')
   await expect(data).toBe('Account does not exist.')
 })
-jest.setTimeout(10000)
 
 // winner is a user in the database with password：fbe789cb41b2fc32df9b89cacff9830d85ac62de09ca48395ebcef69e069160a
 test('user login if password is incorrect', async () => {
   const data = await LogIn('winner', 'wrongpassword')
   await expect(data).toBe('Check username and password.')
 })
-jest.setTimeout(10000)
 
 test('user login is sucessful', async () => {
   const data = await LogIn('winner', 'fbe789cb41b2fc32df9b89cacff9830d85ac62de09ca48395ebcef69e069160a')
   await expect(data).toBe('User is now logged in')
 })
-jest.setTimeout(10000)
 
 // code above is for Login function
 // ---------------------------------------
@@ -61,11 +65,8 @@ test('Check if the user exists', async () => {
   const data = await getUser('winner')
   await expect(data.recordset.length).toBe(1)
 })
-jest.setTimeout(10000)
 
 test('Check if the user exists', async () => {
   const data = await getUser('use')
   await expect(data.recordset.length).toBe(0)
 })
-
-jest.setTimeout(10000)
