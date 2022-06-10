@@ -5,6 +5,7 @@ const { set } = require('express/lib/application')
 const { createServer } = require('http')
 const { Server } = require('socket.io')
 const Client = require('socket.io-client')
+const { closeAll } = require('../src/services/poolManagement.cjs')
 const soc = require('../src/services/socket.cjs')
 
 describe('Test socket.cjs', () => {
@@ -23,6 +24,7 @@ describe('Test socket.cjs', () => {
 
   // Close the server after we are done with all the tests.
   afterAll((done) => {
+    closeAll()
     io.close()
     done()
   })
