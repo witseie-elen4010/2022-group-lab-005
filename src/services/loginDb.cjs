@@ -76,7 +76,7 @@ async function registerUser (username, password) {
 
 async function getUser (username) {
   // Returns whether the user exists
-  const sqlCode = `SELECT * FROM [dbo].[Users]
+  const sqlCode = `SELECT Username FROM [dbo].[Users]
   WHERE [dbo].[Users].Username = '${username}';`
   return new Promise((resolve, reject) => {
     get('default').then(
