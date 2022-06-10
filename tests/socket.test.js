@@ -241,7 +241,6 @@ describe('Test socket.cjs', () => {
       lobbyClient.close()
 
       let didClient1Connect = false
-      const didClient2Connect = false
 
       // Now we make another client and attempt to connect it to the game.
       // Try establish a connection with the server.
@@ -258,6 +257,7 @@ describe('Test socket.cjs', () => {
       gameClient2.on('game_can_start', () => {
         expect(didClient1Connect).toBe(true)
         done()
+
         gameClient1.close()
         gameClient2.close()
       })
