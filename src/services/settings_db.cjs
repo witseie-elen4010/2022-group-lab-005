@@ -1,14 +1,15 @@
 'use strict'
-const { get } = require('./poolManagement.cjs')
+const { get, closeAll } = require('./poolManagement.cjs')
 
 module.exports = {
-  getMode: async function getMode(username) {
+  getMode: async function getMode (username) {
     // Get dark mode setting for specific user
     const modeRequest = `SELECT isDarkmode FROM Settings WHERE Username = '${username}'`
     return new Promise((resolve, reject) => {
       get('default').then(
         (pool) => pool.request().query(modeRequest).then(
           (result) => {
+            closeAll()// Creating two users back-to-back will create pool conflict. solution could be improved
             resolve(result)
           }
         ).catch(reject)
@@ -16,7 +17,7 @@ module.exports = {
     })
   },
 
-  changeMode: async function changeMode(DarkMode, username) {
+  changeMode: async function changeMode (DarkMode, username) {
     // update users table if dark mode has changed
     const sqlCode = `UPDATE Settings SET isDarkmode = '${DarkMode}' WHERE Username = '${username}'`
     return new Promise((resolve, reject) => {
@@ -29,7 +30,7 @@ module.exports = {
     })
   },
 
- changePassword: async function changePassword(password, username) {
+  changePassword: async function changePassword (password, username) {
     const sqlCode = `UPDATE Users SET Password = '${password}' WHERE Username = '${username}'`
     return new Promise((resolve, reject) => {
       console.log(sqlCode)
