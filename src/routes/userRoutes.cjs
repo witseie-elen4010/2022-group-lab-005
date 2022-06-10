@@ -8,8 +8,8 @@ const { getUserFriends, getFriendUser, getUserPendingFriends, getUserFriendReque
 
 const userRouter = express.Router()
 
-userRouter.post('/api/DarkModeData', async function (req, res) {
-  const username = req.body.usernameInput
+userRouter.get('/api/DarkModeData', async function (req, res) {
+  const username = req.query.usernameInput
   getMode(username).then(
     (result) => {
       res.send(result)

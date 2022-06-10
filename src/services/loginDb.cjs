@@ -56,7 +56,6 @@ async function registerUser (username, password) {
                     }
                   ).catch(reject)
                 ).catch(reject)
-
                 resolve('Registration completed')
               } else {
                 resolve('Account exists already.')

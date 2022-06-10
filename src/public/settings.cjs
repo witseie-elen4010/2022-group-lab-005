@@ -43,12 +43,10 @@ lightModeButton.addEventListener('click', function () {
 document.getElementById('updatePassword').addEventListener('click', function (evt) {
   evt.preventDefault()
   // open post request
-  request.open('POST', '/user/updatePassword', true)
-  request.setRequestHeader('Content-type', 'application/json')
   updateAndSendFormControl()
 })
 
-function updateAndSendFormControl () {
+function updateAndSendFormControl() {
   if (document.getElementById('password').value === '') {
     // if password field is empty display error
     document.getElementById('password').className = 'form-control is-invalid'
@@ -59,19 +57,19 @@ function updateAndSendFormControl () {
     // encrypt password
     const hashedPassword = addingSomeSaltAndHash(password)
     // send password and username to server
-    request.send(JSON.stringify({ usernameInput: username, passwordInput: hashedPassword }))
-    request.addEventListener('load', receivedValue)
+    $.post('/user/updatePassword', { usernameInput: username, passwordInput: hashedPassword })
+      .done(function (response) {
+        const msg = 'Password successfully updated'
+        console.log(msg)
+        document.getElementById('output').innerHTML = msg
+      })
+      .fail(function (serverResponse) {
+        alert(serverResponse)
+      })
   }
 }
 
-function receivedValue () {
-  const response = JSON.parse(this.responseText)
-  const msg = 'Password successfully updated'
-  console.log(msg)
-  document.getElementById('output').innerHTML = msg
-}
-
-function addingSomeSaltAndHash (password) {
+function addingSomeSaltAndHash(password) {
   const saltPassword = password + 'PleaseGiveGoodMark'
   const hash = CryptoJS.SHA256(saltPassword).toString()
   return hash

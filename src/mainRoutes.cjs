@@ -37,9 +37,9 @@ mainRouter.get('/loginRedirect', function (req, res) {
 
 /* POST */
 
-mainRouter.post('/log', async function (req, res) {
-  const username = req.body.usernameInput
-  const password = req.body.passwordInput
+mainRouter.get('/log', async function (req, res) {
+  const username = req.query.usernameInput
+  const password = req.query.passwordInput
 
   // This will send the username and password to the server code
   // the await will wait for the program to finish before carring on
@@ -48,9 +48,9 @@ mainRouter.post('/log', async function (req, res) {
   })
 })
 
-mainRouter.post('/register', async function (req, res) {
-  const username = req.body.usernameInput
-  const password = req.body.passwordInput
+mainRouter.get('/register', async function (req, res) {
+  const username = req.query.usernameInput
+  const password = req.query.passwordInput
 
   // This will send the username and password to the server code
   // the await will wait for the program to finish before carring on
