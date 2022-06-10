@@ -287,6 +287,186 @@ describe('Test socket.cjs', () => {
     lobbyClient.connect()
     lobbyClient.emit('create_game', 2, 1, 'none')
   })
+
+  test('Create a custom game with 3 players to test the behavior of a completely incorrect guess.', (done) => {
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      lobbyClient.close()
+
+      const gameClient1 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient1.auth = { sessionInfo: clientGameID, playerName: 'jesse1' }
+
+      const gameClient2 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient2.auth = { sessionInfo: clientGameID, playerName: 'jesse2' }
+
+      const gameClient3 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient3.auth = { sessionInfo: clientGameID, playerName: 'jesse3' }
+
+      gameClient3.on('game_can_start', () => {
+        const correctLetterArray = [['G', 'U', 'E', 'S', 'S'], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']]
+        const correctColorArray = [['n', 'n', 'n', 'n', 'n'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd']]
+        const correctCurrentWordCheck = ['X', 'X', 'X', 'X', 'X']
+        const correctDidTheyWin = false
+        const correctCurrWordIndex = 0
+        const correctAllLettersColorsArray = ['d', 'd', 'n', 'd', 'd', 'd', 'n', 'd', 'd', 'd', 'd', 'n', 'd', 'd', 'n', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
+
+        gameClient3.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin, wordToGuess) => {
+          expect(allLettersColorsArr.toString()).toBe(correctAllLettersColorsArray.toString())
+          expect(currWordIndex).toBe(correctCurrWordIndex)
+          expect(currentWordCheck.toString()).toBe(correctCurrentWordCheck.toString())
+          expect(didTheyWin).toBe(correctDidTheyWin)
+          expect(letterArr.toString()).toBe(correctLetterArray.toString())
+          expect(colorArr.toString()).toBe(correctColorArray.toString())
+          done()
+          gameClient1.close()
+          gameClient2.close()
+          gameClient3.close()
+        })
+
+        const letterArray = [['G', 'U', 'E', 'S', 'S'], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']]
+        const currentWordIndex = 0
+        const colorArray = [['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd']]
+        const currentWordCheck = ['X', 'X', 'X', 'X', 'X']
+        const allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
+
+        gameClient3.emit('send_guess', letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray)
+      })
+
+      gameClient1.connect()
+
+      setTimeout(function () {
+        gameClient2.connect()
+      }, 3000)
+
+      setTimeout(function () {
+        gameClient3.connect()
+      }, 3000)
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 3, 2, 'point')
+  })
+
+  test('Create a custom game with 3 players to test the behavior of a guess with some correct and some letters in the wrong space.', (done) => {
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      lobbyClient.close()
+
+      const gameClient1 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient1.auth = { sessionInfo: clientGameID, playerName: 'jesse1' }
+
+      const gameClient2 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient2.auth = { sessionInfo: clientGameID, playerName: 'jesse2' }
+
+      const gameClient3 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient3.auth = { sessionInfo: clientGameID, playerName: 'jesse3' }
+
+      gameClient3.on('game_can_start', () => {
+        const correctLetterArray = [['P', 'A', 'T', 'T', 'Y'], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']]
+        const correctColorArray = [['c', 'n', 'i', 'n', 'n'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd']]
+        const correctCurrentWordCheck = ['X', 'X', 'X', 'X', 'X']
+        const correctDidTheyWin = false
+        const correctCurrWordIndex = 0
+        const correctAllLettersColorsArray = ['d', 'd', 'd', 'd', 'i', 'n', 'd', 'd', 'd', 'c', 'n', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
+
+        gameClient3.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin, wordToGuess) => {
+          expect(allLettersColorsArr.toString()).toBe(correctAllLettersColorsArray.toString())
+          expect(currWordIndex).toBe(correctCurrWordIndex)
+          expect(currentWordCheck.toString()).toBe(correctCurrentWordCheck.toString())
+          expect(didTheyWin).toBe(correctDidTheyWin)
+          expect(letterArr.toString()).toBe(correctLetterArray.toString())
+          expect(colorArr.toString()).toBe(correctColorArray.toString())
+          done()
+          gameClient1.close()
+          gameClient2.close()
+          gameClient3.close()
+        })
+
+        const letterArray = [['P', 'A', 'T', 'T', 'Y'], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']]
+        const currentWordIndex = 0
+        const colorArray = [['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd']]
+        const currentWordCheck = ['X', 'X', 'X', 'X', 'X']
+        const allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
+
+        gameClient3.emit('send_guess', letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray)
+      })
+
+      gameClient1.connect()
+
+      setTimeout(function () {
+        gameClient2.connect()
+      }, 3000)
+
+      setTimeout(function () {
+        gameClient3.connect()
+      }, 3000)
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 3, 2, 'point')
+  })
+
+  test('Create a custom game with 3 players to test the behavior of a correct guess.', (done) => {
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      lobbyClient.close()
+
+      const gameClient1 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient1.auth = { sessionInfo: clientGameID, playerName: 'jesse1' }
+
+      const gameClient2 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient2.auth = { sessionInfo: clientGameID, playerName: 'jesse2' }
+
+      const gameClient3 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient3.auth = { sessionInfo: clientGameID, playerName: 'jesse3' }
+
+      gameClient3.on('game_can_start', () => {
+        const correctLetterArray = [['P', 'O', 'I', 'N', 'T'], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']]
+        const correctColorArray = [['c', 'c', 'c', 'c', 'c'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd']]
+        const correctCurrentWordCheck = ['X', 'X', 'X', 'X', 'X']
+        const correctDidTheyWin = true
+        const correctCurrWordIndex = 0
+        const correctAllLettersColorsArray = ['d', 'd', 'd', 'd', 'c', 'd', 'd', 'c', 'c', 'c', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'c', 'd', 'd']
+
+        gameClient3.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordCheck, allLettersColorsArr, didTheyWin, wordToGuess) => {
+          expect(allLettersColorsArr.toString()).toBe(correctAllLettersColorsArray.toString())
+          expect(currWordIndex).toBe(correctCurrWordIndex)
+          expect(currentWordCheck.toString()).toBe(correctCurrentWordCheck.toString())
+          expect(didTheyWin).toBe(correctDidTheyWin)
+          expect(letterArr.toString()).toBe(correctLetterArray.toString())
+          expect(colorArr.toString()).toBe(correctColorArray.toString())
+          done()
+          gameClient1.close()
+          gameClient2.close()
+          gameClient3.close()
+        })
+
+        const letterArray = [['P', 'O', 'I', 'N', 'T'], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']]
+        const currentWordIndex = 0
+        const colorArray = [['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd'], ['d', 'd', 'd', 'd', 'd']]
+        const currentWordCheck = ['X', 'X', 'X', 'X', 'X']
+        const allLettersColorsArray = ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'd']
+
+        gameClient3.emit('send_guess', letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray)
+      })
+
+      gameClient1.connect()
+
+      setTimeout(function () {
+        gameClient2.connect()
+      }, 3000)
+
+      setTimeout(function () {
+        gameClient3.connect()
+      }, 3000)
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 3, 2, 'point')
+  })
 })
 
 // Old tests
