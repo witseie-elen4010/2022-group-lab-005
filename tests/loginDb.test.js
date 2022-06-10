@@ -1,5 +1,5 @@
 'use strict'
-const { LogIn, registerUser, validateInput } = require('../src/services/loginDb')
+const { LogIn, registerUser, getUser, validateInput } = require('../src/services/loginDb')
 
 test('user input if username input empty and password is empty', () => {
   const data = validateInput('', '')
@@ -55,4 +55,17 @@ test('user registration if username exist already', async () => {
   const data = await registerUser('winner', 'wrongpassword')
   await expect(data).toBe('Account exists already.')
 })
+
+// getUser test
+test('Check if the user exists', async () => {
+  const data = await getUser('winner')
+  await expect(data.recordset.length).toBe(1)
+})
+jest.setTimeout(10000)
+
+test('Check if the user exists', async () => {
+  const data = await getUser('use')
+  await expect(data.recordset.length).toBe(0)
+})
+
 jest.setTimeout(10000)
