@@ -14,9 +14,13 @@ $(function () {
 const darkModeButton = document.getElementById('darkButton')
 darkModeButton.addEventListener('click', function () {
   const mode = 'true'
+  // save dark mode in cookie
   document.cookie = 'darkMode=' + mode + '; path=/'
+  // send dark mode is true to server
   sendModeToServer(mode)
+  // remove light mode class
   document.body.classList.remove('bg-light')
+  // add dark mode class
   document.body.classList.add('bg-dark')
   location.reload()
 }, false)
@@ -25,15 +29,20 @@ darkModeButton.addEventListener('click', function () {
 const lightModeButton = document.getElementById('lightButton')
 lightModeButton.addEventListener('click', function () {
   const mode = 'false'
+  // save dark mode in cookie
   document.cookie = 'darkMode=' + mode + '; path=/'
+  // send dark mode is false to server
   sendModeToServer(mode)
+  // remove dark mode class
   document.body.classList.remove('bg-dark')
+  // add light mode class
   document.body.classList.add('bg-light')
   location.reload()
 }, false)
 
 document.getElementById('updatePassword').addEventListener('click', function (evt) {
   evt.preventDefault()
+  // open post request
   request.open('POST', '/user/updatePassword', true)
   request.setRequestHeader('Content-type', 'application/json')
   updateAndSendFormControl()
@@ -41,12 +50,15 @@ document.getElementById('updatePassword').addEventListener('click', function (ev
 
 function updateAndSendFormControl () {
   if (document.getElementById('password').value === '') {
+    // if password field is empty display error
     document.getElementById('password').className = 'form-control is-invalid'
     document.getElementById('output').innerHTML = 'Please input new password'
   } else {
     const password = document.getElementById('password').value
     const username = getFromCookie('username', document.cookie)
+    // encrypt password
     const hashedPassword = addingSomeSaltAndHash(password)
+    // send password and username to server
     request.send(JSON.stringify({ usernameInput: username, passwordInput: hashedPassword }))
     request.addEventListener('load', receivedValue)
   }

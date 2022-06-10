@@ -12,6 +12,27 @@ $(function () {
   ).catch()
 })
 
+setModeForPage()
+function setModeForPage () {
+  const isDarkmode = getFromCookie('darkMode', document.cookie)
+  //  set current current scheme
+  if (isDarkmode === 'true') {
+    document.body.classList.remove('bg-light')
+    document.body.classList.add('bg-dark')
+    document.body.style.color = 'white'
+    document.getElementById('numPlayersContainer').style.color = 'white'
+    document.getElementById('gameModeContainer').style.color = 'white'
+    document.getElementById('gameInfo').style.color = 'white'
+  } else {
+    document.body.classList.remove('bg-dark')
+    document.body.classList.add('bg-light')
+    document.body.style.color = 'black'
+    document.getElementById('numPlayersContainer').style.color = 'black'
+    document.getElementById('gameModeContainer').style.color = 'black'
+    document.getElementById('gameInfo').style.color = 'black'
+  }
+}
+
 // Try establish a connection with the server.
 socket.connect()
 
@@ -167,3 +188,4 @@ document.getElementById('createGameBtn').addEventListener('click', () => {
 document.getElementById('homeButton').addEventListener('click', () => {
   window.location.href = '/'
 })
+

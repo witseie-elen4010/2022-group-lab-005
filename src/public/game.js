@@ -125,6 +125,8 @@ socket.on('update_player_screen', (letterArr, currWordIndex, colorArr, currWordC
   colorArray = colorArr
   currentWordCheck = currWordCheck
   allLettersColorsArray = allLettersColorsArr
+  document.addEventListener('keydown', keyboardInputEvent)
+  document.addEventListener('click', virtualKeyboardInputEvent)
 
   if (didTheyWin) {
     // Disable the keyboard.
@@ -148,11 +150,15 @@ socket.on('get_number', (num) => {
 socket.on('word_not_found', () => {
   document.getElementById('errorText').innerHTML = 'This word is not in our database. Please try a different word.'
   $('#gameErrorModal').modal('show')
+  document.addEventListener('keydown', keyboardInputEvent)
+  document.addEventListener('click', virtualKeyboardInputEvent)
 })
 
 socket.on('invalid_guess', () => {
   document.getElementById('errorText').innerHTML = 'You entered a word that contains illegal values. Please make sure your word only contains letters of the alphabet.'
   $('#gameErrorModal').modal('show')
+  document.addEventListener('keydown', keyboardInputEvent)
+  document.addEventListener('click', virtualKeyboardInputEvent)
 })
 
 socket.on('nobody_won', (wordToGuess) => {
@@ -258,6 +264,9 @@ function incrementLetterIndex () {
     currentLetterIndex = currentLetterIndex + 1
   } else {
     socket.emit('send_guess', letterArray, currentWordIndex, colorArray, currentWordCheck, allLettersColorsArray)
+    currentLetterIndex = 5
+    document.removeEventListener('keydown', keyboardInputEvent)
+    document.removeEventListener('click', virtualKeyboardInputEvent)
   }
 }
 

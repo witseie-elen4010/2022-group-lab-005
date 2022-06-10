@@ -142,11 +142,13 @@ async function getGameGuesses (gameID) {
 }
 
 async function isGuessAWord (word) {
-  const sqlCode = `SELECT * FROM [dbo].[Vocabulary]
-  WHERE Word = '${word.toLowerCase()}'`
-
   return new Promise((resolve, reject) => {
-    if (/^[a-zA-Z]+$/.test(word.toLowerCase()) === true && word.length === 5) {
+    const wordTrimmed = word.toLowerCase().substring(0, 5)
+
+    const sqlCode = `SELECT * FROM [dbo].[Vocabulary]
+  WHERE Word = '${wordTrimmed}'`
+
+    if (/^[a-zA-Z]+$/.test(wordTrimmed) === true) {
       get('default').then(
         (pool) => pool.request().query(sqlCode).then(
           (result) => {
