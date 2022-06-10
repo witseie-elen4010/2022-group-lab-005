@@ -151,56 +151,16 @@ h2{
 
 .container{
   visibility: hidden;
-  position: fixed;
-  display: inline-block;
-  background-color: black;
-  width: 400px;
-  height: 400px;
-  left: 70%;
-  top: 15%;
+}
+
+.containerBackground{
+  position: absolute;
+  left: 85%;
 }
 
 .background-popup-visible{
   visibility: visible;
 }
-
-.forest{
-  position:fixed;
-  left: 80%;
-  top: 20%;
-}
-
-.sunny-beach{
-  position:fixed;
-  left: 80%;
-  top: 25%;
-}
-
-.mountains{
-  position:fixed;
-  left: 80%;
-  top: 30%;
-}
-
-.none{
-  position:fixed;
-  left: 80%;
-  top: 35%;
-}
-
-.back{
-  position:fixed;
-  left: 80%;
-  top: 40%;
-}
-
-.change-background-button{
-  color: black;
-  position:fixed;
-  left: 80%;
-  top: 15%;
-}
-
 
 body{
   min-height: 100%;
