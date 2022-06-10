@@ -148,7 +148,7 @@ module.exports = function (io) {
       if (!isNaN(numPlayers) && Number.isInteger(Number(numPlayers)) && parseInt(numPlayers) > 1 && parseInt(numPlayers) < 8) {
         if (modeChosen === 1) {
           insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
-            console.log(result)
+            // console.log(result)
             const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
             socket.emit('get_game_id', clientGameID, 'StandardCreate')
           }).catch((err) => {
@@ -363,7 +363,7 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
 
       // Add the player to the room
       socket.join(socket.data.roomID)
-      console.log(`${playerName} has joined ${gameID}`)
+      // console.log(`${playerName} has joined ${gameID}`)
 
       // Add a listener for when a connected socket leaves the server.
       socket.on('disconnect', () => {

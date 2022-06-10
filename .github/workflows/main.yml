@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    env: #These are credentials for the test database, no client information is stored there!
+    env: #These are credentials for the test database, no client information is stored there!(with secrets this can be stored privately)
       DB_HOST: "elen4010-project-group5-test.database.windows.net"
       DB_USER: "ELEN4010_Group5_test@elen4010-project-group5-test"
       DB_PASSWORD: "Database1"
