@@ -43,6 +43,7 @@ async function getUserPendingFriends (username) {
     ).catch(reject)
   })
 }
+
 // return all pending friend requests user need to accept
 async function getUserFriendRequests (username) {
   const sqlCode = "SELECT Inviter FROM [dbo].[Friends] WHERE Invitee = '" + username + "' AND Status = 'pending';"

@@ -10,7 +10,7 @@ test('Check Beach option is successfully updated into Settings Table', () => {
 
 jest.setTimeout(30000)
   test('Check nothing is returned if user is not in database', () => {
-    return GameBackground.getBackground('bob').then(result => {
+    return GameBackground.getBackground('').then(result => {
         expect(result.recordset[0]).toBe(undefined)
     })
   })

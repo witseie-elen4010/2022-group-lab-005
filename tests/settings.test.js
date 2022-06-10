@@ -8,9 +8,16 @@ test('Check dark mode is true option is successfully updated into Settings Table
   })
 })
 
+test('Check password is updated in the Users table ', () => {
+  const password = 'e0f2c4b6d02d2769d585c7035dda43d5327460f53ff8508e9695e9af3bc9fe61'
+  GameSettings.changePassword(password, 'bob').then(result => {
+    expect(result).toBe(JSON.stringify({ message: `${password} has been saved to the database` }))
+  })
+})
+
 jest.setTimeout(30000)
   test('Check nothing is returned if user is not in database', () => {
-    return GameSettings.getMode('bob').then(result => {
+    return GameSettings.getMode('').then(result => {
         expect(result.recordset[0]).toBe(undefined)
     })
   })
