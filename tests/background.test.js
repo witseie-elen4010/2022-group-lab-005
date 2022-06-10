@@ -1,6 +1,10 @@
 'use strict'
 const GameBackground = require('../src/services/background_db.cjs')
 
+afterAll(() => {
+  closeAll()
+})
+
 test('Check Beach option is successfully updated into Settings Table', () => {
   const background = 'Beach'
   GameBackground.changeBackground(background, 'robyn').then(result => {
