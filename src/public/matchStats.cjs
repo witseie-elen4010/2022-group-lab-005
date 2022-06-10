@@ -62,7 +62,6 @@ backButton.addEventListener('click', function () {
   location.href = '/user/stats'
 }, false)
 
-'use strict'
 setModeForPage()
 function setModeForPage () {
   const isDarkmode = getFromCookie('darkMode', document.cookie)
