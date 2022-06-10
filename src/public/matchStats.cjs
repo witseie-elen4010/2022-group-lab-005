@@ -61,3 +61,24 @@ const backButton = document.getElementById('backButton')
 backButton.addEventListener('click', function () {
   location.href = '/user/stats'
 }, false)
+
+setModeForPage()
+function setModeForPage () {
+  const isDarkmode = getFromCookie('darkMode', document.cookie)
+  //  set current current scheme
+  if (isDarkmode === 'true') {
+    document.body.classList.remove('bg-light')
+    document.body.classList.add('bg-dark')
+    document.body.style.color = 'white'
+    document.getElementById('guessTable').classList.remove('table-striped')
+    document.getElementById('guessTable').style.color = 'white'
+    document.getElementById('guessTableBody').style.color = 'white'
+  } else {
+    document.body.classList.remove('bg-dark')
+    document.body.classList.add('bg-light')
+    document.body.style.color = 'black'
+    document.getElementById('guessTable').classList.add('table-striped')
+    document.getElementById('guessTable').style.color = 'black'
+    document.getElementById('guessTableBody').style.color = 'black'
+  }
+}
