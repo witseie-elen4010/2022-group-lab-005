@@ -87,7 +87,6 @@ socket.on('game_can_start', (playerNames) => {
     createKeyboard()
     updateKeyboard()
     createOpponentBoards()
-    console.log(playerNames)
     gameStart = true
   }
 })
@@ -175,7 +174,6 @@ if (window.sessionStorage.getItem('gameID') === null) {
 
 const gameID = window.sessionStorage.getItem('gameID')
 gameType = window.sessionStorage.getItem('gameType')
-console.log(gameType)
 // Check what game type it is and whether the player is the custom game owner
 if (gameType === 'CustomCreate') {
   customOwner = true

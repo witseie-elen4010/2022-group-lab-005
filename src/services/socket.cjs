@@ -48,7 +48,7 @@ module.exports = function (io) {
       // We add _game_ and numPlayers to the gameID so that we can determine if the room (socket.io) (which has a identity of gameID) is a game or if it is some other room.
       const gameID = `${socket.handshake.auth.sessionInfo.substring(0, socket.handshake.auth.sessionInfo.length)}_game_${numPlayers.toString()}_${socket.data.gameType}`
 
-      console.log(socket.data.wordToGuess)
+      // console.log(socket.data.wordToGuess)
 
       if (numPlayers !== -1 && gameID.length !== 0 && playerName.length !== 0) {
         if (!isRoomEmpty(io, gameID)) {
@@ -57,7 +57,7 @@ module.exports = function (io) {
             addPlayerToRoom(socket, gameID, playerName, numPlayers, io).then((result) => {
               if (parseInt(io.sockets.adapter.rooms.get(socket.data.roomID).size) === parseInt(socket.data.numPlayers)) {
                 // The room is now full. Let's start the game.
-                console.log(`All ${socket.data.numPlayers} players have joined ${socket.data.roomID}, starting the game.`)
+                // console.log(`All ${socket.data.numPlayers} players have joined ${socket.data.roomID}, starting the game.`)
 
                 // Before we start the game, let's query the DB and get a list of player names.
                 getPlayerNames(socket.data.databaseID).then((result) => {
@@ -114,7 +114,7 @@ module.exports = function (io) {
             if (err.number === 2627) {
               // A player that was in the game, disconnected and has now tried to reconnect.
               // This violates the primary key constraint in the UserGame table.
-              console.log('User cannot rejoin game')
+              // console.log('User cannot rejoin game')
               return next(new Error('game_already_running'))
             } else {
               console.log(err.message)
@@ -158,7 +158,7 @@ module.exports = function (io) {
           isGuessAWord(customWord).then(result => {
             if (result) {
               insertNewGameIntoDB(numPlayers, modeChosen, customWord).then((result) => {
-                console.log(result)
+                // console.log(result)
                 const clientGameID = `${uuidv4(result.ID).toString()}${result.ID.toString()}${numPlayers.toString()}`
                 socket.emit('get_game_id', clientGameID, 'CustomCreate')
               }).catch((err) => {
@@ -367,13 +367,13 @@ async function addPlayerToRoom (socket, gameID, playerName, numPlayers, io) {
 
       // Add a listener for when a connected socket leaves the server.
       socket.on('disconnect', () => {
-        console.log(`${socket.data.playerName} has disconnected`)
+        // console.log(`${socket.data.playerName} has disconnected`)
 
         if (socket.data.isGameRunning === undefined) {
           // This socket joined before the game starts so we can remove them
           // from the db if they leave before the game begins.
           removePlayerFromGame(socket.data.databaseID, socket.data.playerName).catch(() => {
-            console.log('Couldn\'t remove player from the game db')
+            // console.log('Couldn\'t remove player from the game db')
           })
         }
       })

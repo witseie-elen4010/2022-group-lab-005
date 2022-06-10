@@ -38,7 +38,7 @@ test('Game information can be retrieved', async () => {
 // there is a game where there is jesse1, jesse2 and jesse3 as participants
 test('Player names can be retrieved', async () => {
   await getPlayerNames(1018).then(result => {
-    console.log(result.recordset[0].Username)
+    // console.log(result.recordset[0].Username)
     expect(result.recordset[0].Username).toBe('jesse1')
     expect(result.recordset[1].Username).toBe('jesse2')
     expect(result.recordset[2].Username).toBe('jesse3')

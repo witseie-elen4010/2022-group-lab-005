@@ -32,7 +32,7 @@ async function checkUser (cookie) {
 
 // Gets an attribute in the cookie
 function getFromCookie (cname, cookie) {
-  const name = cname + "="
+  const name = cname + '='
   const decodedCookie = decodeURIComponent(cookie)
   const ca = decodedCookie.split(';')
   for (let i = 0; i < ca.length; i++) {
@@ -49,11 +49,9 @@ function getFromCookie (cname, cookie) {
 
 function createFakeUser () {
   // Used to check if a fake user is added to the cookie
-  console.log('Creating FakeUser')
+  // console.log('Creating FakeUser')
   let fakeUser = 'FakerUser'
   fakeUser = 'username=' + 'FakerUser'
-  console.log(fakeUser) // User for testing so the console.log stays
+  // console.log(fakeUser) // User for testing so the console.log stays
   return fakeUser
 }
-
-
