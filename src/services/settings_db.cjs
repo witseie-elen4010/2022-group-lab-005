@@ -21,7 +21,6 @@ module.exports = {
     // update users table if dark mode has changed
     const sqlCode = `UPDATE Settings SET isDarkmode = '${DarkMode}' WHERE Username = '${username}'`
     return new Promise((resolve, reject) => {
-      console.log(sqlCode)
       get('default').then(
         (pool) => pool.request().query(sqlCode).then(
           (result) => { resolve(JSON.stringify({ message: `${DarkMode} has been saved to the database` })) }
@@ -33,7 +32,7 @@ module.exports = {
   changePassword: async function changePassword (password, username) {
     const sqlCode = `UPDATE Users SET Password = '${password}' WHERE Username = '${username}'`
     return new Promise((resolve, reject) => {
-      console.log(sqlCode)
+      // console.log(sqlCode)
       get('default').then(
         (pool) => pool.request().query(sqlCode).then(
           (result) => { resolve(JSON.stringify({ message: `${password} has been saved to the database` })) }

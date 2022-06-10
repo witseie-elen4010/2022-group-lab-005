@@ -5,7 +5,7 @@ const { getUserFriends, getFriendUser, getUserPendingFriends, getUserFriendReque
 afterAll(() => {
   closeAll()
 })
-jest.setTimeout(10000)
+jest.setTimeout(30000)
 
 // -----------------
 // user friend list

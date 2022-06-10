@@ -46,7 +46,7 @@ gameRouter.post('/newBackground', jsonParser, async function (req, res) { // ?
   const username = req.body.usernameInput
   const background = req.body.back
 
-  console.log(`Server received: ${background}`)
+  // console.log(`Server received: ${background}`)
 
   changeBackground(background, username).then(
     (result) => {

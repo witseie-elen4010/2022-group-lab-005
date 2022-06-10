@@ -60,7 +60,7 @@ userRouter.post('/changeMode', jsonParser, async function (req, res) { // ?
   const username = req.body.usernameInput
   const darkMode = req.body.darkModeInput
 
-  console.log(`Server received: ${darkMode}`)
+  // console.log(`Server received: ${darkMode}`)
 
   changeMode(darkMode, username).then(
     (result) => {
@@ -73,7 +73,7 @@ userRouter.post('/updatePassword', jsonParser, async function (req, res) { // ?
   const username = req.body.usernameInput
   const password = req.body.passwordInput
 
-  console.log(`Server received: ${password}`)
+  // console.log(`Server received: ${password}`)
 
   changePassword(password, username).then(
     (result) => {

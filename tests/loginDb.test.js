@@ -6,7 +6,7 @@ const { LogIn, registerUser, getUser, validateInput } = require('../src/services
 afterAll(() => {
   closeAll()
 })
-jest.setTimeout(10000)
+jest.setTimeout(30000)
 
 test('user input if username input empty and password is empty', () => {
   const data = validateInput('', '')

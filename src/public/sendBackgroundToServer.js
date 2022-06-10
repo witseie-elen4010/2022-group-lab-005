@@ -1,7 +1,6 @@
 'use strict'
 
 function sendBackgroundToServer (background) {
-  console.log(background)
   // send new background to page
   const username = getFromCookie('username', document.cookie)
   $.post('/game/newBackground', { usernameInput: username, back: background })
