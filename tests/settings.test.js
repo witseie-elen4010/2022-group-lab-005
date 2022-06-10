@@ -1,5 +1,10 @@
 'use strict'
 const GameSettings = require('../src/services/settings_db.cjs')
+const { closeAll } = require('../src/services/poolManagement.cjs')
+
+afterAll(() => {
+  closeAll()
+})
 
 test('Check dark mode is true option is successfully updated into Settings Table', () => {
   const darkmode = 'true'

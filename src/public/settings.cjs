@@ -46,7 +46,7 @@ document.getElementById('updatePassword').addEventListener('click', function (ev
   updateAndSendFormControl()
 })
 
-function updateAndSendFormControl() {
+function updateAndSendFormControl () {
   if (document.getElementById('password').value === '') {
     // if password field is empty display error
     document.getElementById('password').className = 'form-control is-invalid'
@@ -60,7 +60,7 @@ function updateAndSendFormControl() {
     $.post('/user/updatePassword', { usernameInput: username, passwordInput: hashedPassword })
       .done(function (response) {
         const msg = 'Password successfully updated'
-        console.log(msg)
+        // console.log(msg)
         document.getElementById('output').innerHTML = msg
       })
       .fail(function (serverResponse) {
@@ -69,7 +69,7 @@ function updateAndSendFormControl() {
   }
 }
 
-function addingSomeSaltAndHash(password) {
+function addingSomeSaltAndHash (password) {
   const saltPassword = password + 'PleaseGiveGoodMark'
   const hash = CryptoJS.SHA256(saltPassword).toString()
   return hash
