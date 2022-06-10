@@ -24,6 +24,7 @@ function setModeForPage () {
     document.getElementById('gameModeContainer').style.color = 'white'
     document.getElementById('gameInfo').style.color = 'white'
     document.getElementById('gameInfo').classList.remove('table-hover')
+    document.getElementById('customWordField').style.color = 'black'
   } else {
     document.body.classList.remove('bg-dark')
     document.body.classList.add('bg-light')
