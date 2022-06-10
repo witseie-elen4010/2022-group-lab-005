@@ -1,5 +1,5 @@
 'use strict'
-const GameBackground = require('../src/services/background_db.cjs')
+const GameBackground = require('../src/services/backgroundDb.cjs')
 const { closeAll } = require('../src/services/poolManagement.cjs')
 
 afterAll(() => {

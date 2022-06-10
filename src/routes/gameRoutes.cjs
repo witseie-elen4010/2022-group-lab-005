@@ -4,7 +4,7 @@ const express = require('express')
 const jsonParser = bodyParser.json()
 
 const gameRouter = express.Router()
-const { getBackground, changeBackground } = require('../services/background_db.cjs')
+const { getBackground, changeBackground } = require('../services/backgroundDb.cjs')
 const mainRouter = require('../mainRoutes.cjs')
 
 gameRouter.post('/logWord', jsonParser, async function (req, res) { // works

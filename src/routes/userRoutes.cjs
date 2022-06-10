@@ -2,7 +2,7 @@ const path = require('path')
 const bodyParser = require('body-parser')
 const express = require('express')
 const jsonParser = bodyParser.json()
-const { getMode, changeMode, changePassword } = require('../services/settings_db.cjs')
+const { getMode, changeMode, changePassword } = require('../services/settingsDb.cjs')
 const { getUserGames, getUserStats, getUserGuesses } = require('../services/matchHistory.cjs')
 const { getUserFriends, getFriendUser, getUserPendingFriends, getUserFriendRequests, addFriend, updateFriend } = require('../services/friendsDb.cjs')
 
