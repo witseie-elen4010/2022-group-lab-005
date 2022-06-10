@@ -8,9 +8,9 @@ function sendModeToServer (darkModeBool) {
     .done(function (response) {
       dataReceived(response)
     })
-    .fail(function (serverResponse) {
-      alert(serverResponse)
-    })
+    // .fail(function (serverResponse) {
+    //   alert(serverResponse)
+    // })
 }
 
 function dataReceived () {
