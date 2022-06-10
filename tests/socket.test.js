@@ -241,7 +241,6 @@ describe('Test socket.cjs', () => {
       lobbyClient.close()
 
       let didClient1Connect = false
-      const didClient2Connect = false
 
       // Now we make another client and attempt to connect it to the game.
       // Try establish a connection with the server.
@@ -258,8 +257,153 @@ describe('Test socket.cjs', () => {
       gameClient2.on('game_can_start', () => {
         expect(didClient1Connect).toBe(true)
         done()
+
         gameClient1.close()
         gameClient2.close()
+      })
+
+      gameClient1.connect()
+
+      setTimeout(function () {
+        gameClient2.connect()
+      }, 3000)
+    })
+
+    lobbyClient.on('invalid_word', () => {
+      lobbyClient.close()
+      throw new Error('invalid_word')
+    })
+
+    lobbyClient.on('invalid_game_mode', () => {
+      lobbyClient.close()
+      throw new Error('invalid_game_mode')
+    })
+
+    lobbyClient.on('invalid_player_number', () => {
+      lobbyClient.close()
+      throw new Error('invalid_player_number')
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 2, 1, 'none')
+  })
+
+  test('Create a regular game with 2 players, connect both of them to the game and try connect a 3rd player', (done) => {
+    // Make the client.
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      expect(gameType).toBe('StandardCreate')
+      lobbyClient.close()
+
+      let didClient1Connect = false
+
+      // Now we make another client and attempt to connect it to the game.
+      // Try establish a connection with the server.
+      const gameClient1 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient1.auth = { sessionInfo: clientGameID, playerName: 'nick' }
+
+      gameClient1.on('waiting_for_players', () => {
+        didClient1Connect = true
+      })
+
+      const gameClient2 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient2.auth = { sessionInfo: clientGameID, playerName: 'user' }
+
+      gameClient2.on('game_can_start', () => {
+        expect(didClient1Connect).toBe(true)
+
+        const gameClient3 = new Client(`http://localhost:${port}`, { autoConnect: false })
+        gameClient3.auth = { sessionInfo: clientGameID, playerName: 'winner' }
+
+        gameClient3.on('connect_error', (err) => {
+          if (err.message === 'invalid_game_id') {
+            throw new Error('invalid_game_id')
+          } else if (err.message === 'game_already_running') {
+            gameClient1.close()
+            gameClient2.close()
+            gameClient3.close()
+            done()
+          } else if (err.message === 'user_already_in_game') {
+            throw new Error('user_already_in_game')
+          }
+        })
+
+        setTimeout(function () {
+          gameClient3.connect()
+        }, 3000)
+      })
+
+      gameClient1.connect()
+
+      setTimeout(function () {
+        gameClient2.connect()
+      }, 3000)
+    })
+
+    lobbyClient.on('invalid_word', () => {
+      lobbyClient.close()
+      throw new Error('invalid_word')
+    })
+
+    lobbyClient.on('invalid_game_mode', () => {
+      lobbyClient.close()
+      throw new Error('invalid_game_mode')
+    })
+
+    lobbyClient.on('invalid_player_number', () => {
+      lobbyClient.close()
+      throw new Error('invalid_player_number')
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 2, 1, 'none')
+  })
+
+  test('Create a regular game with 2 players, connect both of them to the game. Disconnect one player and try rejoin them', (done) => {
+    // Make the client.
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      expect(gameType).toBe('StandardCreate')
+      lobbyClient.close()
+
+      let didClient1Connect = false
+
+      // Now we make another client and attempt to connect it to the game.
+      // Try establish a connection with the server.
+      const gameClient1 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient1.auth = { sessionInfo: clientGameID, playerName: 'nick' }
+
+      gameClient1.on('waiting_for_players', () => {
+        didClient1Connect = true
+      })
+
+      const gameClient2 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient2.auth = { sessionInfo: clientGameID, playerName: 'user' }
+
+      gameClient2.on('game_can_start', () => {
+        expect(didClient1Connect).toBe(true)
+
+        gameClient2.on('connect_error', (err) => {
+          if (err.message === 'invalid_game_id') {
+            throw new Error(err.message)
+          } else if (err.message === 'game_already_running') {
+            gameClient1.close()
+            gameClient2.close()
+            done()
+          } else if (err.message === 'user_already_in_game') {
+            throw new Error(err.message)
+          }
+        })
+
+        setTimeout(function () {
+          gameClient2.close()
+
+          setTimeout(function () {
+            gameClient2.connect()
+          }, 2000)
+        }, 1000)
       })
 
       gameClient1.connect()
