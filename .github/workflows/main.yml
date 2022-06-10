@@ -20,7 +20,7 @@ jobs:
 
     env: #These are credentials for the test database, no client information is stored there!
       DB_HOST: "elen4010-project-group5-test.database.windows.net"
-      DB_USER: "ELEN4010_Group5_test@elen4010-project-group5"
+      DB_USER: "ELEN4010_Group5_test@elen4010-project-group5-test"
       DB_PASSWORD: "Database1"
       DB_NAME: "HazardaGuess_db_test"
       DB_PORT: "1433"
