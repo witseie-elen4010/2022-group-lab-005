@@ -1,4 +1,4 @@
-jest.setTimeout(10000)
+jest.setTimeout(25000)
 
 const express = require('express')
 const { set } = require('express/lib/application')
@@ -27,7 +27,7 @@ describe('Test socket.cjs', () => {
     done()
   })
 
-  test('Send invalid session information (invalid game id)', (done) => {
+  test('Send invalid session information (invalid game id format)', (done) => {
     // Make the client.
     const gameClient = new Client(`http://localhost:${port}`, { autoConnect: false })
 
@@ -35,6 +35,68 @@ describe('Test socket.cjs', () => {
 
     gameClient.on('connect_error', (err) => {
       expect(err.message).toBe('invalid_game_id')
+      gameClient.close()
+      done()
+    })
+
+    gameClient.connect()
+  })
+
+  test('Send invalid session information (no game id)', (done) => {
+    // Make the client.
+    const gameClient = new Client(`http://localhost:${port}`, { autoConnect: false })
+
+    gameClient.auth = { sessionInfo: '', playerName: 'nick' }
+
+    gameClient.on('connect_error', (err) => {
+      expect(err.message).toBe('invalid_game_id')
+      gameClient.close()
+      done()
+    })
+
+    gameClient.connect()
+  })
+
+  test('Send invalid session information (invalid characters in database id', (done) => {
+    // Make the client.
+    const gameClient = new Client(`http://localhost:${port}`, { autoConnect: false })
+
+    gameClient.auth = { sessionInfo: '31ff815f-3ed9-48a9-9eb3-7117ddffa3ed52!!', playerName: 'nick' }
+
+    gameClient.on('connect_error', (err) => {
+      expect(err.message).toBe('invalid_game_id')
+      gameClient.close()
+      done()
+    })
+
+    gameClient.connect()
+  })
+
+  /*
+  test('Send invalid session information (invalid database id', (done) => {
+    // Make the client.
+    const gameClient = new Client(`http://localhost:${port}`, { autoConnect: false })
+
+    gameClient.auth = { sessionInfo: '31ff815f-3ed9-48a9-9eb3-7117ddffa3ed002', playerName: 'nick' }
+
+    gameClient.on('connect_error', (err) => {
+      expect(err.message).toBe('invalid_game_id')
+      gameClient.close()
+      done()
+    })
+
+    gameClient.connect()
+  })
+  */
+
+  test('Send valid session information', (done) => {
+    // Make the client.
+    const gameClient = new Client(`http://localhost:${port}`, { autoConnect: false })
+
+    gameClient.auth = { sessionInfo: '31ff815f-3ed9-48a9-9eb3-7117ddffa3ed5242', playerName: 'nick' }
+
+    gameClient.on('connect_error', (err) => {
+      expect(err.message).toBe('game_already_running')
       gameClient.close()
       done()
     })
@@ -140,6 +202,90 @@ describe('Test socket.cjs', () => {
 
     lobbyClient.connect()
     lobbyClient.emit('create_game', 3, 2, 'hello')
+  })
+
+  test('Create a game with an invalid game mode', (done) => {
+    // Make the client.
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      lobbyClient.close()
+      throw new Error('get_game_id should not run because the player number is invalid.')
+    })
+
+    lobbyClient.on('invalid_word', () => {
+      lobbyClient.close()
+      throw new Error('invalid_word')
+    })
+
+    lobbyClient.on('invalid_game_mode', () => {
+      lobbyClient.close()
+      done()
+    })
+
+    lobbyClient.on('invalid_player_number', () => {
+      lobbyClient.close()
+      throw new Error('invalid_player_number')
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 3, 9, 'none')
+  })
+
+  test('Create a regular game with 2 players and connect both of them to the game', (done) => {
+    // Make the client.
+    const lobbyClient = new Client(`http://localhost:${port}/rooms`, { autoConnect: false })
+
+    lobbyClient.on('get_game_id', (clientGameID, gameType) => {
+      expect(gameType).toBe('StandardCreate')
+      lobbyClient.close()
+
+      let didClient1Connect = false
+      const didClient2Connect = false
+
+      // Now we make another client and attempt to connect it to the game.
+      // Try establish a connection with the server.
+      const gameClient1 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient1.auth = { sessionInfo: clientGameID, playerName: 'nick' }
+
+      gameClient1.on('waiting_for_players', () => {
+        didClient1Connect = true
+      })
+
+      const gameClient2 = new Client(`http://localhost:${port}`, { autoConnect: false })
+      gameClient2.auth = { sessionInfo: clientGameID, playerName: 'user' }
+
+      gameClient2.on('game_can_start', () => {
+        expect(didClient1Connect).toBe(true)
+        done()
+        gameClient1.close()
+        gameClient2.close()
+      })
+
+      gameClient1.connect()
+
+      setTimeout(function () {
+        gameClient2.connect()
+      }, 3000)
+    })
+
+    lobbyClient.on('invalid_word', () => {
+      lobbyClient.close()
+      throw new Error('invalid_word')
+    })
+
+    lobbyClient.on('invalid_game_mode', () => {
+      lobbyClient.close()
+      throw new Error('invalid_game_mode')
+    })
+
+    lobbyClient.on('invalid_player_number', () => {
+      lobbyClient.close()
+      throw new Error('invalid_player_number')
+    })
+
+    lobbyClient.connect()
+    lobbyClient.emit('create_game', 2, 1, 'none')
   })
 })
 
