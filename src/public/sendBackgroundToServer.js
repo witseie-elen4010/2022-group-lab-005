@@ -4,7 +4,7 @@ function sendBackgroundToServer (background) {
   console.log(background)
   // send new background to page
   const username = getFromCookie('username', document.cookie)
-  $.post('/game/api/BackgroundData', { usernameInput: username, back: background })
+  $.post('/game/newBackground', { usernameInput: username, back: background })
     .done(function (response) {
       dataReceived(response)
     })

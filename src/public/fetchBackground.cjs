@@ -6,7 +6,7 @@ $(function () {
 
 function getBackground () {
   const username = getFromCookie('username', document.cookie)
-  $.post('/game/api/BackgroundData', { usernameInput: username })
+  $.get('/game/api/BackgroundData', { usernameInput: username })
     .done(function (response) {
       const new_response = response.recordset[0].Background
       const background = document.querySelector('body')
