@@ -33,10 +33,10 @@ test('user input if everthing is valid', () => {
   expect(data).toBe('valid')
 })
 
-// test('user login if username does not exist', async () => {
-//   const data = await LogIn('dadadadada', 'wrongpassword')
-//   await expect(data).toBe('Account does not exist.')
-// })
+test('user login if username does not exist', async () => {
+  const data = await LogIn('dadadadada', 'wrongpassword')
+  await expect(data).toBe('Account does not exist.')
+})
 
 // winner is a user in the database with password：fbe789cb41b2fc32df9b89cacff9830d85ac62de09ca48395ebcef69e069160a
 test('user login if password is incorrect', async () => {
